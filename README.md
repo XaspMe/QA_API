@@ -1,29 +1,28 @@
-<h2>C# Core 3.1 Full REST API training project.
-<br><br>
-<h4>The project allows:<br>
-Using API:<br><br>
+# C# Core 3.1 Full REST API training project.
 
-*  Add / display a question and answer on a specific topic.
-*  Add / display topics for questions.
-*  The application can be used for theoretical preparation before tests or interviews. For exams or certification.<br>
+The project allows:
+
+  - Add / display a question and answer on a specific topic.
+  - Add / display topics for questions.
+  - The application can be used for theoretical preparation before tests or interviews. For exams or certification.
 
 There is no client because the project is used for practice in studying the technology used and is a prototype
-<br><br>	
 
-<h2>The project includes:<h4>
-	
-* Automapper
+### Tech
+
+The project includes:
+
+* [Git] - For versioning
+* [Automapper] - To comply with the client's contract and to provide API endpoints
 * MVC;
 * REST;
-* the Repository Pattern;
+* The Repository Pattern;
 * Dependency Injection; 
-* Entity Framework;
+* [EF] - Entity Framework for work with MsSQL;
 * Data Transfer Objects (DTOs);
-* AutoMapper to provide API endpoints
 
-<h4>Examples for POST:<br><br>
-<h2>
-﻿Create Element
+### Examples for POST
+Create Element body
 
 	/api/Elements/
 	{
@@ -32,9 +31,17 @@ There is no client because the project is used for practice in studying the tech
 		"CategoryName": "OOP"
 	}
 
-Create Category
+Create Category body
 
 	/api/Categoties/
 	{
 		"Name": "Python"
 	}
+
+[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
+
+
+   [Git]: <https://git-scm.com/>
+   [Automapper]: <https://automapper.org/>
+   [EF]: https://docs.microsoft.com/en-us/ef/>
+   
