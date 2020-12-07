@@ -1,6 +1,6 @@
-<h4>C# Core 3.1 Full REST API training project.
+<h2>C# Core 3.1 Full REST API training project.
 <br><br>
-The project allows:<br>
+<h4>The project allows:<br>
 Using API:<br><br>
 
 *  Add / display a question and answer on a specific topic.
@@ -9,8 +9,8 @@ Using API:<br><br>
 
 There is no client because the project is used for practice in studying the technology used and is a prototype
 <br><br>	
-The project includes:
-
+<h4>The project includes:
+<h2>
 * Automapper
 * MVC;
 * REST;
@@ -21,7 +21,7 @@ The project includes:
 * AutoMapper to provide API endpoints
 
 <h4>Examples for POST:<br><br>
-
+<h2>
 ﻿Create Element
 
 	/api/Elements/
