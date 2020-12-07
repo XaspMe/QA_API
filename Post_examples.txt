@@ -1,0 +1,15 @@
+﻿Create Element
+
+	/api/Elements/
+	{
+		"Question": "OOP20",
+		"Answer": "OOP17",
+		"CategoryName": "OOP"
+	}
+
+Create Category
+
+	/api/Categoties/
+	{
+		"Name": "Python"
+	}
