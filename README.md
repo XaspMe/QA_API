@@ -1,11 +1,11 @@
 <h4>C# Core 3.1 Full REST API training project.
 <br><br>
 The project allows:<br>
-Using API:
+Using API:<br>
 
 *  Add / display a question and answer on a specific topic.
-* Add / display topics for questions.
-* The application can be used for theoretical preparation before tests or interviews. For exams or certification.<br>
+*  Add / display topics for questions.
+*  The application can be used for theoretical preparation before tests or interviews. For exams or certification.<br>
 
 There is no client because the project is used for practice in studying the technology used and is a prototype
 <br><br>	
