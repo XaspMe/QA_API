@@ -1,7 +1,5 @@
-C# Core 3.1 Full REST API training project.
-
+<h4>C# Core 3.1 Full REST API training project.<br><br>
 The project includes:
-
 
 * Automapper
 * MVC;
@@ -12,9 +10,7 @@ The project includes:
 * Data Transfer Objects (DTOs);
 * AutoMapper to provide API endpoints
 
-<h2>Completed.
-
-<h2>Examples for POST:
+<h4>Examples for POST:
 
 ﻿Create Element
 
