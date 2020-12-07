@@ -1,18 +1,18 @@
-C# Core 3.1 Full REST API training project.
+<h1>C# Core 3.1 Full REST API training project.
 
-The project uses:
-  Automapper
-  MVC;
-  REST;
-  the Repository Pattern;
-  Dependency Injection; 
-  Entity Framework;
-  Data Transfer Objects (DTOs);
-  AutoMapper to provide API endpoints
+<h2>The project uses:
+* Automapper
+* MVC;
+* REST;
+* the Repository Pattern;
+* Dependency Injection; 
+* Entity Framework;
+* Data Transfer Objects (DTOs);
+* AutoMapper to provide API endpoints
 
-Completed.
+<h2>Completed.
 
-Examples for POST:
+<h2>Examples for POST:
 
 ﻿Create Element
 
