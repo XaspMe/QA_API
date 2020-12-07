@@ -6,7 +6,7 @@ The project allows:
   - Add / display topics for questions.
   - The application can be used for theoretical preparation before tests or interviews. For exams or certification.
 
-There is no client because the project is used for practice in studying the technology used and is a prototype
+There is no client, because the project is a prototype and is used for practice in the study of applied technologies.
 
 ### Tech
 
