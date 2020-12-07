@@ -9,8 +9,8 @@ Using API:<br><br>
 
 There is no client because the project is used for practice in studying the technology used and is a prototype
 <br><br>	
-<h4>The project includes:
-<h2>
+<h4>The project includes:<h2>
+
 * Automapper
 * MVC;
 * REST;
