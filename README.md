@@ -2,8 +2,8 @@
 
 The project allows:
 
-  - Add / display a question and answer on a specific topic.
-  - Add / display topics for questions.
+  - Create / get a question and answer on a specific topic.
+  - Create / get topics for questions.
   - The application can be used for theoretical preparation before tests or interviews. For exams or certification.
 
 There is no client, because the project is a prototype and is used for practice in the study of applied technologies.
