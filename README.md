@@ -1,6 +1,7 @@
 <h1>C# Core 3.1 Full REST API training project.
 
 <h2>The project uses:
+	
 * Automapper
 * MVC;
 * REST;
