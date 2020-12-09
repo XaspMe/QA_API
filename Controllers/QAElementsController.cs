@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QA_API.Data;
 using QA_API.Dtos;
@@ -18,62 +16,51 @@ namespace QA_API.Controllers
     [ApiController]
     public class QAElementsController : Controller
     {
-        private readonly IQaRepo _repo;
-        private readonly IMapper _mapper;
+        private readonly QAContext _qaContext;
 
-        public QAElementsController(IQaRepo repo, IMapper mapper)
+        public QAElementsController(QAContext qaContext)
         {
-            _repo = repo;
-            _mapper = mapper;
+            _qaContext = qaContext;
         }
 
         // TODO: Не возвращаются категории при обращении к элементам.
         //GET api/Categories
         [HttpGet]
-        public ActionResult<IEnumerable<CategoryReadDto>> GetAllElements()
+        public IAsyncEnumerable<ElementReadDto> GetAllElements()
         {
-            var result = _repo.GetAllElements();
-            var mappedResult = _mapper.Map<IEnumerable<ElementReadDto>>(result);
-            return Ok(mappedResult);
+            return _qaContext.Elements
+                .AsNoTracking()
+                .AsEnumerable()
+                .Select(x => x.ToView())
+                .ToAsyncEnumerable();
         }
 
         //GET api/Categories/{id}
         [HttpGet("{id}", Name = "GetElementById")]
-        public ActionResult<ElementReadDto> GetElementById(int id)
+        public async Task<ActionResult<ElementReadDto>> GetElementById(Guid id)
         {
-            var result = _repo.GetElementById(id);
-
-            if (result != null)
-            {
-                var mappedResult = _mapper.Map<ElementReadDto>(result);
-                return Ok(mappedResult);
-            }
-            return NotFound();
+            var entry = await _qaContext.Elements.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == id);
+            if (entry == null) return NotFound();
+            return entry.ToView();
         }
 
 
         // POST: api/Create/
         [HttpPost]
-        public ActionResult<ElementReadDto> Create(ElementCreateDto element)
+        public async Task<ActionResult<Guid>> Create(ElementCreateDto element, CancellationToken cancellationToken)
         {
-            if (element != null)
-            {
-                var elementCreateDto = _mapper.Map<ElementCreateDto>(element);
+            if (element == null)
+                return BadRequest();
+            var category = await _qaContext.Categories.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Name == element.CategoryName, cancellationToken);
 
-                var elementModel = _mapper.Map<QAElement>(element);
-                elementModel.Category = _repo.GetCategoryByName(element.CategoryName);
+            // TODO: проверь категорию, если null - создать новую
+            var entity = new QAElement(element);
+            entity.Category = category;
+            await _qaContext.Elements.AddAsync(entity, cancellationToken);
+            await _qaContext.SaveChangesAsync(cancellationToken);
 
-                if (elementModel.Category != null)
-                {
-                    _repo.CreateElement(elementModel);
-                    _repo.SaveChanges();
-                    return CreatedAtRoute(nameof(GetElementById), new { Id = elementModel.Id }, elementModel);
-                }
-
-                return ValidationProblem($"Категория: {element.CategoryName} не существует, объект не был создан.");
-            }
-
-            return ValidationProblem(nameof(element));
+            return Ok(entity.Guid);
         }
     }
 }

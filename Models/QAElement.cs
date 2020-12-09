@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using QA_API.Dtos;
 
 namespace QA_API.Models
 {
-    public class QAElement
+    public class QAElement : AggregateRoot<ElementCreateDto, ElementReadDto>
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(250)]
         public string Question { get; set; }
@@ -16,6 +13,22 @@ namespace QA_API.Models
         public string Answer { get; set; }
 
         [Required]
-        public QACategory Category { get; set; } 
+        public QACategory Category { get; set; }
+
+        public QAElement(ElementCreateDto command) : base(command)
+        {
+            Question = command.Question;
+            Answer = command.Answer;
+        }
+
+        public override ElementReadDto ToView()
+        {
+            return new ElementReadDto
+            {
+                Id = Guid,
+                Question = Question,
+                Answer = Answer
+            };
+        }
     }
 }
