@@ -1,20 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using QA_API.Dtos;
 
 namespace QA_API.Models
 {
     [ComplexType]
-    public class QACategory
+    public class QACategory : AggregateRoot<CategoryCreateDto, CategoryReadDto>
     {
-        [Key]
-        public int Id { get; set; }
+        public QACategory(CategoryCreateDto command) : base(command)
+        {
+            Name = command.Name;
+        }
 
         [Required]
         [MaxLength(250)]
         public string Name { get; set; }
+
+        public override CategoryReadDto ToView()
+        {
+            return new CategoryReadDto
+            {
+                Id = Guid,
+                Name = Name
+            };
+        }
     }
 }
