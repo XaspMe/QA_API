@@ -22,6 +22,8 @@ namespace QA_API
             services
                 .AddDbContext<QAContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("QA_Connection")))
                 .AddControllers();
+            services
+                .AddMvcCore();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

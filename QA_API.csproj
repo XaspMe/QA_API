@@ -26,4 +26,13 @@
     <Folder Include="Profiles" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\QACategories\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\QACategories\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\QACategories\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\QACategories\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\QACategories\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+  </ItemGroup>
+
 </Project>
