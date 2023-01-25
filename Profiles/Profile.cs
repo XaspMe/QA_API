@@ -10,7 +10,7 @@ namespace QA_API.Profiles
         public QaProfile()
         {
             // Source -> target
-            CreateMap<QACategory, CategoryReadDto>()
+            CreateMap<QACategory, CategoryReadDto>();
             CreateMap<CategoryReadDto, QACategory>();
 
             CreateMap<CategoryCreateDto, QACategory>();
