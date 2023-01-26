@@ -70,6 +70,21 @@ namespace QA_API.Controllers
         [HttpPost]
         public ActionResult<ElementReadDto> Create(ElementCreateDto element)
         {
+            // var result = System.IO.File.ReadLines(@"G:\qa_db\элементы.csv");
+            // foreach (var str in result)
+            // {
+            //     var _res = str.Split(@";");
+            //     var model = new QAElement
+            //     {
+            //         Question = _res[1],
+            //         Answer = _res[2],
+            //         Category = _repo.GetCategoryById(int.Parse(_res[3]))
+            //     };
+            //     _repo.CreateElement(model);
+            // }
+            //
+            // _repo.SaveChanges();
+            
             if (element != null)
             {
                 var elementCreateDto = _mapper.Map<ElementCreateDto>(element);

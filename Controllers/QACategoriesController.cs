@@ -36,7 +36,7 @@ namespace QA_API.Controllers
         }
 
         //GET api/Categories/{id}
-        [HttpGet("{id}", Name="GetCategoriesById")]
+        [HttpGet("{id}", Name = "GetCategoriesById")]
         public ActionResult<CategoryReadDto> GetCategoriesById(int id)
         {
             var result = _repo.GetCategoryById(id);
@@ -46,6 +46,7 @@ namespace QA_API.Controllers
                 var mappedResult = _mapper.Map<CategoryReadDto>(result);
                 return Ok(mappedResult);
             }
+
             return NotFound();
         }
 
