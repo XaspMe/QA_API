@@ -29,19 +29,33 @@ namespace QA_API.Controllers
 
         // TODO: Не возвращаются категории при обращении к элементам.
         //GET api/Categories
-        [HttpGet]
-        public ActionResult<IEnumerable<CategoryReadDto>> GetAllElements()
-        {
-            var result = _repo.GetAllElements();
-            var mappedResult = _mapper.Map<IEnumerable<ElementReadDto>>(result);
-            return Ok(mappedResult);
-        }
+         [HttpGet]
+         public ActionResult<IEnumerable<CategoryReadDto>> GetAllElements()
+         {
+             var result = _repo.GetAllElements();
+             var mappedResult = _mapper.Map<IEnumerable<ElementReadDto>>(result);
+             return Ok(mappedResult);
+         }
 
         //GET api/Categories/{id}
         [HttpGet("{id}", Name = "GetElementById")]
         public ActionResult<ElementReadDto> GetElementById(int id)
         {
             var result = _repo.GetElementById(id);
+
+            if (result != null)
+            {
+                var mappedResult = _mapper.Map<ElementReadDto>(result);
+                return Ok(mappedResult);
+            }
+            return NotFound();
+        }
+        
+        [HttpGet]
+        [Route("/api/Elements/Random")]
+        public ActionResult<ElementReadDto> GetElementRandom()
+        {
+            var result = _repo.GetElementRandom();
 
             if (result != null)
             {

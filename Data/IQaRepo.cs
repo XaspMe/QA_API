@@ -21,6 +21,7 @@ namespace QA_API.Data
 
         IEnumerable<QAElement> GetAllElements();
         QAElement GetElementById(int id);
+        QAElement GetElementRandom();
         void CreateElement(QAElement element);
         void UpdateElement(QAElement element);
         void DeleteElement(QAElement element);

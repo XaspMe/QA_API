@@ -26,6 +26,13 @@ namespace QA_API.Data
             _context.Categories.Add(category);
         }
 
+        public QAElement GetElementRandom()
+        {
+            var collection = _context.Elements.ToList();
+            var randomElement = collection[new Random().Next(collection.Count)];
+            return randomElement;
+        }
+
         public void CreateElement(QAElement element)
         {
             if (element == null)
