@@ -28,19 +28,20 @@ namespace QA_API
             services.AddSwaggerGen();
             services.AddScoped<IQaRepo, SqlQaRepo>();
             services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<DumpService>();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
                     builder =>
                     {
                         builder
-                            .AllowAnyOrigin() 
+                            .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader();
                     });
             });
         }
-        
+
         private void InitializeDatabase(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
@@ -51,9 +52,9 @@ namespace QA_API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
+
             app.UseCors("AllowAll");
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

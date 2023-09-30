@@ -20,11 +20,13 @@ namespace QA_API.Controllers
     {
         private readonly IQaRepo _repo;
         private readonly IMapper _mapper;
+        private readonly DumpService _dumpService;
 
-        public QAElementsController(IQaRepo repo, IMapper mapper)
+        public QAElementsController(IQaRepo repo, IMapper mapper, DumpService dumpService)
         {
             _repo = repo;
             _mapper = mapper;
+            _dumpService = dumpService;
         }
 
         // TODO: Не возвращаются категории при обращении к элементам.
@@ -50,7 +52,7 @@ namespace QA_API.Controllers
             }
             return NotFound();
         }
-        
+
         [HttpGet]
         [Route("/api/Elements/Random")]
         public ActionResult<ElementReadDto> GetElementRandom()
@@ -70,8 +72,22 @@ namespace QA_API.Controllers
         [HttpPost]
         public ActionResult<ElementReadDto> Create(ElementCreateDto element)
         {
-            // var result = System.IO.File.ReadLines(@"G:\qa_db\элементы.csv");
-            // foreach (var str in result)
+            // var categories = System.IO.File.ReadLines(@"G:\qa_db\категории.csv");
+            // foreach (var str in categories)
+            // {
+            //     var _res = str.Split(@";");
+            //     var model = new QACategory()
+            //     {
+            //         Id = int.Parse(_res[0]),
+            //         Name = _res[1]
+            //     };
+            //     _repo.CreateCategory(model);
+            // }
+            //
+            // _repo.SaveChanges();
+            //
+            // var elements = System.IO.File.ReadLines(@"G:\qa_db\элементы.csv");
+            // foreach (var str in elements)
             // {
             //     var _res = str.Split(@";");
             //     var model = new QAElement
@@ -84,7 +100,7 @@ namespace QA_API.Controllers
             // }
             //
             // _repo.SaveChanges();
-            
+
             if (element != null)
             {
                 var elementCreateDto = _mapper.Map<ElementCreateDto>(element);
@@ -96,6 +112,7 @@ namespace QA_API.Controllers
                 {
                     _repo.CreateElement(elementModel);
                     _repo.SaveChanges();
+                    _dumpService.Dump();
                     return CreatedAtRoute(nameof(GetElementById), new { Id = elementModel.Id }, elementModel);
                 }
 
