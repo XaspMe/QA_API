@@ -27,6 +27,7 @@ namespace QA_API
                 .AddMvcCore();
             services.AddSwaggerGen();
             services.AddScoped<IQaRepo, SqlQaRepo>();
+            services.AddHostedService<TelegramService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<DumpService>();
             services.AddCors(options =>
