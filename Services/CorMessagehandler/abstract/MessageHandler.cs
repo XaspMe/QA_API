@@ -1,9 +1,7 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.@abstract;
 
 public abstract class MessageHandler
 {

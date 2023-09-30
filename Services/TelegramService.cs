@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QA_API.CorMessagehandler;
 using QA_API.Data;
+using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
