@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QA_API.Data;
 using QA_API.Dtos;
@@ -15,47 +17,61 @@ namespace QA_API.Controllers
     [ApiController]
     public class QACategoriesController : Controller
     {
-        private readonly QAContext _qaContext;
+        private readonly IQaRepo _repo;
+        private readonly IMapper _mapper;
 
-        public QACategoriesController(QAContext qaContext)
+        public QACategoriesController(IQaRepo repo, IMapper mapper)
         {
-            _qaContext = qaContext;
+            _repo = repo;
+            _mapper = mapper;
         }
 
         //GET api/Categories
         [HttpGet]
-        public IAsyncEnumerable<CategoryReadDto> GetAllCategories()
+        public ActionResult<IEnumerable<CategoryReadDto>> GetAllCategories()
         {
-            return _qaContext.Categories
-                .AsNoTracking()
-                .AsEnumerable()
-                .Select(x => x.ToView())
-                .ToAsyncEnumerable();
+            var result = _repo.GetAllCategories();
+            var mappedResult = _mapper.Map<IEnumerable<CategoryReadDto>>(result);
+            return Ok(mappedResult);
         }
 
         //GET api/Categories/{id}
-        [HttpGet("{id}", Name="GetCategoriesById")]
-        public async Task<ActionResult<CategoryReadDto>> GetCategoriesById(Guid id)
+        [HttpGet("{id}", Name = "GetCategoriesById")]
+        public ActionResult<CategoryReadDto> GetCategoriesById(int id)
         {
-            var entry = await _qaContext.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Guid == id);
-            if (entry == null) return NotFound();
-            return entry.ToView();
+            var result = _repo.GetCategoryById(id);
+
+            if (result != null)
+            {
+                var mappedResult = _mapper.Map<CategoryReadDto>(result);
+                return Ok(mappedResult);
+            }
+
+            return NotFound();
         }
 
         // POST: api/Create/
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create(CategoryCreateDto category, CancellationToken cancellationToken)
+        public ActionResult<CategoryReadDto> Create(CategoryCreateDto category)
         {
-            if (category == null)
-                return BadRequest();
-            if (await _qaContext.Categories.AsNoTracking().AnyAsync(x => x.Name == category.Name, cancellationToken))
-                return BadRequest($"Category already exist {category.Name}");
+            if (category != null)
+            {
+                var categoryModel = _mapper.Map<QACategory>(category);
 
-            var entity = new QACategory(category);
-            await _qaContext.Categories.AddAsync(entity, cancellationToken);
-            await _qaContext.SaveChangesAsync(cancellationToken);
+                if (_repo.GetCategoryByName(category.Name) != null)
+                {
+                    return ValidationProblem($"Category already exist {category.Name}");
+                }
 
-            return Ok(entity.Guid);
+                _repo.CreateCategory(categoryModel);
+
+                _repo.SaveChanges();
+                var readDto = _mapper.Map<CategoryReadDto>(categoryModel);
+                // TODO: Return id value does not workin
+                return CreatedAtRoute(nameof(GetCategoriesById), new { Id = readDto.Id }, readDto);
+            }
+
+            return ValidationProblem(nameof(category));
         }
     }
 }

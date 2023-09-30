@@ -1,0 +1,4 @@
+dotnet publish -r linux-x64 -p:IncludeAllContentForSelfExtract=true -c Release --self-contained true -p:PublishSingleFile=true
+scp -r C:\Users\kasp_me\Desktop\QA_API\bin\Release\netcoreapp3.1\linux-x64\publish\* st@62.113.97.22:/srv/HelloWorld
+
+sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf 
