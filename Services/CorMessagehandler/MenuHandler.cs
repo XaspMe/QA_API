@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
 using QA_API.Data;
-using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,32 +11,31 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace QA_API.CorMessagehandler;
 
-public class AnswerCurrentQuestionHandler : MessageHandler
+public class MenuHandler : MessageHandler
 {
-    private readonly IQaRepo _repo;
-    private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly CancellationToken _ct;
+    private readonly IQaRepo _repo;
 
-    public AnswerCurrentQuestionHandler(IQaRepo repo, Dictionary<long, int> userCurrentQuestion, ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public MenuHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
-        _repo = repo;
-        _ct = ct;
-        _userCurrentQuestion = userCurrentQuestion;
         _telegramBotClient = telegramBotClient;
+        _ct = ct;
+        _repo = repo;
     }
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.ANSWER_CURRENT_QUESTION) && _userCurrentQuestion.TryGetValue(message.Chat.Id, out var value))
+        if (message.Text!.Contains(TelegramCommands.START) || message.Text!.Contains(TelegramCommands.MENU))
         {
-            var question = _repo.GetElementById(value);
-
+            var categories = _repo.GetAllCategories();
+            var replyKeyboardMarkup = message.Chat.Id != 87584263 ? TelegramMarkups.MAIN_MENU : TelegramMarkups.ADMIN_MENU;
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                // replace br's for telegram only
-                text: question.Answer?.Replace("<br>", "\n") ?? string.Empty,
-                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
+                text: message.Text is TelegramCommands.START?
+                    TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" + String.Join("\n", categories.Select(x => x.Name)):
+                    TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount()),
+                replyMarkup: replyKeyboardMarkup,
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

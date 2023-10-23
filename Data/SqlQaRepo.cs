@@ -33,6 +33,13 @@ namespace QA_API.Data
             return randomElement;
         }
 
+        public QAElement GetElementRandomInCategory(int category)
+        {
+            var collection = _context.Elements.Where(x => x.Category.Id == category).ToList();
+            var randomElement = collection[new Random().Next(collection.Count)];
+            return randomElement;
+        }
+
         public void CreateElement(QAElement element)
         {
             if (element == null)
@@ -107,6 +114,11 @@ namespace QA_API.Data
         public void UpdateElement(QAElement element)
         {
             // Nothing
+        }
+
+        public int ElementsCount()
+        {
+            return _context.Elements.Count();
         }
     }
 }

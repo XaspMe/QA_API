@@ -23,6 +23,7 @@ public class TelegramService : IHostedService
 {
     private readonly IServiceScopeFactory scopeFactory;
     private Dictionary<long, int> userCurrentElement = new Dictionary<long, int>();
+    private Dictionary<long, int> userCurrentCategory = new Dictionary<long, int>();
 
     public TelegramService(IServiceScopeFactory scopeFactory)
     {
@@ -32,7 +33,7 @@ public class TelegramService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         // todo move to config
-        var botClient = new TelegramBotClient("");
+        var botClient = new TelegramBotClient("6598126500:AAGhJct9tr4E4giPkzrV8uV2edhhju5LFro");
 
         using CancellationTokenSource cts = new ();
         ReceiverOptions receiverOptions = new ()
@@ -63,42 +64,56 @@ public class TelegramService : IHostedService
     {
         if (update.Message is not { } message)
             return;
-
         if (message.Text is not { } messageText)
             return;
 
         Console.WriteLine($"Received a '{messageText}' message in chat {message.Chat.Id}.");
         using var scope = scopeFactory.CreateScope();
-        MessageHandler mainHandler = new StartHandler(botClient, message.Chat.Id, cancellationToken);
-        MessageHandler nextQuestionhandler = new NextQuestionHandler(
-            scope.ServiceProvider.GetRequiredService<IQaRepo>(),
+
+        IQaRepo qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
+        MessageHandler menuHandler = new MenuHandler(botClient,
+            cancellationToken,
+            qaRepo);
+        MessageHandler nextQuestionHandler = new NextQuestionHandler(
+            qaRepo,
             userCurrentElement,
             botClient,
-            message.Chat.Id,
-            cancellationToken);
+            cancellationToken,
+            userCurrentCategory);
         MessageHandler answerCurrentQuestionHandler = new AnswerCurrentQuestionHandler(
-            scope.ServiceProvider.GetRequiredService<IQaRepo>(),
+            qaRepo,
             userCurrentElement,
             botClient,
-            message.Chat.Id,
+            cancellationToken);
+        MessageHandler categoriesHandler = new CategoriesHandler(
+            botClient,
+            cancellationToken,
+            qaRepo);
+        SelectCategoriesHandler selectCategories = new SelectCategoriesHandler(
+            qaRepo,
+            userCurrentCategory,
+            userCurrentElement,
+            botClient,
             cancellationToken);
 
-        mainHandler.SetNextHandler(nextQuestionhandler);
-        nextQuestionhandler.SetNextHandler(answerCurrentQuestionHandler);
+        menuHandler.SetNextHandler(nextQuestionHandler);
+        nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
+        answerCurrentQuestionHandler.SetNextHandler(categoriesHandler);
+        categoriesHandler.SetNextHandler(selectCategories);
 
-        await mainHandler.HandleMessage(message);
+        await menuHandler.HandleMessage(message);
     }
 
     Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        var ErrorMessage = exception switch
+        var errorMessage = exception switch
         {
             ApiRequestException apiRequestException
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
 
-        Console.WriteLine(ErrorMessage);
+        Console.WriteLine(errorMessage);
         return Task.CompletedTask;
     }
 }

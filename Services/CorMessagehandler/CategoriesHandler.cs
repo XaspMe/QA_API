@@ -1,42 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
 using QA_API.Data;
-using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace QA_API.CorMessagehandler;
 
-public class AnswerCurrentQuestionHandler : MessageHandler
+public class CategoriesHandler : MessageHandler
 {
-    private readonly IQaRepo _repo;
-    private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly CancellationToken _ct;
+    private readonly IQaRepo _repo;
 
-    public AnswerCurrentQuestionHandler(IQaRepo repo, Dictionary<long, int> userCurrentQuestion, ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public CategoriesHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
-        _repo = repo;
-        _ct = ct;
-        _userCurrentQuestion = userCurrentQuestion;
         _telegramBotClient = telegramBotClient;
+        _ct = ct;
+        _repo = repo;
     }
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.ANSWER_CURRENT_QUESTION) && _userCurrentQuestion.TryGetValue(message.Chat.Id, out var value))
+        if (message.Text!.Contains(TelegramCommands.CATEGORIES))
         {
-            var question = _repo.GetElementById(value);
+            var categories = _repo.GetAllCategories();
 
+            // todo добавить категории
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                // replace br's for telegram only
-                text: question.Answer?.Replace("<br>", "\n") ?? string.Empty,
-                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
+                text: TelegramMessages.CATEGORIES,
+                replyMarkup: TelegramMarkups.CATEGORIES_KEYBOARD(categories.Select(x => x.Name)),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)
