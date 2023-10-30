@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Profiles" />
     <Folder Include="Services\CorMessagehandler\Admin\" />
   </ItemGroup>

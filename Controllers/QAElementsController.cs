@@ -72,7 +72,7 @@ namespace QA_API.Controllers
         [HttpPost]
         public ActionResult<ElementReadDto> Create(ElementCreateDto element)
         {
-            var categories = System.IO.File.ReadLines(@"G:\qa_db\категории.csv");
+            var categories = System.IO.File.ReadLines(@"C:\qa_db\категории.csv");
             foreach (var str in categories)
             {
                 var _res = str.Split(@";");
@@ -86,7 +86,7 @@ namespace QA_API.Controllers
 
             _repo.SaveChanges();
 
-            var elements = System.IO.File.ReadLines(@"G:\qa_db\элементы.csv");
+            var elements = System.IO.File.ReadLines(@"C:\qa_db\элементы.csv");
             foreach (var str in elements)
             {
                 var _res = str.Split(@";");

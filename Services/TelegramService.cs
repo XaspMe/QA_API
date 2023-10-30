@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QA_API.CorMessagehandler;
@@ -11,11 +10,8 @@ using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace QA_API;
 
@@ -24,6 +20,8 @@ public class TelegramService : IHostedService
     private readonly IServiceScopeFactory scopeFactory;
     private Dictionary<long, int> userCurrentElement = new Dictionary<long, int>();
     private Dictionary<long, int> userCurrentCategory = new Dictionary<long, int>();
+    private Dictionary<long, DateTime> lastMessage = new Dictionary<long, DateTime>();
+    private Dictionary<long, int> userFavorites = new Dictionary<long, int>();
 
     public TelegramService(IServiceScopeFactory scopeFactory)
     {
@@ -33,7 +31,7 @@ public class TelegramService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         // todo move to config
-        var botClient = new TelegramBotClient("6598126500:AAGhJct9tr4E4giPkzrV8uV2edhhju5LFro");
+        var botClient = new TelegramBotClient("6598126500:AAGwJxzSV8xtE7d-7FL0SoTMmSBIEe0QwYM");
 
         using CancellationTokenSource cts = new ();
         ReceiverOptions receiverOptions = new ()
@@ -48,7 +46,7 @@ public class TelegramService : IHostedService
             cancellationToken: cts.Token
         );
 
-        var me = await botClient.GetMeAsync();
+        var me = await botClient.GetMeAsync(cancellationToken: cts.Token);
 
         Console.WriteLine($"Start listening for @{me.Username}");
         Console.ReadLine();
@@ -66,6 +64,13 @@ public class TelegramService : IHostedService
             return;
         if (message.Text is not { } messageText)
             return;
+
+        // if (lastMessage.TryGetValue(message.Chat.Id, out var lastUserMessage) &&
+        //     (DateTime.Now - lastUserMessage).TotalSeconds < 1)
+        // {
+        //     Console.WriteLine("DDOS handling");
+        //     return;
+        // }
 
         Console.WriteLine($"Received a '{messageText}' message in chat {message.Chat.Id}.");
         using var scope = scopeFactory.CreateScope();
@@ -95,11 +100,19 @@ public class TelegramService : IHostedService
             userCurrentElement,
             botClient,
             cancellationToken);
+        CategoryStatisticsHandler categoryStatisticsHandler = new CategoryStatisticsHandler(
+            botClient,
+            cancellationToken,
+            qaRepo);
+        AddToFavoritesHandler addToFavoritesHandler = new AddToFavoritesHandler(
+            userCurrentElement, botClient, cancellationToken, userFavorites);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
         answerCurrentQuestionHandler.SetNextHandler(categoriesHandler);
         categoriesHandler.SetNextHandler(selectCategories);
+        selectCategories.SetNextHandler(categoryStatisticsHandler);
+        categoryStatisticsHandler.SetNextHandler(addToFavoritesHandler);
 
         await menuHandler.HandleMessage(message);
     }

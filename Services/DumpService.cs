@@ -50,7 +50,7 @@ namespace QA_API
             var categories = _repo.GetAllCategories();
             var dumpQas = elements.Select(x => new
                 { x.Id, x.Question, x.Answer, CategoryName = categories.First(y => y.Id == x.Category.Id).Name }).ToList();
-            var dir = @$"G:\qa_db\qa_db_dump\";
+            var dir = @$"С:\qa_db\qa_db_dump\";
             var serializeObject = JsonConvert.SerializeObject(dumpQas);
             System.IO.File.WriteAllText(dir + $"qa-dump-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}.json", serializeObject);
         }

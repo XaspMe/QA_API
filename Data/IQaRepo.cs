@@ -12,6 +12,7 @@ namespace QA_API.Data
     {
         bool SaveChanges();
         int ElementsCount();
+        IEnumerable<string> CategoriesStats();
 
         IEnumerable<QACategory> GetAllCategories();
         QACategory GetCategoryById(int id);
@@ -23,7 +24,7 @@ namespace QA_API.Data
         IEnumerable<QAElement> GetAllElements();
         QAElement GetElementById(int id);
         QAElement GetElementRandom();
-        public QAElement GetElementRandomInCategory(int category);
+        QAElement GetElementRandomInCategory(int category);
         void CreateElement(QAElement element);
         void UpdateElement(QAElement element);
         void DeleteElement(QAElement element);

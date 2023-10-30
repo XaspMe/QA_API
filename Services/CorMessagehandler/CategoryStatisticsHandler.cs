@@ -1,5 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
@@ -7,17 +7,16 @@ using QA_API.Data;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace QA_API.CorMessagehandler;
 
-public class MenuHandler : MessageHandler
+public class CategoryStatisticsHandler : MessageHandler
 {
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
     private readonly IQaRepo _repo;
 
-    public MenuHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
+    public CategoryStatisticsHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
         _telegramBotClient = telegramBotClient;
         _ct = ct;
@@ -26,17 +25,22 @@ public class MenuHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.START) || message.Text!.Contains(TelegramCommands.MENU))
+        if (message.Text!.Contains(TelegramCommands.SHOW_CATEGORIES_STATISTICS))
         {
             var categories = _repo.GetAllCategories();
-            // todo move to admins list
-            var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263);
+
+            var responceMessage = new StringBuilder();
+            responceMessage.AppendLine("Статистика по вашим категориям");
+            foreach (var stat in _repo.CategoriesStats())
+            {
+                responceMessage.AppendLine(stat);
+            }
+
+            // todo добавить категории
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: message.Text is TelegramCommands.START?
-                    TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" + String.Join("\n", categories.Select(x => x.Name)):
-                    TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount()),
-                replyMarkup: replyKeyboardMarkup,
+                text: responceMessage.ToString(),
+                replyMarkup: TelegramMarkups.MAIN_MENU(false),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

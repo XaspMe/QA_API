@@ -70,6 +70,15 @@ namespace QA_API.Data
             _context.Elements.Remove(element);
         }
 
+        public IEnumerable<string> CategoriesStats()
+        {
+            var cateories = _context.Categories.ToList();
+            foreach (var cat in cateories)
+            {
+                yield return $"{cat.Name} - {_context.Elements.Count(x => x.Category.Id == cat.Id)} elements";
+            } 
+        }
+
         public IEnumerable<QACategory> GetAllCategories()
         {
             return _context.Categories.ToList();
