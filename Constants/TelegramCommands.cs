@@ -14,7 +14,7 @@ public static class TelegramCommands
     public const string ADD_TO_FAVORITES = "В избранное";
     public const string CATEGORIES = "Темы по категориям";
     public const string MENU = "Меню";
-    public const string CONTACTS = "Контакты разработчика";
+    public const string DEVELOPER_CONTACTS = "Контакты разработчика";
     public const string FAVORITES_QUESTIONS = "Мои избранные";
     public const string FEEDBACK = "Я бы хотел улучшить...";
     public const string REPORT = "Замечание";
@@ -38,9 +38,11 @@ public static class TelegramMessages
     public const string HANDLE_ERROR = "Извините, я не могу обработать ваше сообщение.";
     public const string CATEGORIES = "Выбери категорию";
     public const string ERROR = "Произошла ошибка :(";
+    public const string DEVELOPER_CONTACT = "По всем существующим вопросам:\n@comppomosh";
     public const string ADDED_TO_FAVORITES = "Вопрос успешно добавлен в избранное, ваши избранные вопросы могут быть найдены в главном меню.";
     public static string HELLO(int qaCount) => $"Привет! Я знаю {qaCount} вопросов, которые могут быть использованы на собеседованиях по следующим темам:";
     public static string MAIN_MENU_SELECTOR(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
+    
 }
 
 public static class TelegramMarkups
@@ -61,7 +63,7 @@ public static class TelegramMarkups
                 new KeyboardButton[]
                     { "\ud84d " + TelegramCommands.CATEGORIES, "\U00002b50 " + TelegramCommands.FAVORITES_QUESTIONS },
                 new KeyboardButton[]
-                    { "\u260f " + TelegramCommands.CONTACTS, "\U0001F48C " + TelegramCommands.FEEDBACK }
+                    { "\u260f " + TelegramCommands.DEVELOPER_CONTACTS, "\U0001F48C " + TelegramCommands.FEEDBACK }
             });
         }
         
@@ -70,7 +72,7 @@ public static class TelegramMarkups
             new KeyboardButton[]
                 { "\ud84d " + TelegramCommands.CATEGORIES, "\U00002b50 " + TelegramCommands.FAVORITES_QUESTIONS },
             new KeyboardButton[]
-                { "\u260f " + TelegramCommands.CONTACTS, "\U0001F48C " + TelegramCommands.FEEDBACK },
+                { "\u260f " + TelegramCommands.DEVELOPER_CONTACTS, "\U0001F48C " + TelegramCommands.FEEDBACK },
             new KeyboardButton[] 
                 { TelegramCommands.EDIT_QUESTION, TelegramCommands.ADD_QUESTION },
             new KeyboardButton[] 

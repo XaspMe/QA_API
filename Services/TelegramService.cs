@@ -107,6 +107,9 @@ public class TelegramService : IHostedService
             qaRepo);
         AddToFavoritesHandler addToFavoritesHandler = new AddToFavoritesHandler(
             userCurrentElement, botClient, cancellationToken, userFavorites);
+        DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler(
+            botClient,
+            cancellationToken);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
@@ -114,6 +117,7 @@ public class TelegramService : IHostedService
         categoriesHandler.SetNextHandler(selectCategories);
         selectCategories.SetNextHandler(categoryStatisticsHandler);
         categoryStatisticsHandler.SetNextHandler(addToFavoritesHandler);
+        addToFavoritesHandler.SetNextHandler(developerContactsHandler);       
 
         await menuHandler.HandleMessage(message);
     }
