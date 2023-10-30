@@ -29,7 +29,7 @@ public class AddToFavoritesHandler : MessageHandler
     {
         if (message.Text!.Contains(TelegramCommands.ADD_TO_FAVORITES))
         {
-            if (_userCurrentQuestion.ContainsKey(message.Chat.Id))
+            if (_userCurrentQuestion.ContainsKey(message.Chat.Id) && !_userFavorites.ContainsValue(_userCurrentQuestion[message.Chat.Id]))
             {
                 _userFavorites[message.Chat.Id] = _userCurrentQuestion[message.Chat.Id];
                 await _telegramBotClient.SendTextMessageAsync(
@@ -39,7 +39,7 @@ public class AddToFavoritesHandler : MessageHandler
             }
             else
             {
-                // todo сделать что-то
+                // todo сделать что-то если вопроса нет в активных и если вопрос уже в избранных
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: TelegramMessages.HANDLE_ERROR,
