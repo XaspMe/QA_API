@@ -17,6 +17,7 @@ namespace QA_API;
 
 public class TelegramService : IHostedService
 {
+    // todo move this to repo
     private readonly IServiceScopeFactory scopeFactory;
     private Dictionary<long, int> userCurrentElement = new Dictionary<long, int>();
     private Dictionary<long, int> userCurrentCategory = new Dictionary<long, int>();
