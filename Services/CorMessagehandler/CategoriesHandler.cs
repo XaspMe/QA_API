@@ -25,7 +25,7 @@ public class CategoriesHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.CATEGORIES))
+        if (message.Text == TelegramCommands.CATEGORIES)
         {
             var categories = _repo.GetAllCategories();
 

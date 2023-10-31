@@ -33,7 +33,7 @@ public class NextQuestionHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.NEXT_QUESTION))
+        if (message.Text == TelegramCommands.NEXT_QUESTION)
         {
             var hasValue = _userCurrentCategory.TryGetValue(message.Chat.Id, out var value);
             try
@@ -43,7 +43,8 @@ public class NextQuestionHandler : MessageHandler
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: question.Question,
+                    // replace br's for telegram only
+                    text: question.Question?.Replace("<br>", "\n") ?? string.Empty,
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);

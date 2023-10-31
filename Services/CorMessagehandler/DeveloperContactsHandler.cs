@@ -22,7 +22,7 @@ public class DeveloperContactsHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.DEVELOPER_CONTACTS))
+        if (message.Text == TelegramCommands.DEVELOPER_CONTACTS)
         {
             // todo добавить категории
             await _telegramBotClient.SendTextMessageAsync(

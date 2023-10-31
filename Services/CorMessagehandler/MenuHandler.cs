@@ -26,7 +26,7 @@ public class MenuHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.START) || message.Text!.Contains(TelegramCommands.MENU))
+        if (message.Text is TelegramCommands.START or TelegramCommands.MENU)
         {
             var categories = _repo.GetAllCategories();
             // todo move to admins list

@@ -27,7 +27,7 @@ public class AddToFavoritesHandler : MessageHandler
     
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text!.Contains(TelegramCommands.ADD_TO_FAVORITES))
+        if (message.Text == TelegramCommands.ADD_TO_FAVORITES)
         {
             if (_userCurrentQuestion.ContainsKey(message.Chat.Id) && !_userFavorites.ContainsValue(_userCurrentQuestion[message.Chat.Id]))
             {
