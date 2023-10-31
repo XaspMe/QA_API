@@ -1,9 +1,9 @@
-﻿using QA_API.Dtos;
-using QA_API.Models;
+﻿using QA_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace QA_API.Data
 {
@@ -103,6 +103,29 @@ namespace QA_API.Data
         public QAElement GetElementInGroupByQuestion(string question, int group)
         {
             return _context.Elements.FirstOrDefault(x => x.Question == question && x.Category.Id == group);
+        }
+
+        public async Task СreateTelegramUserIfDoesntExist(long chatId)
+        {
+            if (!await _context.UserStates.AnyAsync(x => x.TelegramChatId == chatId))
+            {
+                await _context.UserStates.AddAsync(new UserState() { TelegramChatId = chatId });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task SetElementOnCurrentTelegramUser(long chatId, QAElement element)
+        {
+            var user = await _context.UserStates.Where(x => x.TelegramChatId == chatId).FirstOrDefaultAsync();
+            user.CurrentQuestion = element;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<QAElement> GetElementOnCurrentTelegramUser(long chatId)
+        {
+            var user = await _context.UserStates.Where(x => x.TelegramChatId == chatId)
+                .Include(userState => userState.CurrentQuestion).FirstOrDefaultAsync();
+            return user.CurrentQuestion;
         }
 
         public QAElement GetElementById(int id)

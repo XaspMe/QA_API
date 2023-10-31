@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QA_API.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QA_API.Data
 {
@@ -14,6 +10,13 @@ namespace QA_API.Data
             modelBuilder.Entity<QACategory>()
                 .HasIndex(c => c.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<UserState>()
+                .HasKey(x => x.Id);
+            
+            modelBuilder.Entity<UserState>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
 
         public QAContext(DbContextOptions<QAContext> opt) : base(opt)
@@ -23,5 +26,6 @@ namespace QA_API.Data
 
         public DbSet<QACategory> Categories { get; set; }
         public DbSet<QAElement> Elements { get; set; }
+        public DbSet<UserState> UserStates { get; set; }
     }
 }

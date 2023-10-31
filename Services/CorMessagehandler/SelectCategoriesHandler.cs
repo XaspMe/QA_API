@@ -17,16 +17,13 @@ public class SelectCategoriesHandler : MessageHandler
 {
     private readonly IQaRepo _repo;
     private readonly Dictionary<long, int> _userCurrentCategory;
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly CancellationToken _ct;
     private readonly ITelegramBotClient _telegramBotClient;
 
-    public SelectCategoriesHandler(IQaRepo repo, Dictionary<long, int> userCurrentCategory,
-        Dictionary<long, int> userCurrentQuestion, ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public SelectCategoriesHandler(IQaRepo repo, Dictionary<long, int> userCurrentCategory, ITelegramBotClient telegramBotClient, CancellationToken ct)
     {
         _repo = repo;
         _userCurrentCategory = userCurrentCategory;
-        _userCurrentQuestion = userCurrentQuestion;
         _ct = ct;
         _telegramBotClient = telegramBotClient;
     }
@@ -54,7 +51,7 @@ public class SelectCategoriesHandler : MessageHandler
                 var question = message.Text!.Contains(TelegramCommands.ALL_CATEGORIES)
                     ? _repo.GetElementRandom()
                     : _repo.GetElementRandomInCategory(_userCurrentCategory[message.Chat.Id]);
-                _userCurrentQuestion[message.Chat.Id] = question.Id;
+                await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

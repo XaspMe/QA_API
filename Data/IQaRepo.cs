@@ -29,5 +29,8 @@ namespace QA_API.Data
         void UpdateElement(QAElement element);
         void DeleteElement(QAElement element);
         QAElement GetElementInGroupByQuestion(string question, int group);
+        Task СreateTelegramUserIfDoesntExist(long chatId);
+        Task SetElementOnCurrentTelegramUser(long chatId, QAElement element);
+        Task<QAElement> GetElementOnCurrentTelegramUser(long chatId);
     }
 }

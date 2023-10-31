@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
@@ -9,7 +8,6 @@ using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace QA_API.CorMessagehandler;
 
@@ -17,17 +15,14 @@ public class NextQuestionHandler : MessageHandler
 {
     private readonly IQaRepo _repo;
     private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly Dictionary<long, int> _userCurrentCategory;
     private readonly ITelegramBotClient _telegramBotClient;
 
-    public NextQuestionHandler(IQaRepo repo, Dictionary<long, int> userCurrentQuestion,
-        ITelegramBotClient telegramBotClient, CancellationToken ct, Dictionary<long, int> userCurrentCategory)
+    public NextQuestionHandler(IQaRepo repo, ITelegramBotClient telegramBotClient, CancellationToken ct, Dictionary<long, int> userCurrentCategory)
     {
         _repo = repo;
         _ct = ct;
         _userCurrentCategory = userCurrentCategory;
-        _userCurrentQuestion = userCurrentQuestion;
         _telegramBotClient = telegramBotClient;
     }
 
@@ -39,7 +34,7 @@ public class NextQuestionHandler : MessageHandler
             try
             {
                 var question = hasValue ? _repo.GetElementRandomInCategory(value) : _repo.GetElementRandom();
-                _userCurrentQuestion[message.Chat.Id] = question.Id;
+                await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

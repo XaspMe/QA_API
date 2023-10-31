@@ -19,7 +19,6 @@ public class TelegramService : IHostedService
 {
     // todo move this to repo
     private readonly IServiceScopeFactory scopeFactory;
-    private Dictionary<long, int> userCurrentElement = new Dictionary<long, int>();
     private Dictionary<long, int> userCurrentCategory = new Dictionary<long, int>();
     private Dictionary<long, DateTime> lastMessage = new Dictionary<long, DateTime>();
     private Dictionary<long, int> userFavorites = new Dictionary<long, int>();
@@ -65,6 +64,8 @@ public class TelegramService : IHostedService
             return;
         if (message.Text is not { } messageText)
             return;
+        
+        
 
         // if (lastMessage.TryGetValue(message.Chat.Id, out var lastUserMessage) &&
         //     (DateTime.Now - lastUserMessage).TotalSeconds < 1)
@@ -77,18 +78,18 @@ public class TelegramService : IHostedService
         using var scope = scopeFactory.CreateScope();
 
         IQaRepo qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
+        await qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
+        
         MessageHandler menuHandler = new MenuHandler(botClient,
             cancellationToken,
             qaRepo);
         MessageHandler nextQuestionHandler = new NextQuestionHandler(
             qaRepo,
-            userCurrentElement,
             botClient,
             cancellationToken,
             userCurrentCategory);
         MessageHandler answerCurrentQuestionHandler = new AnswerCurrentQuestionHandler(
             qaRepo,
-            userCurrentElement,
             botClient,
             cancellationToken);
         MessageHandler categoriesHandler = new CategoriesHandler(
@@ -98,15 +99,14 @@ public class TelegramService : IHostedService
         SelectCategoriesHandler selectCategories = new SelectCategoriesHandler(
             qaRepo,
             userCurrentCategory,
-            userCurrentElement,
             botClient,
             cancellationToken);
         CategoryStatisticsHandler categoryStatisticsHandler = new CategoryStatisticsHandler(
             botClient,
             cancellationToken,
             qaRepo);
-        AddToFavoritesHandler addToFavoritesHandler = new AddToFavoritesHandler(
-            userCurrentElement, botClient, cancellationToken, userFavorites);
+        AddToFavoritesHandler addToFavoritesHandler =
+            new AddToFavoritesHandler(botClient, cancellationToken, userFavorites, qaRepo);
         DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler(
             botClient,
             cancellationToken);
@@ -130,7 +130,7 @@ public class TelegramService : IHostedService
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString()
         };
-
+        
         Console.WriteLine(errorMessage);
         return Task.CompletedTask;
     }

@@ -16,23 +16,20 @@ public class AnswerCurrentQuestionHandler : MessageHandler
 {
     private readonly IQaRepo _repo;
     private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly ITelegramBotClient _telegramBotClient;
 
-    public AnswerCurrentQuestionHandler(IQaRepo repo, Dictionary<long, int> userCurrentQuestion, ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public AnswerCurrentQuestionHandler(IQaRepo repo, ITelegramBotClient telegramBotClient, CancellationToken ct)
     {
         _repo = repo;
         _ct = ct;
-        _userCurrentQuestion = userCurrentQuestion;
         _telegramBotClient = telegramBotClient;
     }
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text == TelegramCommands.ANSWER_CURRENT_QUESTION && _userCurrentQuestion.TryGetValue(message.Chat.Id, out var value))
+        if (message.Text == TelegramCommands.ANSWER_CURRENT_QUESTION)
         {
-            var question = _repo.GetElementById(value);
-
+            var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 // replace br's for telegram only

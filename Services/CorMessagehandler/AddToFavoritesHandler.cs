@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
+using QA_API.Data;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,40 +12,31 @@ namespace QA_API.CorMessagehandler;
 
 public class AddToFavoritesHandler : MessageHandler
 {
-    private readonly Dictionary<long, int> _userCurrentQuestion;
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
     private readonly Dictionary<long, int> _userFavorites;
+    private readonly IQaRepo _repo;
 
-    public AddToFavoritesHandler(Dictionary<long, int> userCurrentQuestion,
-        ITelegramBotClient telegramBotClient, CancellationToken ct, Dictionary<long, int> userFavorites)
+    public AddToFavoritesHandler(ITelegramBotClient telegramBotClient, CancellationToken ct,
+        Dictionary<long, int> userFavorites, IQaRepo repo)
     {
-        _userCurrentQuestion = userCurrentQuestion;
         _telegramBotClient = telegramBotClient;
         _ct = ct;
         _userFavorites = userFavorites;
+        _repo = repo;
     }
-    
+
     public override async Task HandleMessage(Message message)
     {
         if (message.Text == TelegramCommands.ADD_TO_FAVORITES)
         {
-            if (_userCurrentQuestion.ContainsKey(message.Chat.Id) && !_userFavorites.ContainsValue(_userCurrentQuestion[message.Chat.Id]))
-            {
-                _userFavorites[message.Chat.Id] = _userCurrentQuestion[message.Chat.Id];
-                await _telegramBotClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: TelegramMessages.ADDED_TO_FAVORITES,
-                    cancellationToken: _ct);
-            }
-            else
-            {
-                // todo сделать что-то если вопроса нет в активных и если вопрос уже в избранных
-                await _telegramBotClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: TelegramMessages.HANDLE_ERROR,
-                    cancellationToken: _ct);
-            }
+            var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
+            _userFavorites[message.Chat.Id] = question.Id;
+
+            await _telegramBotClient.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: TelegramMessages.ADDED_TO_FAVORITES,
+                cancellationToken: _ct);
         }
         else if (_nextHandler != null)
         {
