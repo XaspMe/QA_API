@@ -20,7 +20,6 @@ public class TelegramService : IHostedService
     // todo move this to repo
     private readonly IServiceScopeFactory scopeFactory;
     private Dictionary<long, DateTime> lastMessage = new Dictionary<long, DateTime>();
-    private Dictionary<long, int> userFavorites = new Dictionary<long, int>();
     private IQaRepo qaRepo;
 
     public TelegramService(IServiceScopeFactory scopeFactory)
@@ -104,7 +103,7 @@ public class TelegramService : IHostedService
             cancellationToken,
             qaRepo);
         AddToFavoritesHandler addToFavoritesHandler =
-            new AddToFavoritesHandler(botClient, cancellationToken, userFavorites, qaRepo);
+            new AddToFavoritesHandler(botClient, cancellationToken, qaRepo);
         DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler(
             botClient,
             cancellationToken);

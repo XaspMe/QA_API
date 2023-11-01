@@ -134,7 +134,7 @@ namespace QA_API.Data
             return user.FavoriteCategories;
         }
 
-        public async Task UpdateTelegramUserCategories(long chatId, IEnumerable<QACategory> qaCategories)
+        public async Task UpdateTelegramUserFavoriteCategories(long chatId, IEnumerable<QACategory> qaCategories)
         {
             var user = await _context.Users.Include(u => u.FavoriteCategories).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);
             if (user != null)
@@ -150,6 +150,16 @@ namespace QA_API.Data
                     user.FavoriteCategories = _context.Categories.ToList();
                     await _context.SaveChangesAsync();
                 }
+            }
+        }
+
+        public async Task AddToTelegramUserFavoriteElements(long chatId, QAElement qaElement)
+        {
+            var user = await _context.Users.Include(u => u.FavoriteElements).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);
+            if (user != null && user.FavoriteElements.All(x => x.Id != qaElement.Id))
+            {
+                user.FavoriteElements.Add(qaElement);
+                await _context.SaveChangesAsync();
             }
         }
 

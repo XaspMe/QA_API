@@ -37,12 +37,12 @@ public class SelectCategoriesHandler : MessageHandler
             {
                 if (message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
                 {
-                    await _repo.UpdateTelegramUserCategories(message.Chat.Id, new List<QACategory>());
+                    await _repo.UpdateTelegramUserFavoriteCategories(message.Chat.Id, new List<QACategory>());
                 }
                 else
                 {
                     var userDbCats = categories.FirstOrDefault(x => x.Name == message.Text);
-                    await _repo.UpdateTelegramUserCategories(message.Chat.Id, new List<QACategory>() {
+                    await _repo.UpdateTelegramUserFavoriteCategories(message.Chat.Id, new List<QACategory>() {
                         userDbCats
                     });
                 }

@@ -59,6 +59,7 @@ public class NextQuestionHandler : MessageHandler
                     text: TelegramMessages.ERROR,
                     // todo move to admins list
                     replyMarkup: TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263),
+                    parseMode: ParseMode.Html,
                     cancellationToken: _ct);
 
                 throw e;

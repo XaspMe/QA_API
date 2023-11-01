@@ -14,24 +14,22 @@ public class AddToFavoritesHandler : MessageHandler
 {
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userFavorites;
     private readonly IQaRepo _repo;
 
-    public AddToFavoritesHandler(ITelegramBotClient telegramBotClient, CancellationToken ct,
-        Dictionary<long, int> userFavorites, IQaRepo repo)
+    public AddToFavoritesHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
         _telegramBotClient = telegramBotClient;
         _ct = ct;
-        _userFavorites = userFavorites;
         _repo = repo;
     }
 
     public override async Task HandleMessage(Message message)
     {
+        // todo highlight if already favorite
         if (message.Text == TelegramCommands.ADD_TO_FAVORITES)
         {
             var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
-            _userFavorites[message.Chat.Id] = question.Id;
+            await _repo.AddToTelegramUserFavoriteElements(message.Chat.Id, question);
 
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,

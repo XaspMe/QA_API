@@ -31,6 +31,18 @@ namespace QA_API.Data
                     {
                         j.HasKey("UserId", "QACategoryId");
                     });
+            
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.FavoriteElements)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserFavoriteElements",
+                    j => j.HasOne<QAElement>().WithMany().HasForeignKey("QAElementId"),
+                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "QAElementId");
+                    });
         }
 
         public QAContext(DbContextOptions<QAContext> opt) : base(opt)

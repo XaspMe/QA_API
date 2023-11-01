@@ -9,4 +9,5 @@ public class User
     public QAElement CurrentQuestion { get; set; }
     public long TelegramChatId { get; set; }
     public ICollection<QACategory> FavoriteCategories { get; set; }
+    public ICollection<QAElement> FavoriteElements { get; set; }
 }

@@ -34,6 +34,7 @@ namespace QA_API.Data
         Task SetElementOnCurrentTelegramUser(long chatId, QAElement element);
         Task<QAElement> GetElementOnCurrentTelegramUser(long chatId);
         Task<IEnumerable<QACategory>> GetTelegramUserCategories(long chatId);
-        public Task UpdateTelegramUserCategories(long chatId, IEnumerable<QACategory> qaCategories);
+        public Task UpdateTelegramUserFavoriteCategories(long chatId, IEnumerable<QACategory> qaCategories);
+        public Task AddToTelegramUserFavoriteElements(long chatId, QAElement qaElement);
     }
 }
