@@ -34,7 +34,7 @@ public class AnswerCurrentQuestionHandler : MessageHandler
                 chatId: message.Chat.Id,
                 // replace br's for telegram only
                 text: question.Answer?.Replace("<br>", "\n") ?? string.Empty,
-                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
+                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                 parseMode: ParseMode.Html,
                 cancellationToken: _ct);
         }

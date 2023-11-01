@@ -162,6 +162,23 @@ namespace QA_API.Data
                 await _context.SaveChangesAsync();
             }
         }
+        
+        public async Task RemoveFromTelegramUserFavoriteElements(long chatId, QAElement qaElement)
+        {
+            var user = await _context.Users.Include(u => u.FavoriteElements).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);
+            if (user != null && user.FavoriteElements.All(x => x.Id != qaElement.Id))
+            {
+                user.FavoriteElements.Add(qaElement);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> IsElementTelegramUserFavorite(long chatId, QAElement element)
+        {
+            var user = await _context.Users.Where(x => x.TelegramChatId == chatId)
+                .Include(user => user.FavoriteElements).FirstOrDefaultAsync();
+            return user.FavoriteElements.Any(x => x == element);
+        }
 
         public QAElement GetElementById(int id)
         {

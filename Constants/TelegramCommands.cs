@@ -12,6 +12,7 @@ public static class TelegramCommands
     public const string ANSWER_CURRENT_QUESTION = "\u003f Показать ответ";
     public const string NEXT_QUESTION = "\u21d2 Следующий вопрос";
     public const string ADD_TO_FAVORITES = "\u2661 В избранное";
+    public const string REMOVE_FROM_FAVORITES = "\u2573 Убрать из избранного";
     public const string CATEGORIES = "\ud83d\udcf0 Темы по категориям";
     public const string MENU = "\u2630 Меню";
     public const string DEVELOPER_CONTACTS = "\ud83d\udcf1 Контакты разработчика";
@@ -47,12 +48,23 @@ public static class TelegramMessages
 
 public static class TelegramMarkups
 {
-    public static readonly ReplyKeyboardMarkup QUESTIONS_KEYBOARD = new(new[]
+    public static ReplyKeyboardMarkup QUESTIONS_KEYBOARD(bool isFavorite)
     {
-        new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION,  TelegramCommands.NEXT_QUESTION },
-        new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
-        new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
-    });
+        if (isFavorite)
+            return new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+                new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
+                new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
+            });
+        else
+            return new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+                new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
+                new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
+            });
+    }
 
     public static ReplyKeyboardMarkup MAIN_MENU(bool isAdmin)
     {

@@ -63,8 +63,6 @@ public class TelegramService : IHostedService
             return;
         if (message.Text is not { } messageText)
             return;
-        
-        
 
         // if (lastMessage.TryGetValue(message.Chat.Id, out var lastUserMessage) &&
         //     (DateTime.Now - lastUserMessage).TotalSeconds < 1)

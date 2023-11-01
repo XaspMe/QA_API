@@ -57,7 +57,7 @@ public class SelectCategoriesHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: $"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}",
-                    replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
+                    replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);
             }
