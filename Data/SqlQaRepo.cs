@@ -76,7 +76,7 @@ namespace QA_API.Data
             foreach (var cat in cateories)
             {
                 yield return $"{cat.Name} - {_context.Elements.Count(x => x.Category.Id == cat.Id)} elements";
-            } 
+            }
         }
 
         public IEnumerable<QACategory> GetAllCategories()
@@ -107,25 +107,50 @@ namespace QA_API.Data
 
         public async Task СreateTelegramUserIfDoesntExist(long chatId)
         {
-            if (!await _context.UserStates.AnyAsync(x => x.TelegramChatId == chatId))
+            if (!await _context.Users.AnyAsync(x => x.TelegramChatId == chatId))
             {
-                await _context.UserStates.AddAsync(new UserState() { TelegramChatId = chatId });
+                await _context.Users.AddAsync(new User() { TelegramChatId = chatId });
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task SetElementOnCurrentTelegramUser(long chatId, QAElement element)
         {
-            var user = await _context.UserStates.Where(x => x.TelegramChatId == chatId).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(x => x.TelegramChatId == chatId).FirstOrDefaultAsync();
             user.CurrentQuestion = element;
             await _context.SaveChangesAsync();
         }
 
         public async Task<QAElement> GetElementOnCurrentTelegramUser(long chatId)
         {
-            var user = await _context.UserStates.Where(x => x.TelegramChatId == chatId)
+            var user = await _context.Users.Where(x => x.TelegramChatId == chatId)
                 .Include(userState => userState.CurrentQuestion).FirstOrDefaultAsync();
             return user.CurrentQuestion;
+        }
+
+        public async Task<IEnumerable<QACategory>> GetTelegramUserCategories(long chatId)
+        {
+            var user = _context.Users.Include(u => u.FavoriteCategories).FirstOrDefault(u => u.TelegramChatId == chatId);
+            return user.FavoriteCategories;
+        }
+
+        public async Task UpdateTelegramUserCategories(long chatId, IEnumerable<QACategory> qaCategories)
+        {
+            var user = await _context.Users.Include(u => u.FavoriteCategories).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);
+            if (user != null)
+            {
+                if (qaCategories.Any())
+                {
+                    user.FavoriteCategories.Clear();
+                    user.FavoriteCategories = qaCategories.ToList();
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    user.FavoriteCategories = _context.Categories.ToList();
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
 
         public QAElement GetElementById(int id)

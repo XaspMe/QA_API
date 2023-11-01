@@ -16,14 +16,12 @@ namespace QA_API.CorMessagehandler;
 public class SelectCategoriesHandler : MessageHandler
 {
     private readonly IQaRepo _repo;
-    private readonly Dictionary<long, int> _userCurrentCategory;
     private readonly CancellationToken _ct;
     private readonly ITelegramBotClient _telegramBotClient;
 
-    public SelectCategoriesHandler(IQaRepo repo, Dictionary<long, int> userCurrentCategory, ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public SelectCategoriesHandler(IQaRepo repo, ITelegramBotClient telegramBotClient, CancellationToken ct)
     {
         _repo = repo;
-        _userCurrentCategory = userCurrentCategory;
         _ct = ct;
         _telegramBotClient = telegramBotClient;
     }
@@ -33,29 +31,32 @@ public class SelectCategoriesHandler : MessageHandler
         try
         {
             var categories = _repo.GetAllCategories().ToList();
-
             var categoriesNames = categories.Select(x => x.Name).ToList();
+            
             if (categoriesNames.Any(x => message.Text!.Contains(x)) || message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
             {
                 if (message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
                 {
-                    if (_userCurrentCategory.ContainsKey(message.Chat.Id))
-                        _userCurrentCategory.Remove(message.Chat.Id);
+                    await _repo.UpdateTelegramUserCategories(message.Chat.Id, new List<QACategory>());
                 }
                 else
                 {
-                    var categoryId = categories.FirstOrDefault(x => x.Name == message.Text)!.Id;
-                    _userCurrentCategory[message.Chat.Id] = categoryId;
+                    var userDbCats = categories.FirstOrDefault(x => x.Name == message.Text);
+                    await _repo.UpdateTelegramUserCategories(message.Chat.Id, new List<QACategory>() {
+                        userDbCats
+                    });
                 }
 
+                var telegramUserCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
                 var question = message.Text!.Contains(TelegramCommands.ALL_CATEGORIES)
                     ? _repo.GetElementRandom()
-                    : _repo.GetElementRandomInCategory(_userCurrentCategory[message.Chat.Id]);
+                    // todo refactor to many categories
+                    : _repo.GetElementRandomInCategory(telegramUserCategories.FirstOrDefault().Id);
                 await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: question.Question,
+                    text: $"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}",
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);

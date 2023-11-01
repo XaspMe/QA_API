@@ -1,6 +1,7 @@
 ﻿using QA_API.Dtos;
 using QA_API.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,5 +33,7 @@ namespace QA_API.Data
         Task СreateTelegramUserIfDoesntExist(long chatId);
         Task SetElementOnCurrentTelegramUser(long chatId, QAElement element);
         Task<QAElement> GetElementOnCurrentTelegramUser(long chatId);
+        Task<IEnumerable<QACategory>> GetTelegramUserCategories(long chatId);
+        public Task UpdateTelegramUserCategories(long chatId, IEnumerable<QACategory> qaCategories);
     }
 }

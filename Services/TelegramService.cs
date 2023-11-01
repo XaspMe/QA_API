@@ -19,9 +19,9 @@ public class TelegramService : IHostedService
 {
     // todo move this to repo
     private readonly IServiceScopeFactory scopeFactory;
-    private Dictionary<long, int> userCurrentCategory = new Dictionary<long, int>();
     private Dictionary<long, DateTime> lastMessage = new Dictionary<long, DateTime>();
     private Dictionary<long, int> userFavorites = new Dictionary<long, int>();
+    private IQaRepo qaRepo;
 
     public TelegramService(IServiceScopeFactory scopeFactory)
     {
@@ -32,22 +32,22 @@ public class TelegramService : IHostedService
     {
         // todo move to config
         var botClient = new TelegramBotClient("6598126500:AAGwJxzSV8xtE7d-7FL0SoTMmSBIEe0QwYM");
-
+        
         using CancellationTokenSource cts = new ();
         ReceiverOptions receiverOptions = new ()
         {
             AllowedUpdates = Array.Empty<UpdateType>() // receive all update types except ChatMember related updates
         };
-
+        
         botClient.StartReceiving(
             updateHandler: HandleUpdateAsync,
             pollingErrorHandler: HandlePollingErrorAsync,
             receiverOptions: receiverOptions,
             cancellationToken: cts.Token
         );
-
+        
         var me = await botClient.GetMeAsync(cancellationToken: cts.Token);
-
+        
         Console.WriteLine($"Start listening for @{me.Username}");
         Console.ReadLine();
         cts.Cancel();
@@ -77,7 +77,7 @@ public class TelegramService : IHostedService
         Console.WriteLine($"Received a '{messageText}' message in chat {message.Chat.Id}.");
         using var scope = scopeFactory.CreateScope();
 
-        IQaRepo qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
+        qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
         await qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
         
         MessageHandler menuHandler = new MenuHandler(botClient,
@@ -86,8 +86,7 @@ public class TelegramService : IHostedService
         MessageHandler nextQuestionHandler = new NextQuestionHandler(
             qaRepo,
             botClient,
-            cancellationToken,
-            userCurrentCategory);
+            cancellationToken);
         MessageHandler answerCurrentQuestionHandler = new AnswerCurrentQuestionHandler(
             qaRepo,
             botClient,
@@ -98,7 +97,6 @@ public class TelegramService : IHostedService
             qaRepo);
         SelectCategoriesHandler selectCategories = new SelectCategoriesHandler(
             qaRepo,
-            userCurrentCategory,
             botClient,
             cancellationToken);
         CategoryStatisticsHandler categoryStatisticsHandler = new CategoryStatisticsHandler(

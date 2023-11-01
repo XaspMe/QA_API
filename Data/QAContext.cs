@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using QA_API.Data;
 using QA_API.Models;
 
 namespace QA_API.Data
@@ -11,12 +13,24 @@ namespace QA_API.Data
                 .HasIndex(c => c.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<UserState>()
+            modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
             
-            modelBuilder.Entity<UserState>()
+            modelBuilder.Entity<User>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
+            
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.FavoriteCategories)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserFavoriteCategories",
+                    j => j.HasOne<QACategory>().WithMany().HasForeignKey("QACategoryId"),
+                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "QACategoryId");
+                    });
         }
 
         public QAContext(DbContextOptions<QAContext> opt) : base(opt)
@@ -26,6 +40,6 @@ namespace QA_API.Data
 
         public DbSet<QACategory> Categories { get; set; }
         public DbSet<QAElement> Elements { get; set; }
-        public DbSet<UserState> UserStates { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

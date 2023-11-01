@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
 using QA_API.Data;
+using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -15,14 +17,12 @@ public class NextQuestionHandler : MessageHandler
 {
     private readonly IQaRepo _repo;
     private readonly CancellationToken _ct;
-    private readonly Dictionary<long, int> _userCurrentCategory;
     private readonly ITelegramBotClient _telegramBotClient;
 
-    public NextQuestionHandler(IQaRepo repo, ITelegramBotClient telegramBotClient, CancellationToken ct, Dictionary<long, int> userCurrentCategory)
+    public NextQuestionHandler(IQaRepo repo, ITelegramBotClient telegramBotClient, CancellationToken ct)
     {
         _repo = repo;
         _ct = ct;
-        _userCurrentCategory = userCurrentCategory;
         _telegramBotClient = telegramBotClient;
     }
 
@@ -30,16 +30,24 @@ public class NextQuestionHandler : MessageHandler
     {
         if (message.Text == TelegramCommands.NEXT_QUESTION)
         {
-            var hasValue = _userCurrentCategory.TryGetValue(message.Chat.Id, out var value);
+            var userChosenCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
+            
             try
             {
-                var question = hasValue ? _repo.GetElementRandomInCategory(value) : _repo.GetElementRandom();
+                var question = new QAElement();
+                
+                var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
+                if (chosenCategories.Count() == _repo.GetAllCategories().Count())
+                    question = _repo.GetElementRandom();
+                // todo множественный выбор категорий
+                else question = _repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
                 await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
+                Console.WriteLine($"текущий вопрос {question.Id}");
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     // replace br's for telegram only
-                    text: question.Question?.Replace("<br>", "\n") ?? string.Empty,
+                    text: $"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}",
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD,
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);
