@@ -26,6 +26,7 @@ namespace QA_API.Data
         QAElement GetElementById(int id);
         QAElement GetElementRandom();
         QAElement GetElementRandomInCategory(int category);
+        Task<QAElement> GetRandomElementFromTelegramUserFavorites(long chatId);
         void CreateElement(QAElement element);
         void UpdateElement(QAElement element);
         void DeleteElement(QAElement element);

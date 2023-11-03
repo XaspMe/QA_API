@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
@@ -33,8 +34,7 @@ public class AnswerCurrentQuestionHandler : MessageHandler
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 // replace br's for telegram only
-                text: question.Answer?.Replace("<br>", "\n") ?? string.Empty,
-                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
+                text: WebUtility.HtmlEncode(question.Answer?.Replace("<br>", "\n")) ?? string.Empty,
                 parseMode: ParseMode.Html,
                 cancellationToken: _ct);
         }

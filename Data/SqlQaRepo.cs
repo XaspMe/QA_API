@@ -40,6 +40,15 @@ namespace QA_API.Data
             return randomElement;
         }
 
+        public async Task<QAElement> GetRandomElementFromTelegramUserFavorites(long chatId)
+        {
+            User user = await _context.Users.Include(x => x.FavoriteElements).FirstOrDefaultAsync();
+            var elements = user.FavoriteElements;
+            if (elements.Any())
+                return elements.ToArray()[new Random().Next(elements.Count - 1)];
+            return null;
+        }
+
         public void CreateElement(QAElement element)
         {
             if (element == null)
@@ -124,7 +133,8 @@ namespace QA_API.Data
         public async Task<QAElement> GetElementOnCurrentTelegramUser(long chatId)
         {
             var user = await _context.Users.Where(x => x.TelegramChatId == chatId)
-                .Include(userState => userState.CurrentQuestion).FirstOrDefaultAsync();
+                .Include(userState => userState.CurrentQuestion)
+                .Include(x => x.CurrentQuestion.Category).FirstOrDefaultAsync();
             return user.CurrentQuestion;
         }
 
@@ -166,9 +176,9 @@ namespace QA_API.Data
         public async Task RemoveFromTelegramUserFavoriteElements(long chatId, QAElement qaElement)
         {
             var user = await _context.Users.Include(u => u.FavoriteElements).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);
-            if (user != null && user.FavoriteElements.All(x => x.Id != qaElement.Id))
+            if (user != null && user.FavoriteElements.Contains(qaElement))
             {
-                user.FavoriteElements.Add(qaElement);
+                user.FavoriteElements.Remove(qaElement);
                 await _context.SaveChangesAsync();
             }
         }

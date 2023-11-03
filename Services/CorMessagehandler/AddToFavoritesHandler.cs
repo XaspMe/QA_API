@@ -34,6 +34,8 @@ public class AddToFavoritesHandler : MessageHandler
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.ADDED_TO_FAVORITES,
+                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
+                    await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

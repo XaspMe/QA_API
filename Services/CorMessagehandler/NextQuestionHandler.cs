@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
@@ -28,13 +29,32 @@ public class NextQuestionHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text == TelegramCommands.NEXT_QUESTION)
+        if (message.Text is TelegramCommands.NEXT_QUESTION or TelegramCommands.REMOVE_FROM_FAVORITES)
         {
+            if (message.Text is TelegramCommands.REMOVE_FROM_FAVORITES)
+            {
+                var curent = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
+                if (curent != null)
+                {
+                    await _repo.RemoveFromTelegramUserFavoriteElements(message.Chat.Id, curent);
+                    await _telegramBotClient.SendTextMessageAsync(
+                        chatId: message.Chat.Id,
+                        // replace br's for telegram only
+                        text: TelegramMessages.REMOVED_FROM_FAVORITES,
+                        replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
+                            await _repo.IsElementTelegramUserFavorite(message.Chat.Id, curent)),
+                        cancellationToken: _ct,
+                        parseMode: ParseMode.Html);
+                    return;
+                }
+                return;
+            }
+            
             var userChosenCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
             
             try
             {
-                var question = new QAElement();
+                QAElement question;
                 
                 var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
                 if (chosenCategories.Count() == _repo.GetAllCategories().Count())
@@ -47,7 +67,7 @@ public class NextQuestionHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     // replace br's for telegram only
-                    text: $"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}",
+                    text: WebUtility.HtmlEncode($"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);

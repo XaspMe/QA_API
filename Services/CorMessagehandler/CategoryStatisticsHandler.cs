@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ public class CategoryStatisticsHandler : MessageHandler
             responceMessage.AppendLine("Статистика по вашим категориям");
             foreach (var stat in _repo.CategoriesStats())
             {
-                responceMessage.AppendLine(stat);
+                responceMessage.AppendLine(WebUtility.HtmlEncode(stat));
             }
 
             // todo добавить категории
