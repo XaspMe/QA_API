@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
 using QA_API.Data;
-using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
 public class MyFavoritesQuestionMessageHandler : MessageHandler
 {

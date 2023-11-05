@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using QA_API.Models;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace QA_API.Constants;
@@ -39,6 +40,8 @@ public static class TelegramCommands
 public static class TelegramMessages
 {
     public const string HANDLE_ERROR = "Извините, я не могу обработать ваше сообщение.";
+    public const string FEEDBACK_MESSAGE = "Введите текст и отправьте мне обычным сообщением, ваше обращение будет рассмотрено администратором.";
+    public const string FEEDBACK_ACCEPTED_MESSAGE = "Спасибо за обратную связь, это помогает проекту стать лучше.";
     public const string CATEGORIES = "Выбери категорию";
     public const string ERROR = "Произошла ошибка :(";
     // todo вынести в конфиг или указать ссылку на гитхаб
@@ -80,6 +83,11 @@ public static class TelegramMarkups
             new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
         });
     }
+
+    public static ReplyKeyboardMarkup FEEDBACK_KEYBOARD => new(new[]
+    {
+        new KeyboardButton[] { TelegramCommands.MENU }
+    });
 
     public static ReplyKeyboardMarkup MAIN_MENU(bool isAdmin)
     {

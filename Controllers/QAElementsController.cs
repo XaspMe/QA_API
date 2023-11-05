@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using QA_API.Data;
 using QA_API.Dtos;
 using QA_API.Models;
+using QA_API.Services;
 
 
 namespace QA_API.Controllers

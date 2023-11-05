@@ -39,5 +39,8 @@ namespace QA_API.Data
         public Task AddToTelegramUserFavoriteElements(long chatId, QAElement qaElement);
         public Task RemoveFromTelegramUserFavoriteElements(long chatId, QAElement qaElement);
         public Task<bool> IsElementTelegramUserFavorite(long chatId, QAElement element);
+        public Task<UserInputMode> GetTelegramUserMode(long chatId);
+        public Task SetTelegramUserMode(long chaId, UserInputMode mode);
+        public Task AddTelegramUserFeedBack(long chatId, string message);
     }
 }

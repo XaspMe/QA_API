@@ -12,7 +12,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
 public class SelectCategoriesHandler : MessageHandler
 {

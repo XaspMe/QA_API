@@ -5,9 +5,8 @@ using System.Runtime.Serialization;
 using AutoMapper;
 using Newtonsoft.Json;
 using QA_API.Data;
-using QA_API.Models;
 
-namespace QA_API
+namespace QA_API.Services
 {
     public class DumpService
     {

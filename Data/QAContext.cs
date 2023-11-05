@@ -43,6 +43,18 @@ namespace QA_API.Data
                     {
                         j.HasKey("UserId", "QAElementId");
                     });
+            
+            modelBuilder.Entity<User>()
+                .Property(p => p.UserInputMode)
+                .HasConversion<string>();
+            
+            modelBuilder.Entity<FeedBack>()
+                .HasOne(f => f.User)
+                .WithMany(u => u.FeedBacks);
+            
+            modelBuilder.Entity<FeedBack>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
 
         public QAContext(DbContextOptions<QAContext> opt) : base(opt)
@@ -53,5 +65,6 @@ namespace QA_API.Data
         public DbSet<QACategory> Categories { get; set; }
         public DbSet<QAElement> Elements { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FeedBack> Feedbacks { get; set; }
     }
 }

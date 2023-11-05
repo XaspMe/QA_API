@@ -190,6 +190,32 @@ namespace QA_API.Data
             return user.FavoriteElements.Any(x => x == element);
         }
 
+        public async Task<UserInputMode> GetTelegramUserMode(long chatId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.TelegramChatId == chatId);
+            return user.UserInputMode;
+        }
+
+        public async Task AddTelegramUserFeedBack(long chatId, string message)
+        {
+            var user = await _context.Users
+                .Where(x => x.TelegramChatId == chatId)
+                .Include(x => x.FeedBacks)
+                .FirstOrDefaultAsync();
+            user.FeedBacks.Add(new FeedBack() { User = user, Message = message});
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SetTelegramUserMode(long chatId, UserInputMode mode)
+        {
+            var user = await _context.Users
+                .Where(x => x.TelegramChatId == chatId)
+                .Include(x => x.FeedBacks)
+                .FirstOrDefaultAsync();
+            user.UserInputMode = mode;
+            await _context.SaveChangesAsync();
+        }
+
         public QAElement GetElementById(int id)
         {
             return _context.Elements.FirstOrDefault(x => x.Id == id);

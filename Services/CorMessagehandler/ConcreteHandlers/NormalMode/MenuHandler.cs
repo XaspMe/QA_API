@@ -7,9 +7,8 @@ using QA_API.Data;
 using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
 public class MenuHandler : MessageHandler
 {

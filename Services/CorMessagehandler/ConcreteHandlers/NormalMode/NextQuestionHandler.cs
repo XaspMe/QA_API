@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -12,7 +11,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
 public class NextQuestionHandler : MessageHandler
 {

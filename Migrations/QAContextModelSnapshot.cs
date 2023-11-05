@@ -22,6 +22,27 @@ namespace QA_API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("QA_API.Models.FeedBack", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
+                });
+
             modelBuilder.Entity("QA_API.Models.QACategory", b =>
                 {
                     b.Property<int>("Id")
@@ -79,6 +100,10 @@ namespace QA_API.Migrations
                     b.Property<long>("TelegramChatId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("UserInputMode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentQuestionId");
@@ -114,6 +139,15 @@ namespace QA_API.Migrations
                     b.HasIndex("QAElementId");
 
                     b.ToTable("UserFavoriteElements");
+                });
+
+            modelBuilder.Entity("QA_API.Models.FeedBack", b =>
+                {
+                    b.HasOne("QA_API.Models.User", "User")
+                        .WithMany("FeedBacks")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("QA_API.Models.QAElement", b =>
@@ -164,6 +198,11 @@ namespace QA_API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("QA_API.Models.User", b =>
+                {
+                    b.Navigation("FeedBacks");
                 });
 #pragma warning restore 612, 618
         }

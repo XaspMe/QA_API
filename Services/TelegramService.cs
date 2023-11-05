@@ -4,16 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QA_API.CorMessagehandler;
 using QA_API.Data;
+using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
+using QA_API.Services.CorMessagehandler.ConcreteHandlers.AppFeedBackMode;
+using QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 using Telegram.Bot;
-using Telegram.Bot.Polling;
-using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
-namespace QA_API;
+namespace QA_API.Services;
 
 public class TelegramService : IHostedService
 {
@@ -76,7 +78,9 @@ public class TelegramService : IHostedService
 
         qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
         await qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
-        
+
+        #region normal_mode
+
         MessageHandler menuHandler = new MenuHandler(botClient,
             cancellationToken,
             qaRepo);
@@ -107,6 +111,7 @@ public class TelegramService : IHostedService
             cancellationToken);
         MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler =
             new MyFavoritesQuestionMessageHandler(qaRepo, botClient, cancellationToken);
+        FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, qaRepo);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
@@ -116,8 +121,23 @@ public class TelegramService : IHostedService
         categoryStatisticsHandler.SetNextHandler(addToFavoritesHandler);
         addToFavoritesHandler.SetNextHandler(developerContactsHandler);
         developerContactsHandler.SetNextHandler(myFavoritesQuestionMessageHandler);
+        myFavoritesQuestionMessageHandler.SetNextHandler(feedBackHandler);
 
-        await menuHandler.HandleMessage(message);
+        #endregion
+
+        #region app_feedback_mode
+
+        AcceptFeedbackText acceptFeedback = new AcceptFeedbackText(botClient,
+            cancellationToken,
+            qaRepo);
+
+        #endregion
+
+        switch (await qaRepo.GetTelegramUserMode(message.Chat.Id))
+        {
+            case UserInputMode.Normal : await menuHandler.HandleMessage(message); break;
+            case UserInputMode.AppFeedBack : await acceptFeedback.HandleMessage(message); break;
+        }
     }
 
     Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)

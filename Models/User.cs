@@ -10,4 +10,6 @@ public class User
     public long TelegramChatId { get; set; }
     public ICollection<QACategory> FavoriteCategories { get; set; }
     public ICollection<QAElement> FavoriteElements { get; set; }
+    public ICollection<FeedBack> FeedBacks { get; set; }
+    public UserInputMode UserInputMode { get; set; }
 }

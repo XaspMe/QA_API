@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
 public class CategoryStatisticsHandler : MessageHandler
 {

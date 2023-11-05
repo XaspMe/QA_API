@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using QA_API.Constants;
 using QA_API.Data;
@@ -7,27 +6,34 @@ using QA_API.Services.CorMessagehandler.@abstract;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace QA_API.CorMessagehandler;
+namespace QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 
-public class DeveloperContactsHandler : MessageHandler
+public class AddToFavoritesHandler : MessageHandler
 {
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
+    private readonly IQaRepo _repo;
 
-    public DeveloperContactsHandler(ITelegramBotClient telegramBotClient, CancellationToken ct)
+    public AddToFavoritesHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
         _telegramBotClient = telegramBotClient;
         _ct = ct;
+        _repo = repo;
     }
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text == TelegramCommands.DEVELOPER_CONTACTS)
+        // todo highlight if already favorite
+        if (message.Text == TelegramCommands.ADD_TO_FAVORITES)
         {
-            // todo добавить категории
+            var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
+            await _repo.AddToTelegramUserFavoriteElements(message.Chat.Id, question);
+
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: TelegramMessages.DEVELOPER_CONTACT,
+                text: TelegramMessages.ADDED_TO_FAVORITES,
+                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
+                    await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)
@@ -36,7 +42,6 @@ public class DeveloperContactsHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,
