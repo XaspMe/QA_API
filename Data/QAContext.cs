@@ -16,6 +16,12 @@ namespace QA_API.Data
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
             
+            modelBuilder.Entity<QACategory>()
+                .HasOne(c => c.Author)
+                .WithMany(u => u.CategoriesCreated)
+                // todo delete categories and questions on user delete
+                .OnDelete(DeleteBehavior.Restrict);
+            
             modelBuilder.Entity<User>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();

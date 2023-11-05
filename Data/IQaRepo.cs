@@ -11,6 +11,7 @@ namespace QA_API.Data
 {
     public interface IQaRepo
     {
+        // todo убрать все телеграмм методы
         bool SaveChanges();
         int ElementsCount();
         IEnumerable<string> CategoriesStats();
@@ -42,5 +43,6 @@ namespace QA_API.Data
         public Task<UserInputMode> GetTelegramUserMode(long chatId);
         public Task SetTelegramUserMode(long chaId, UserInputMode mode);
         public Task AddTelegramUserFeedBack(long chatId, string message);
+        public Task CreateTelegramUserQaCategory(long chatId, QACategory category);
     }
 }

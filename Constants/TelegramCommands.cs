@@ -32,13 +32,15 @@ public static class TelegramCommands
     public const string DELETE_QUESTION = "Удалить вопрос";
     public const string CHANGE_QUESTION_CATEGORY = "Изменить категорию для вопроса";
     public const string RENAME_CATEGORY = "Переименовать категорию";
-    public const string ADD_CATEGORY = "Добавить категорию";
+    public const string CREATE_CATEGORY = "Добавить категорию";
     public const string DELETE_CATEGORY = "Удалить категорию";
     public const string SHOW_CATEGORIES_STATISTICS = "Показать статистику по категориям";
 }
 
 public static class TelegramMessages
 {
+    public const string CATEGORY_CREATED = "Категория успешно создана.";
+    public const string REQUEST_CATEGORY_NAME = "Введите имя новой категории.";
     public const string HANDLE_ERROR = "Извините, я не могу обработать ваше сообщение.";
     public const string FEEDBACK_MESSAGE = "Введите текст и отправьте мне обычным сообщением, ваше обращение будет рассмотрено администратором.";
     public const string FEEDBACK_ACCEPTED_MESSAGE = "Спасибо за обратную связь, это помогает проекту стать лучше.";
@@ -84,7 +86,7 @@ public static class TelegramMarkups
         });
     }
 
-    public static ReplyKeyboardMarkup FEEDBACK_KEYBOARD => new(new[]
+    public static ReplyKeyboardMarkup GO_TO_MENU => new(new[]
     {
         new KeyboardButton[] { TelegramCommands.MENU }
     });
@@ -113,7 +115,7 @@ public static class TelegramMarkups
             new KeyboardButton[] 
                 { TelegramCommands.DELETE_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
             new KeyboardButton[]
-                { TelegramCommands.RENAME_CATEGORY, TelegramCommands.ADD_CATEGORY },
+                { TelegramCommands.RENAME_CATEGORY, TelegramCommands.CREATE_CATEGORY },
             new KeyboardButton[]
                 { TelegramCommands.DELETE_CATEGORY, TelegramCommands.SHOW_CATEGORIES_STATISTICS}
             

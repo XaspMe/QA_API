@@ -21,5 +21,6 @@ namespace QA_API.Models
         [Required]
         [MaxLength(250)]
         public string Name { get; set; }
+        public User Author { get; set; }
     }
 }

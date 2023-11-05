@@ -206,6 +206,14 @@ namespace QA_API.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task CreateTelegramUserQaCategory(long chatId, QACategory category)
+        {
+            var user = await _context.Users.Include(x => x.CategoriesCreated)
+                .FirstOrDefaultAsync(x => x.TelegramChatId == chatId);
+            user.CategoriesCreated.Add(category);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task SetTelegramUserMode(long chatId, UserInputMode mode)
         {
             var user = await _context.Users

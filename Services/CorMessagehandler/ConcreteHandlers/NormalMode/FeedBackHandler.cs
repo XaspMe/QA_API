@@ -30,7 +30,7 @@ public class FeedBackHandler : MessageHandler
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.FEEDBACK_MESSAGE,
-                replyMarkup: TelegramMarkups.FEEDBACK_KEYBOARD,
+                replyMarkup: TelegramMarkups.GO_TO_MENU,
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

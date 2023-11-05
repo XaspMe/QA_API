@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using QA_API.Data;
 using QA_API.Models;
 using QA_API.Services.CorMessagehandler.@abstract;
+using QA_API.Services.CorMessagehandler.ConcreteHandlers.AddCategoryMode;
 using QA_API.Services.CorMessagehandler.ConcreteHandlers.AppFeedBackMode;
 using QA_API.Services.CorMessagehandler.ConcreteHandlers.NormalMode;
 using Telegram.Bot;
@@ -112,6 +113,7 @@ public class TelegramService : IHostedService
         MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler =
             new MyFavoritesQuestionMessageHandler(qaRepo, botClient, cancellationToken);
         FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, qaRepo);
+        CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, qaRepo);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
@@ -122,6 +124,7 @@ public class TelegramService : IHostedService
         addToFavoritesHandler.SetNextHandler(developerContactsHandler);
         developerContactsHandler.SetNextHandler(myFavoritesQuestionMessageHandler);
         myFavoritesQuestionMessageHandler.SetNextHandler(feedBackHandler);
+        feedBackHandler.SetNextHandler(createCategoryHandler);
 
         #endregion
 
@@ -133,10 +136,17 @@ public class TelegramService : IHostedService
 
         #endregion
 
+        #region create_category
+
+        AcceptCategoryName acceptCategoryName = new AcceptCategoryName(botClient, cancellationToken, qaRepo);
+
+        #endregion
+
         switch (await qaRepo.GetTelegramUserMode(message.Chat.Id))
         {
             case UserInputMode.Normal : await menuHandler.HandleMessage(message); break;
             case UserInputMode.AppFeedBack : await acceptFeedback.HandleMessage(message); break;
+            case UserInputMode.CreateCategory : await acceptCategoryName.HandleMessage(message); break;
         }
     }
 
