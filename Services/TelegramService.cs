@@ -18,7 +18,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace QA_API.Services;
 
-public class TelegramService : IHostedService
+public class TelegramService : BackgroundService
 {
     // todo move this to repo
     private readonly IServiceScopeFactory scopeFactory;
@@ -30,34 +30,31 @@ public class TelegramService : IHostedService
         this.scopeFactory = scopeFactory;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // todo move to config
         var botClient = new TelegramBotClient("6598126500:AAGwJxzSV8xtE7d-7FL0SoTMmSBIEe0QwYM");
-        
+    
         using CancellationTokenSource cts = new ();
         ReceiverOptions receiverOptions = new ()
         {
             AllowedUpdates = Array.Empty<UpdateType>() // receive all update types except ChatMember related updates
         };
-        
-        botClient.StartReceiving(
+    
+        await botClient.ReceiveAsync(
             updateHandler: HandleUpdateAsync,
             pollingErrorHandler: HandlePollingErrorAsync,
             receiverOptions: receiverOptions,
             cancellationToken: cts.Token
         );
-        
+    
         var me = await botClient.GetMeAsync(cancellationToken: cts.Token);
-        
+    
         Console.WriteLine($"Start listening for @{me.Username}");
-        Console.ReadLine();
-        cts.Cancel();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        throw new System.NotImplementedException();
+        return Task.CompletedTask;
     }
 
     async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -142,24 +139,32 @@ public class TelegramService : IHostedService
 
         #endregion
 
-        switch (await qaRepo.GetTelegramUserMode(message.Chat.Id))
+        try
         {
-            case UserInputMode.Normal : await menuHandler.HandleMessage(message); break;
-            case UserInputMode.AppFeedBack : await acceptFeedback.HandleMessage(message); break;
-            case UserInputMode.CreateCategory : await acceptCategoryName.HandleMessage(message); break;
+            switch (await qaRepo.GetTelegramUserMode(message.Chat.Id))
+            {
+                case UserInputMode.Normal : await menuHandler.HandleMessage(message); break;
+                case UserInputMode.AppFeedBack : await acceptFeedback.HandleMessage(message); break;
+                case UserInputMode.CreateCategory : await acceptCategoryName.HandleMessage(message); break;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
 
-    Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
-        var errorMessage = exception switch
-        {
-            ApiRequestException apiRequestException
-                => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-            _ => exception.ToString()
-        };
-        
-        Console.WriteLine(errorMessage);
+        // todo log all exceptions
+        // var ErrorMessage = exception switch
+        // {
+        //     ApiRequestException apiRequestException
+        //         => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+        //     _ => exception.ToString()
+        // };
+
+        Console.WriteLine(exception.Message);
         return Task.CompletedTask;
     }
 }

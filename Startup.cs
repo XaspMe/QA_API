@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Prometheus;
 using QA_API.Data;
 using QA_API.Services;
 
@@ -31,6 +35,13 @@ namespace QA_API
             services.AddHostedService<TelegramService>();
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<DumpService>();
+            services.UseHttpClientMetrics();
+            services.AddHealthChecks()
+                // Define a sample health check that always signals healthy state.
+                .AddCheck<SampleHealthCheck>(nameof(SampleHealthCheck))
+                // Report health check results in the metrics output.
+                .ForwardToPrometheus();
+            services.AddHealthChecks();
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -73,7 +84,17 @@ namespace QA_API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapMetrics();
             });
         }
+    }
+}
+
+public sealed class SampleHealthCheck : IHealthCheck
+{
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    {
+        // todo move to service folder
+        return Task.FromResult(HealthCheckResult.Healthy());
     }
 }
