@@ -432,3 +432,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 /элементы.csv
+/src/QA.Telegram.Bot.App/obj
