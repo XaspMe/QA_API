@@ -12,7 +12,7 @@ using QA.Common.Data;
 namespace QA.Data.Migrations
 {
     [DbContext(typeof(QaContext))]
-    [Migration("20231107230729_init")]
+    [Migration("20231114142909_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -52,7 +52,7 @@ namespace QA.Data.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -103,7 +103,7 @@ namespace QA.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CurrentQuestionId")
+                    b.Property<int?>("CurrentQuestionId")
                         .HasColumnType("int");
 
                     b.Property<long>("TelegramChatId")
@@ -166,8 +166,7 @@ namespace QA.Data.Migrations
                     b.HasOne("QA.Models.Models.User", "Author")
                         .WithMany("CategoriesCreated")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Author");
                 });
@@ -187,9 +186,7 @@ namespace QA.Data.Migrations
                 {
                     b.HasOne("QA.Models.Models.QAElement", "CurrentQuestion")
                         .WithMany()
-                        .HasForeignKey("CurrentQuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrentQuestionId");
 
                     b.Navigation("CurrentQuestion");
                 });

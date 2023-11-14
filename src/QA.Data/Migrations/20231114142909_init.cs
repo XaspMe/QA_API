@@ -17,7 +17,7 @@ namespace QA.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,7 +50,7 @@ namespace QA.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CurrentQuestionId = table.Column<int>(type: "int", nullable: false),
+                    CurrentQuestionId = table.Column<int>(type: "int", nullable: true),
                     TelegramChatId = table.Column<long>(type: "bigint", nullable: false),
                     UserInputMode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -61,8 +61,7 @@ namespace QA.Data.Migrations
                         name: "FK_Users_Elements_CurrentQuestionId",
                         column: x => x.CurrentQuestionId,
                         principalTable: "Elements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
