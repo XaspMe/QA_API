@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dotnet-QA.Telegram.Bot.App-FEF079F7-5CC4-42C7-B167-AA1681E73A2C</UserSecretsId>
+        <UserSecretsId>dotnet-QA.Telegram.Bot.App-6E501626-2F87-4518-95F6-47860763CDFC</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
