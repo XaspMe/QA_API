@@ -19,4 +19,9 @@
       <ProjectReference Include="..\QA.Models\QA.Models.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Tools\" />
+    </ItemGroup>
+
 </Project>

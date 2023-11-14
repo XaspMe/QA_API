@@ -67,35 +67,6 @@ namespace QA_API.Controllers
         [HttpPost]
         public ActionResult<ElementReadDto> Create(ElementCreateDto element)
         {
-            var categories = System.IO.File.ReadLines(@"C:\qa_db\категории.csv");
-            foreach (var str in categories)
-            {
-                var _res = str.Split(@";");
-                var model = new QACategory()
-                {
-                    Id = int.Parse(_res[0]),
-                    Name = _res[1]
-                };
-                _repo.CreateCategory(model);
-            }
-
-            _repo.SaveChanges();
-
-            var elements = System.IO.File.ReadLines(@"C:\qa_db\элементы.csv");
-            foreach (var str in elements)
-            {
-                var _res = str.Split(@";");
-                var model = new QAElement
-                {
-                    Question = _res[1],
-                    Answer = _res[2],
-                    Category = _repo.GetCategoryById(int.Parse(_res[3]))
-                };
-                _repo.CreateElement(model);
-            }
-
-            _repo.SaveChanges();
-
             if (element != null)
             {
                 var elementCreateDto = _mapper.Map<ElementCreateDto>(element);

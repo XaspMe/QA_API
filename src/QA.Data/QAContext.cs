@@ -11,7 +11,7 @@ namespace QA.Common.Data
             // todo move to some settings storage
             optionsBuilder.UseSqlServer("Server=localhost;initial catalog=QA_DB;user ID=sa;Password=yourStrong(!)Password;TrustServerCertificate=True");
         }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<QACategory>()
@@ -20,17 +20,22 @@ namespace QA.Common.Data
 
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
-            
+
             modelBuilder.Entity<QACategory>()
                 .HasOne(c => c.Author)
                 .WithMany(u => u.CategoriesCreated)
                 // todo delete categories and questions on user delete
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.CurrentQuestion)
+                .WithMany()
+                .IsRequired(false);
+
             modelBuilder.Entity<User>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
-            
+
             modelBuilder.Entity<User>()
                 .HasMany(u => u.FavoriteCategories)
                 .WithMany()
@@ -42,7 +47,7 @@ namespace QA.Common.Data
                     {
                         j.HasKey("UserId", "QACategoryId");
                     });
-            
+
             modelBuilder.Entity<User>()
                 .HasMany(u => u.FavoriteElements)
                 .WithMany()
@@ -54,15 +59,15 @@ namespace QA.Common.Data
                     {
                         j.HasKey("UserId", "QAElementId");
                     });
-            
+
             modelBuilder.Entity<User>()
                 .Property(p => p.UserInputMode)
                 .HasConversion<string>();
-            
+
             modelBuilder.Entity<FeedBack>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.FeedBacks);
-            
+
             modelBuilder.Entity<FeedBack>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
@@ -78,7 +83,7 @@ namespace QA.Common.Data
         public DbSet<User> Users { get; set; }
         public DbSet<FeedBack> Feedbacks { get; set; }
     }
-    
+
     public class QaContextFactory : IDesignTimeDbContextFactory<QaContext>
     {
         public QaContext CreateDbContext(string[] args)

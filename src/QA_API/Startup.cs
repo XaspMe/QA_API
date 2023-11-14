@@ -32,7 +32,6 @@ public class Startup
             .AddMvcCore();
         services.AddSwaggerGen();
         services.AddScoped<IQaRepo, SqlQaRepo>();
-        services.AddHostedService<TelegramService>();
         services.AddAutoMapper(typeof(Startup));
         services.AddScoped<DumpService>();
         services.UseHttpClientMetrics();
@@ -55,6 +54,7 @@ public class Startup
         });
     }
 
+    // todo move to db
     private void InitializeDatabase(IApplicationBuilder app)
     {
         using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())

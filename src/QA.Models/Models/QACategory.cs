@@ -16,6 +16,6 @@ namespace QA.Models.Models
         [Required]
         [MaxLength(250)]
         public string Name { get; set; }
-        public User Author { get; set; }
+        public User? Author { get; set; }
     }
 }
