@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Prometheus;
 using QA.Common.Data;
 using QA.Common.Services;
-using QA.Telegram.Bot;
 
 namespace QA_API;
 

@@ -11,11 +11,11 @@ public class TestDataAppender
         var categories = await File.ReadAllLinesAsync(@"G:\qa_db\категории.csv");
         foreach (var str in categories)
         {
-            var _res = str.Split(@";");
+            var res = str.Split(@";");
             var model = new QACategory()
             {
-                Id = int.Parse(_res[0]),
-                Name = _res[1]
+                Id = int.Parse(res[0]),
+                Name = res[1]
             };
             _repo.CreateCategory(model);
         }

@@ -22,6 +22,7 @@ namespace QA.Common.Data
         QAElement GetElementRandomInCategory(int category);
         Task<QAElement> GetRandomElementFromTelegramUserFavorites(long chatId);
         void CreateElement(QAElement element);
+        Task CreateElementWithCategoryLoading(QAElement element);
         void UpdateElement(QAElement element);
         void DeleteElement(QAElement element);
         QAElement GetElementInGroupByQuestion(string question, int group);

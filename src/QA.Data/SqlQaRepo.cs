@@ -55,6 +55,14 @@ namespace QA.Common.Data
             _context.Elements.Add(element);
         }
 
+        public async Task CreateElementWithCategoryLoading(QAElement element)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == element.Category.Name);
+            element.Category = category;
+            _context.Elements.Add(element);
+            await _context.SaveChangesAsync();
+        }
+
         public void DeleteCategory(QACategory category)
         {
             if (category == null)
@@ -168,7 +176,7 @@ namespace QA.Common.Data
                 await _context.SaveChangesAsync();
             }
         }
-        
+
         public async Task RemoveFromTelegramUserFavoriteElements(long chatId, QAElement qaElement)
         {
             var user = await _context.Users.Include(u => u.FavoriteElements).FirstOrDefaultAsync(u => u.TelegramChatId == chatId);

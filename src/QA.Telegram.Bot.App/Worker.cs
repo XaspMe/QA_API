@@ -1,25 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using QA.Common.Data;
 using QA.Models.Models;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using QA.Common.Data;
-using QA.Models.Models;
 using QA.Telegram.Bot.CorMessagehandler.@abstract;
 using QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.AddCategoryMode;
+using QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.AddElementMode;
 using QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.AppFeedBackMode;
 using QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.NormalMode;
 using QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.ServiceHandlers;
-using Telegram.Bot;
-using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App;
 
@@ -29,6 +20,7 @@ public class BotService : BackgroundService
     private readonly IServiceScopeFactory scopeFactory;
     private Dictionary<long, DateTime> lastMessage = new Dictionary<long, DateTime>();
     private IQaRepo qaRepo;
+    private IMemoryCache cache;
 
     public BotService(IServiceScopeFactory scopeFactory)
     {
@@ -82,10 +74,10 @@ public class BotService : BackgroundService
         using var scope = scopeFactory.CreateScope();
 
         qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
+        cache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
         await qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
 
         #region normal_mode
-
         MessageHandler menuHandler = new MenuHandler(botClient,
             cancellationToken,
             qaRepo);
@@ -119,6 +111,7 @@ public class BotService : BackgroundService
         FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, qaRepo);
         CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, qaRepo);
         AddTestData addTestData = new AddTestData(botClient, cancellationToken, qaRepo);
+        CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, qaRepo);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
@@ -131,21 +124,21 @@ public class BotService : BackgroundService
         myFavoritesQuestionMessageHandler.SetNextHandler(feedBackHandler);
         feedBackHandler.SetNextHandler(createCategoryHandler);
         createCategoryHandler.SetNextHandler(addTestData);
-
+        addTestData.SetNextHandler(createQuestionHandler);
         #endregion
 
         #region app_feedback_mode
-
         AcceptFeedbackText acceptFeedback = new AcceptFeedbackText(botClient,
             cancellationToken,
             qaRepo);
-
         #endregion
 
         #region create_category
+        AcceptNewCategory acceptNewCategory = new AcceptNewCategory(botClient, cancellationToken, qaRepo);
+        #endregion
 
-        AcceptCategoryName acceptCategoryName = new AcceptCategoryName(botClient, cancellationToken, qaRepo);
-
+        #region create_element
+        AcceptNewElement acceptNewElement = new AcceptNewElement(botClient, cancellationToken, qaRepo, cache);
         #endregion
 
         try
@@ -154,7 +147,8 @@ public class BotService : BackgroundService
             {
                 case UserInputMode.Normal : await menuHandler.HandleMessage(message); break;
                 case UserInputMode.AppFeedBack : await acceptFeedback.HandleMessage(message); break;
-                case UserInputMode.CreateCategory : await acceptCategoryName.HandleMessage(message); break;
+                case UserInputMode.CreateCategory : await acceptNewCategory.HandleMessage(message); break;
+                case UserInputMode.CreateQuestion : await acceptNewElement.HandleMessage(message); break;
             }
         }
         catch (Exception e)

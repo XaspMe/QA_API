@@ -7,13 +7,13 @@ using Telegram.Bot.Types;
 
 namespace QA.Telegram.Bot.CorMessagehandler.ConcreteHandlers.AddCategoryMode;
 
-public class AcceptCategoryName : MessageHandler
+public class AcceptNewCategory : MessageHandler
 {
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
     private readonly IQaRepo _repo;
 
-    public AcceptCategoryName(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
+    public AcceptNewCategory(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
         _telegramBotClient = telegramBotClient;
         _ct = ct;

@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
-
-namespace QA.Models.Models;
+﻿namespace QA.Models.Models;
 
 public class User
 {

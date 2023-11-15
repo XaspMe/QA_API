@@ -4,5 +4,6 @@ public enum UserInputMode
 {
     Normal,
     AppFeedBack,
-    CreateCategory
+    CreateCategory,
+    CreateQuestion
 }
