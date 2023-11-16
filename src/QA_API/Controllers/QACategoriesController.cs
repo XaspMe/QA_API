@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using QA.Common.Data;
 using QA.Common.Dtos;
+using QA.Data;
 using QA.Models.Models;
 
 namespace QA_API.Controllers

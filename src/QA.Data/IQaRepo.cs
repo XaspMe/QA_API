@@ -1,6 +1,6 @@
 ﻿using QA.Models.Models;
 
-namespace QA.Common.Data
+namespace QA.Data
 {
     public interface IQaRepo
     {

@@ -48,7 +48,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\QA.Common\QA.Common.csproj" />
-    <ProjectReference Include="..\QA.Telegram.Bot\QA.Telegram.Bot.csproj" />
   </ItemGroup>
 
 </Project>

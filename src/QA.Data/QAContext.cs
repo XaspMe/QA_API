@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using QA.Models.Models;
 
-namespace QA.Common.Data
+namespace QA.Data
 {
     public class QaContext : DbContext
     {

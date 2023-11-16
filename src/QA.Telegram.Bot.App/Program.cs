@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using QA.Common.Data;
+using QA.Data;
 using QA.Telegram.Bot.App;
 
 IHost host = Host.CreateDefaultBuilder(args)

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QA.Data.Exceptions;
 using QA.Models.Models;
 
-namespace QA.Common.Data
+namespace QA.Data
 {
     public class SqlQaRepo : IQaRepo
     {

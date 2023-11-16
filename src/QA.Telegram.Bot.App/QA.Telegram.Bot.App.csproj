@@ -9,11 +9,15 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1"/>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Telegram.Bot" Version="19.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\QA.Data\QA.Data.csproj" />
-      <ProjectReference Include="..\QA.Telegram.Bot\QA.Telegram.Bot.csproj" />
+      <ProjectReference Include="..\QA.Telegram.Bot.Common\QA.Telegram.Bot.Common.csproj" />
     </ItemGroup>
 </Project>

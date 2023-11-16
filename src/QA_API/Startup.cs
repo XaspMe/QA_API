@@ -8,8 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
-using QA.Common.Data;
 using QA.Common.Services;
+using QA.Data;
 
 namespace QA_API;
 

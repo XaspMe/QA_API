@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using AutoMapper;
 using Newtonsoft.Json;
-using QA.Common.Data;
+using QA.Data;
 
 namespace QA.Common.Services
 {
