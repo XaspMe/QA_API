@@ -78,8 +78,6 @@ namespace QA_API.Controllers
                 {
                     _repo.CreateElement(elementModel);
                     _repo.SaveChanges();
-                    // todo wtf
-                    _dumpService.Dump();
                     return CreatedAtRoute(nameof(GetElementById), new { Id = elementModel.Id }, elementModel);
                 }
 

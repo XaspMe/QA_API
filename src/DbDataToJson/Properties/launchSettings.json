@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "QA.Telegram.Bot.App": {
+    "SqlDataToJson": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {

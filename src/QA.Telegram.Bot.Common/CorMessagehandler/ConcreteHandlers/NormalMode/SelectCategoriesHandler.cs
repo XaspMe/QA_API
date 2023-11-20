@@ -28,9 +28,10 @@ public class SelectCategoriesHandler : MessageHandler
         {
             var categories = _repo.GetAllCategories().ToList();
             var categoriesNames = categories.Select(x => x.Name).ToList();
-            
+
             if (categoriesNames.Any(x => message.Text!.Contains(x)) || message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
             {
+                // todo повторение код из next handler, вызывать его
                 if (message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
                 {
                     await _repo.UpdateTelegramUserFavoriteCategories(message.Chat.Id, new List<QACategory>());
@@ -52,7 +53,7 @@ public class SelectCategoriesHandler : MessageHandler
 
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
-                    text: WebUtility.HtmlEncode($"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
+                    text: WebUtility.HtmlEncode($"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);

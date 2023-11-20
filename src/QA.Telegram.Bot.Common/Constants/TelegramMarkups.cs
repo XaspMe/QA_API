@@ -46,7 +46,9 @@ public static class TelegramMarkups
                 new KeyboardButton[]
                     { TelegramCommands.CATEGORIES, TelegramCommands.MY_FAVORITES_QUESTIONS },
                 new KeyboardButton[]
-                    { TelegramCommands.DEVELOPER_CONTACTS, TelegramCommands.FEEDBACK }
+                    { TelegramCommands.DEVELOPER_CONTACTS, TelegramCommands.FEEDBACK },
+                new KeyboardButton[]
+                    { TelegramCommands.ABOUT }
             });
         }
 
@@ -56,6 +58,8 @@ public static class TelegramMarkups
                 { TelegramCommands.CATEGORIES, TelegramCommands.MY_FAVORITES_QUESTIONS },
             new KeyboardButton[]
                 { TelegramCommands.DEVELOPER_CONTACTS, TelegramCommands.FEEDBACK },
+            new KeyboardButton[]
+                { TelegramCommands.ABOUT },
             new KeyboardButton[]
                 { TelegramCommands.EDIT_QUESTION, TelegramCommands.ADD_QUESTION },
             new KeyboardButton[]

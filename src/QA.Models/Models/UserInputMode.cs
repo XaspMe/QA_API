@@ -3,6 +3,7 @@
 public enum UserInputMode
 {
     Normal,
+    Favorites,
     AppFeedBack,
     CreateCategory,
     CreateQuestion

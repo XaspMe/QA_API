@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using QA.Data;
 
@@ -7,13 +8,11 @@ namespace QA.Common.Services
 {
     public class DumpService
     {
-        private readonly IQaRepo _repo;
-        private readonly IMapper _mapper;
+        private readonly IQaRepo _qaRepo;
 
-        public DumpService(IQaRepo repo, IMapper mapper)
+        public DumpService(IQaRepo qaRepo)
         {
-            _repo = repo;
-            _mapper = mapper;
+            _qaRepo = qaRepo;
         }
 
         [DataContract]
@@ -33,27 +32,23 @@ namespace QA.Common.Services
             }
         }
 
-        public class QaObject
+        public async Task Dump()
         {
-            public int len { get; set; }
-            public DateTime created { get; set; }
-            public IEnumerable<QaDump> qas { get; set; }
-        }
-
-        public void Dump()
-        {
-            var elements = _repo.GetAllElements();
-            var categories = _repo.GetAllCategories();
+            var elements = _qaRepo.GetAllElements();
+            var categories = _qaRepo.GetAllCategories();
             var dumpQas = elements.Select(x => new
-                { x.Id, x.Question, x.Answer, CategoryName = categories.First(y => y.Id == x.Category.Id).Name }).ToList();
-            var dir = @$"С:\qa_db\qa_db_dump\";
+                    { x.Id, x.Question, x.Answer, CategoryName = categories.First(y => y.Id == x.Category.Id).Name })
+                .ToList();
             var serializeObject = JsonConvert.SerializeObject(dumpQas);
-            System.IO.File.WriteAllText(dir + $"qa-dump-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}.json", serializeObject);
-        }
 
-        public void ReadDump()
-        {
+            var qaDumpSavePath = Environment.GetEnvironmentVariable("QA_DUMP_SAVE_PATH", EnvironmentVariableTarget.Machine);
+            if (qaDumpSavePath is "" or null)
+                throw new NotImplementedException("QA_DUMP_SAVE_PATH environment variable dos not exists on this machine or empty");
 
+            var path = Path.Combine(qaDumpSavePath, "dumps");
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            var combine = Path.Combine(path, $"qa-dump-{DateTime.Now:yyyy-MM-ddTHH-mm-ss}.json");
+            await File.WriteAllTextAsync(combine, serializeObject);
         }
     }
 }

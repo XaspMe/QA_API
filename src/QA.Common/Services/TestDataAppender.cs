@@ -8,7 +8,7 @@ public class TestDataAppender
     public async Task Append(IQaRepo _repo)
     {
         // todo move to something
-        var categories = await File.ReadAllLinesAsync(@"G:\qa_db\категории.csv");
+        var categories = await File.ReadAllLinesAsync(@"категории.csv");
         foreach (var str in categories)
         {
             var res = str.Split(@";");
@@ -22,7 +22,7 @@ public class TestDataAppender
 
         _repo.SaveChanges();
 
-        var elements = await File.ReadAllLinesAsync(@"G:\qa_db\элементы.csv");
+        var elements = await File.ReadAllLinesAsync(@"элементы.csv");
         foreach (var str in elements)
         {
             var _res = str.Split(@";");

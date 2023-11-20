@@ -39,7 +39,9 @@ namespace QA.Data
 
         public async Task<QAElement> GetRandomElementFromTelegramUserFavorites(long chatId)
         {
-            User user = await _context.Users.Include(x => x.FavoriteElements).FirstOrDefaultAsync();
+            User user = await _context.Users.Include(x => x.FavoriteElements)
+                .Where(x => x.TelegramChatId == chatId)
+                .FirstOrDefaultAsync();
             var elements = user.FavoriteElements;
             if (elements.Any())
                 return elements.ToArray()[new Random().Next(elements.Count - 1)];

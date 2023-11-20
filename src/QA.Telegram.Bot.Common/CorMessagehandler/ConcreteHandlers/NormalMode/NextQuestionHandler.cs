@@ -44,13 +44,13 @@ public class NextQuestionHandler : MessageHandler
                 }
                 return;
             }
-            
+
             var userChosenCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
-            
+
             try
             {
                 QAElement question;
-                
+
                 var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
                 if (chosenCategories.Count() == _repo.GetAllCategories().Count())
                     question = _repo.GetElementRandom();
@@ -62,7 +62,7 @@ public class NextQuestionHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     // replace br's for telegram only
-                    text: WebUtility.HtmlEncode($"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
+                    text: WebUtility.HtmlEncode($"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
                     replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);

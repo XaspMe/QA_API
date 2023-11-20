@@ -6,12 +6,6 @@ namespace QA.Data
 {
     public class QaContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // todo move to some settings storage
-            optionsBuilder.UseSqlServer("Server=localhost;initial catalog=QA_DB;user ID=sa;Password=yourStrong(!)Password;TrustServerCertificate=True");
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<QACategory>()
@@ -41,24 +35,20 @@ namespace QA.Data
                 .WithMany()
                 .UsingEntity<Dictionary<string, object>>(
                     "UserFavoriteCategories",
-                    j => j.HasOne<QACategory>().WithMany().HasForeignKey("QACategoryId").OnDelete(DeleteBehavior.NoAction),
+                    j => j.HasOne<QACategory>().WithMany().HasForeignKey("QACategoryId")
+                        .OnDelete(DeleteBehavior.NoAction),
                     j => j.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction),
-                    j =>
-                    {
-                        j.HasKey("UserId", "QACategoryId");
-                    });
+                    j => { j.HasKey("UserId", "QACategoryId"); });
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.FavoriteElements)
                 .WithMany()
                 .UsingEntity<Dictionary<string, object>>(
                     "UserFavoriteElements",
-                    j => j.HasOne<QAElement>().WithMany().HasForeignKey("QAElementId").OnDelete(DeleteBehavior.NoAction),
+                    j => j.HasOne<QAElement>().WithMany().HasForeignKey("QAElementId")
+                        .OnDelete(DeleteBehavior.NoAction),
                     j => j.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction),
-                    j =>
-                    {
-                        j.HasKey("UserId", "QAElementId");
-                    });
+                    j => { j.HasKey("UserId", "QAElementId"); });
 
             modelBuilder.Entity<User>()
                 .Property(p => p.UserInputMode)
@@ -84,15 +74,17 @@ namespace QA.Data
         public DbSet<FeedBack> Feedbacks { get; set; }
     }
 
-    public class QaContextFactory : IDesignTimeDbContextFactory<QaContext>
+    // design time read db connection from machine env
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<QaContext>
     {
         public QaContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<QaContext>();
-            // todo move to some settings storage
-            optionsBuilder.UseSqlServer("Server=localhost;initial catalog=QA_DB;user ID=sa;Password=yourStrong(!)Password;TrustServerCertificate=True");
-
-            return new QaContext(optionsBuilder.Options);
+            var builder = new DbContextOptionsBuilder<QaContext>();
+            var environmentVariable = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Machine);
+            if (environmentVariable is "" or null)
+                throw new NotImplementedException("QA_DB environment variable dos not exists on this machine or empty");
+            builder.UseSqlServer(environmentVariable);
+            return new QaContext(builder.Options);
         }
     }
 }

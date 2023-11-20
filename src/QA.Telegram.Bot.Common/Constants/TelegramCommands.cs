@@ -20,6 +20,7 @@ public static class TelegramCommands
     public const string START = "/start";
     public const string ADMIN = "/adm";
     public const string ALL_CATEGORIES = "Все подряд";
+    public const string ABOUT = "О приложении";
     // adm
     public const string EDIT_QUESTION = "Исправить вопрос";
     public const string ADD_QUESTION = "Добавить вопрос";
