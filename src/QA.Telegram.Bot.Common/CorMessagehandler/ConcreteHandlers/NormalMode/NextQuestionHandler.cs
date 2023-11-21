@@ -72,7 +72,6 @@ public class NextQuestionHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: TelegramMessages.ERROR,
-                    // todo move to admins list
                     replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                     parseMode: ParseMode.Html,
                     cancellationToken: _ct);
@@ -86,7 +85,6 @@ public class NextQuestionHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

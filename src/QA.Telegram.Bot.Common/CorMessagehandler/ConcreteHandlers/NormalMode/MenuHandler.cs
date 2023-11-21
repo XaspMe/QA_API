@@ -24,7 +24,6 @@ public class MenuHandler : MessageHandler
         if (message.Text is TelegramCommands.START or TelegramCommands.MENU)
         {
             var categories = _repo.GetAllCategories();
-            // todo move to admins list
             var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id));
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
@@ -40,7 +39,6 @@ public class MenuHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

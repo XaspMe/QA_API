@@ -22,7 +22,6 @@ public class AddTestData  : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        // todo highlight if already favorite
         if (message.Text == TelegramCommands.ADD_TEST_DATA)
         {
             await new TestDataAppender().Append(_repo);

@@ -11,7 +11,7 @@ public class CreateCategoryHandler : MessageHandler
 {
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly CancellationToken _ct;
-    private readonly IQaRepo _repo; 
+    private readonly IQaRepo _repo;
 
     public CreateCategoryHandler(ITelegramBotClient telegramBotClient, CancellationToken ct, IQaRepo repo)
     {
@@ -37,7 +37,6 @@ public class CreateCategoryHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

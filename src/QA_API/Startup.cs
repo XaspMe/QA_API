@@ -35,9 +35,7 @@ public class Startup
         services.AddScoped<DumpService>();
         services.UseHttpClientMetrics();
         services.AddHealthChecks()
-            // Define a sample health check that always signals healthy state.
-            .AddCheck<SampleHealthCheck>(nameof(SampleHealthCheck))
-            // Report health check results in the metrics output.
+            .AddCheck<HealthCheck>(nameof(HealthCheck))
             .ForwardToPrometheus();
         services.AddHealthChecks();
         services.AddCors(options =>
@@ -53,15 +51,6 @@ public class Startup
         });
     }
 
-    // todo move to db
-    private void InitializeDatabase(IApplicationBuilder app)
-    {
-        using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            scope.ServiceProvider.GetRequiredService<QaContext>().Database.Migrate();
-        }
-    }
-
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
 
@@ -73,7 +62,6 @@ public class Startup
         }
         // Enable middleware to serve generated Swagger as a JSON endpoint.
         app.UseSwagger();
-        InitializeDatabase(app);
 
         // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
         app.UseSwaggerUI();
@@ -88,11 +76,10 @@ public class Startup
     }
 }
 
-public sealed class SampleHealthCheck : IHealthCheck
+public sealed class HealthCheck : IHealthCheck
 {
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        // todo move to service folder
         return Task.FromResult(HealthCheckResult.Healthy());
     }
 }

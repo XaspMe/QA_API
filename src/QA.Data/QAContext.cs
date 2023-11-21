@@ -18,7 +18,6 @@ namespace QA.Data
             modelBuilder.Entity<QACategory>()
                 .HasOne(c => c.Author)
                 .WithMany(u => u.CategoriesCreated)
-                // todo delete categories and questions on user delete
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
@@ -82,7 +81,7 @@ namespace QA.Data
             var builder = new DbContextOptionsBuilder<QaContext>();
             var environmentVariable = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
             if (environmentVariable is "" or null)
-                throw new NotImplementedException("QA_DB environment variable dos not exists on this machine or empty");
+                throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
             builder.UseSqlServer(environmentVariable);
             return new QaContext(builder.Options);
         }

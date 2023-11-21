@@ -20,7 +20,6 @@ public class DeveloperContactsHandler : MessageHandler
     {
         if (message.Text == TelegramCommands.DEVELOPER_CONTACTS)
         {
-            // todo добавить категории
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.DEVELOPER_CONTACT,
@@ -32,7 +31,6 @@ public class DeveloperContactsHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

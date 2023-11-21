@@ -16,7 +16,6 @@ namespace QA.Telegram.Bot.App;
 
 public class BotService : BackgroundService
 {
-    // todo move this to repo
     private readonly IServiceScopeFactory _scopeFactory;
     private Dictionary<long, DateTime> _lastMessage = new Dictionary<long, DateTime>();
     private IQaRepo _qaRepo;
@@ -33,7 +32,7 @@ public class BotService : BackgroundService
             Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.User);
         if (qaBotToken is "" or null)
         {
-            throw new NotImplementedException("QA_BOT_TOKEN environment variable dos not exists on this machine or empty");
+            throw new ArgumentException("QA_BOT_TOKEN environment variable dos not exists on this machine or empty");
         }
 
         var botClient = new TelegramBotClient(qaBotToken);

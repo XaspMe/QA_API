@@ -2,7 +2,6 @@
 
 public static class TelegramMessages
 {
-    // todo refactor names
     public const string CATEGORY_CREATED = "Категория успешно создана.";
     public const string REQUEST_CATEGORY_NAME = "Введите имя новой категории.";
     public const string REQUEST_CATEGORY_FOR_NEW_QA = "Выберите категорию для нового вопроса.";
@@ -15,7 +14,6 @@ public static class TelegramMessages
     public const string FEEDBACK_ACCEPTED_MESSAGE = "Спасибо за обратную связь, это помогает проекту стать лучше.";
     public const string CATEGORIES = "Выбери категорию";
     public const string ERROR = "Произошла ошибка :(";
-    // todo вынести в конфиг или указать ссылку на гитхаб
     public const string DEVELOPER_CONTACT = "По всем существующим вопросам:\n@comppomosh";
     public const string ADDED_TO_FAVORITES = "Вопрос успешно добавлен в избранное, ваши избранные вопросы могут быть найдены в главном меню.";
     public const string REMOVED_FROM_FAVORITES = "Вопрос был убран из вашего списка избранных.";

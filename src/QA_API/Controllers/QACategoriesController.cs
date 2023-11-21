@@ -61,7 +61,6 @@ namespace QA_API.Controllers
 
                 _repo.SaveChanges();
                 var readDto = _mapper.Map<CategoryReadDto>(categoryModel);
-                // TODO: Return id value does not workin
                 return CreatedAtRoute(nameof(GetCategoriesById), new { Id = readDto.Id }, readDto);
             }
 

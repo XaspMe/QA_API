@@ -25,7 +25,7 @@ public class CategoriesHandler : MessageHandler
         {
             var categories = _repo.GetAllCategories();
 
-            // todo добавить категории
+            // todo добавить мультивыбор категорий
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.CATEGORIES,
@@ -38,7 +38,6 @@ public class CategoriesHandler : MessageHandler
         }
         else
         {
-            // todo reply markup
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

@@ -43,7 +43,7 @@ namespace QA.Common.Services
 
             var qaDumpSavePath = Environment.GetEnvironmentVariable("QA_DUMP_SAVE_PATH", EnvironmentVariableTarget.Machine);
             if (qaDumpSavePath is "" or null)
-                throw new NotImplementedException("QA_DUMP_SAVE_PATH environment variable dos not exists on this machine or empty");
+                throw new ArgumentException("QA_DUMP_SAVE_PATH environment variable dos not exists on this machine or empty");
 
             var path = Path.Combine(qaDumpSavePath, "dumps");
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);

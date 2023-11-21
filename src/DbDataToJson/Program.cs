@@ -5,7 +5,7 @@ using QA.Data;
 
 var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Machine);
 if (dBConnectionString is "" or null)
-    throw new NotImplementedException("QA_DB environment variable dos not exists on this machine or empty");
+    throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>

@@ -34,7 +34,6 @@ public class CategoryStatisticsHandler : MessageHandler
                 responceMessage.AppendLine(WebUtility.HtmlEncode(stat));
             }
 
-            // todo добавить категории
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: responceMessage.ToString(),
@@ -47,7 +46,6 @@ public class CategoryStatisticsHandler : MessageHandler
         }
         else
         {
-            // todo reply markup  
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,

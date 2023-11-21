@@ -21,7 +21,6 @@ public class AddToFavoritesHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        // todo highlight if already favorite
         if (message.Text == TelegramCommands.ADD_TO_FAVORITES)
         {
             var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
