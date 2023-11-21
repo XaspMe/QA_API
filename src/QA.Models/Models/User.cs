@@ -10,4 +10,6 @@ public class User
     public ICollection<QAElement>? FavoriteElements { get; set; }
     public ICollection<FeedBack>? FeedBacks { get; set; }
     public UserInputMode UserInputMode { get; set; }
+    // am using it before adding proper auth approach
+    public bool isAdmin { get; set; } = false;
 }
