@@ -29,7 +29,8 @@ public class BotService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var qaBotToken = Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.Machine);
+        var qaBotToken =
+            Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.User);
         if (qaBotToken is "" or null)
         {
             throw new NotImplementedException("QA_BOT_TOKEN environment variable dos not exists on this machine or empty");

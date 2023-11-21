@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using QA.Data;
 using QA.Telegram.Bot.App;
 
-var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Machine);
+var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
 if (dBConnectionString is "" or null)
 {
     throw new NotImplementedException("QA_DB environment variable does not exists on this machine or empty");
