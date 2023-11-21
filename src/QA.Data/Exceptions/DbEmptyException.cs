@@ -2,7 +2,7 @@
 
 public class EmptyDatabaseException : Exception
 {
-    public EmptyDatabaseException() : base("База данных пустая.")
+    public EmptyDatabaseException() : base("Data base is empty.")
     {
     }
 
