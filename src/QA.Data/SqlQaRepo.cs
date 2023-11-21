@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
 using QA.Data.Exceptions;
 using QA.Models.Models;
 
@@ -236,6 +237,12 @@ namespace QA.Data
             return _context.Elements.FirstOrDefault(x => x.Id == id);
         }
 
+        public async Task<bool> IsTelegramUserAdmin(long chatId)
+        {
+            var user = await _context.Users.FirstAsync(x => x.TelegramChatId == chatId);
+            return user.isAdmin;
+        }
+
         public bool SaveChanges()
         {
             return (_context.SaveChanges() >= 0);
@@ -243,12 +250,12 @@ namespace QA.Data
 
         public void UpdateCategory(QACategory category)
         {
-            // Nothing
+            throw new NotImplementedException();
         }
 
         public void UpdateElement(QAElement element)
         {
-            // Nothing
+            throw new NotImplementedException();
         }
 
         public int ElementsCount()

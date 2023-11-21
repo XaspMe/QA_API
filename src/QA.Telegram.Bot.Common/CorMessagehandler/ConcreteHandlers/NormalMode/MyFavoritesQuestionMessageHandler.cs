@@ -42,8 +42,8 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                             cancellationToken: _ct);
                     }
                 }
-                
-                
+
+
                 var question = await _repo.GetRandomElementFromTelegramUserFavorites(message.Chat.Id);
                 if (question != null)
                     await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
@@ -56,8 +56,7 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                         : TelegramMessages.NO_FAVORITES,
                     replyMarkup: question != null
                         ? TelegramMarkups.FAVORITE_QUESTIONS_KEYBOARD()
-                        // todo move to admins list
-                        : TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263),
+                        : TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);
             }
@@ -66,8 +65,7 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: TelegramMessages.ERROR,
-                    // todo move to admins list
-                    replyMarkup: TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263),
+                    replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                     parseMode: ParseMode.Html,
                     cancellationToken: _ct);
 

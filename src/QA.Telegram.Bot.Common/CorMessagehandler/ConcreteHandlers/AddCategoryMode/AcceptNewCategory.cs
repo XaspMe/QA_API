@@ -28,8 +28,7 @@ public class AcceptNewCategory : MessageHandler
         }
         await _repo.SetTelegramUserMode(message.Chat.Id, UserInputMode.Normal);
         var categories = _repo.GetAllCategories();
-        // todo move to admins list
-        var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263);
+        var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id));
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
             text: message.Text is TelegramCommands.MENU

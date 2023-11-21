@@ -76,8 +76,7 @@ public class SelectCategoriesHandler : MessageHandler
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.ERROR,
-                // todo move to admins list
-                replyMarkup: TelegramMarkups.MAIN_MENU(message.Chat.Id != 87584263),
+                replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                 cancellationToken: _ct);
             throw e;
         }

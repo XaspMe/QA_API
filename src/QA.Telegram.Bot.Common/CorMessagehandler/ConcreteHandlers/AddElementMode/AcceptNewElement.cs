@@ -60,7 +60,7 @@ public class AcceptNewElement : MessageHandler
             chatId: message.Chat.Id,
             text: TelegramMessages.QA_ELEMENT_CREATED +
                   $"\nКатегория:\n{qaElement.Category.Name}\nВопрос:\n{qaElement.Question}\nОтвет:\n{qaElement.Answer}",
-            replyMarkup: TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263),
+            replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
             parseMode: ParseMode.Html,
             cancellationToken: _ct);
         await _repo.CreateElementWithCategoryLoading(qaElement);
@@ -83,8 +83,7 @@ public class AcceptNewElement : MessageHandler
     private async Task ErrorSaving(Message message)
     {
         await _repo.SetTelegramUserMode(message.Chat.Id, UserInputMode.Normal);
-        // todo move to admins list
-        var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263);
+        var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id));
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
             text: message.Text is TelegramCommands.MENU
@@ -128,7 +127,7 @@ public class AcceptNewElement : MessageHandler
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
             text: TelegramMessages.CATEGORY_SELECT_FAIL,
-            replyMarkup: TelegramMarkups.MAIN_MENU(message.Chat.Id == 87584263),
+            replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
             cancellationToken: _ct);
         await _repo.SetTelegramUserMode(message.Chat.Id, UserInputMode.Normal);
     }
