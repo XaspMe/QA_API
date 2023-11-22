@@ -123,15 +123,11 @@ public static class TelegramMarkups
             new KeyboardButton[]
                 { TelegramCommands.ABOUT },
             new KeyboardButton[]
-                { TelegramCommands.EDIT_QUESTION, TelegramCommands.ADD_QUESTION },
-            new KeyboardButton[]
-                { TelegramCommands.DELETE_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
-            new KeyboardButton[]
                 { TelegramCommands.RENAME_CATEGORY, TelegramCommands.CREATE_CATEGORY },
             new KeyboardButton[]
                 { TelegramCommands.DELETE_CATEGORY, TelegramCommands.SHOW_CATEGORIES_STATISTICS},
             new KeyboardButton[]
-                { TelegramCommands.ADD_TEST_DATA }
+                { TelegramCommands.ADD_TEST_DATA, TelegramCommands.ADD_QUESTION }
 
         });
     }

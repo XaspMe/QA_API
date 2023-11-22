@@ -17,7 +17,7 @@ public static class TelegramCommands
     public const string FEEDBACK = "\u002a Я бы хотел улучшить";
     public const string REPORT = "\u275e Замечание";
     public const string RATE = "\u2756 Оценить вопрос или ответ";
-    public const string RETURN = "\u2756 Вернуться";
+    public const string RETURN = "\u2B90 Вернуться";
     public const string START = "/start";
     public const string ADMIN = "/adm";
     public const string ALL_CATEGORIES = "Все подряд";
