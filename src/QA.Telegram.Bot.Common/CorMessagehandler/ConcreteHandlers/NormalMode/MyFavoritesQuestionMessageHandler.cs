@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using QA.Data;
+using QA.Models.Models;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Common.CorMessagehandler.@abstract;
 using Telegram.Bot;
@@ -23,6 +24,7 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
+        // todo refactor
         if (message.Text is TelegramCommands.MY_FAVORITES_QUESTIONS
             or TelegramCommands.NEXT_FAVORITE_QUESTION
             or TelegramCommands.EXCLUDE_FROM_FAVORITES)
@@ -43,22 +45,8 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                     }
                 }
 
-
-                var question = await _repo.GetRandomElementFromTelegramUserFavorites(message.Chat.Id);
-                if (question != null)
-                    await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
-
-                await _telegramBotClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    // replace br's for telegram only
-                    text: question != null
-                        ? WebUtility.HtmlEncode($"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}")
-                        : TelegramMessages.NO_FAVORITES,
-                    replyMarkup: question != null
-                        ? TelegramMarkups.FAVORITE_QUESTIONS_KEYBOARD()
-                        : TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
-                    cancellationToken: _ct,
-                    parseMode: ParseMode.Html);
+                await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.FavoriteQuestion);
+                await SendNextFavoritesQuestionOrGoToMenu(message);
             }
             catch (Exception e)
             {
@@ -83,5 +71,26 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                 text: TelegramMessages.HANDLE_ERROR,
                 cancellationToken: _ct);
         }
+    }
+
+    private async Task SendNextFavoritesQuestionOrGoToMenu(Message message)
+    {
+        // todo bug with go to menu but step is forbidden
+        var question = await _repo.GetRandomElementFromTelegramUserFavorites(message.Chat.Id);
+        if (question != null)
+            await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
+
+        await _telegramBotClient.SendTextMessageAsync(
+            chatId: message.Chat.Id,
+            // replace br's for telegram only
+            text: question != null
+                ? WebUtility.HtmlEncode(
+                    $"Категория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}")
+                : TelegramMessages.NO_FAVORITES,
+            replyMarkup: question != null
+                ? TelegramMarkups.FAVORITE_QUESTIONS_KEYBOARD()
+                : TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
+            cancellationToken: _ct,
+            parseMode: ParseMode.Html);
     }
 }

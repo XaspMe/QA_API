@@ -39,5 +39,8 @@ namespace QA.Data
         public Task SetTelegramUserMode(long chaId, UserInputMode mode);
         public Task AddTelegramUserFeedBack(long chatId, string message);
         public Task CreateTelegramUserQaCategory(long chatId, QACategory category);
+        public Task ChangeQuestionCategory(QAElement qaElement, QACategory category);
+        public Task<UserCurrentStep> GetUserCurrentStep(long telegramChatId);
+        public Task SetUserCurrentStep(long telegramChatId, UserCurrentStep step);
     }
 }

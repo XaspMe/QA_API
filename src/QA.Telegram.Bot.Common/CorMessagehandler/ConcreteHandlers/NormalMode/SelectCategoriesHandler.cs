@@ -44,6 +44,8 @@ public class SelectCategoriesHandler : MessageHandler
                     });
                 }
 
+                await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.Questions);
+
                 var telegramUserCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
                 var question = message.Text!.Contains(TelegramCommands.ALL_CATEGORIES)
                     ? _repo.GetElementRandom()
@@ -54,7 +56,8 @@ public class SelectCategoriesHandler : MessageHandler
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,
                     text: WebUtility.HtmlEncode($"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
-                    replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
+                    replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question),
+                        await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                     cancellationToken: _ct,
                     parseMode: ParseMode.Html);
             }

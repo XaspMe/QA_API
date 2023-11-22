@@ -53,6 +53,10 @@ namespace QA.Data
                 .Property(p => p.UserInputMode)
                 .HasConversion<string>();
 
+            modelBuilder.Entity<User>()
+                .Property(p => p.UserCurrentStep)
+                .HasConversion<string>();
+
             modelBuilder.Entity<FeedBack>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.FeedBacks);

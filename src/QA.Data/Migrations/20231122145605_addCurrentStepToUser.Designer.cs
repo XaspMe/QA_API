@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QA.Data;
 
@@ -11,9 +12,11 @@ using QA.Data;
 namespace QA.Data.Migrations
 {
     [DbContext(typeof(QaContext))]
-    partial class QaContextModelSnapshot : ModelSnapshot
+    [Migration("20231122145605_addCurrentStepToUser")]
+    partial class addCurrentStepToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

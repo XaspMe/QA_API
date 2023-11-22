@@ -222,6 +222,26 @@ namespace QA.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task ChangeQuestionCategory(QAElement qaElement, QACategory category)
+        {
+            var element = await _context.Elements.FirstAsync(x => x.Id == qaElement.Id);
+            element.Category = await _context.Categories.FirstAsync(x => x.Id == category.Id);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserCurrentStep> GetUserCurrentStep(long TelegramChatId)
+        {
+            var firstAsync = await _context.Users.Where(x => x.TelegramChatId == TelegramChatId).FirstAsync();
+            return firstAsync.UserCurrentStep;
+        }
+
+        public async Task SetUserCurrentStep(long TelegramChatId, UserCurrentStep step)
+        {
+            var firstAsync = await _context.Users.Where(x => x.TelegramChatId == TelegramChatId).FirstAsync();
+            firstAsync.UserCurrentStep = step;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task SetTelegramUserMode(long chatId, UserInputMode mode)
         {
             var user = await _context.Users

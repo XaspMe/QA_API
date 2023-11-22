@@ -5,6 +5,7 @@ using QA.Telegram.Bot.Common.CorMessagehandler.@abstract;
 using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AddCategoryMode;
 using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AddElementMode;
 using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AppFeedBackMode;
+using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.ChangeQuestionCategoryMode;
 using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.NormalMode;
 using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.ServiceHandlers;
 using Telegram.Bot;
@@ -123,6 +124,9 @@ public class BotService : BackgroundService
         CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
         SelectedQuestionHandler selectedQuestionHandler =
             new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken);
+        ChangeQuestionCategoryHandler questionCategoryHandler =
+            new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken);
+        ReturnToPreviousStep previousStep = new ReturnToPreviousStep(botClient, cancellationToken, _qaRepo);
 
         menuHandler.SetNextHandler(nextQuestionHandler);
         nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
@@ -137,6 +141,8 @@ public class BotService : BackgroundService
         createCategoryHandler.SetNextHandler(addTestData);
         addTestData.SetNextHandler(createQuestionHandler);
         createQuestionHandler.SetNextHandler(selectedQuestionHandler);
+        selectedQuestionHandler.SetNextHandler(questionCategoryHandler);
+        questionCategoryHandler.SetNextHandler(previousStep);
         #endregion
 
         #region app_feedback_mode
@@ -153,6 +159,13 @@ public class BotService : BackgroundService
         AcceptNewElement acceptNewElement = new AcceptNewElement(botClient, cancellationToken, _qaRepo, _cache);
         #endregion
 
+        #region change_element_category
+
+        AcceptNewCategoryOrGoToMenu acceptNewCategoryOrGoToMenu =
+            new AcceptNewCategoryOrGoToMenu(botClient, cancellationToken, _qaRepo);
+
+        #endregion
+
         try
         {
             switch (await _qaRepo.GetTelegramUserMode(message.Chat.Id))
@@ -161,6 +174,7 @@ public class BotService : BackgroundService
                 case UserInputMode.AppFeedBack: await acceptFeedback.HandleMessage(message); break;
                 case UserInputMode.CreateCategory: await acceptNewCategory.HandleMessage(message); break;
                 case UserInputMode.CreateQuestion: await acceptNewElement.HandleMessage(message); break;
+                case UserInputMode.ChangeQuestionCategory: await acceptNewCategoryOrGoToMenu.HandleMessage(message); break;
             }
         }
         catch (Exception e)

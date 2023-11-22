@@ -4,8 +4,30 @@ namespace QA.Telegram.Bot.Common.Constants;
 
 public static class TelegramMarkups
 {
-    public static ReplyKeyboardMarkup QUESTIONS_KEYBOARD(bool isFavorite)
+    public static ReplyKeyboardMarkup QUESTIONS_KEYBOARD(bool isFavorite, bool isAdmin)
     {
+        if (isAdmin)
+        {
+            if (isFavorite)
+                return new ReplyKeyboardMarkup(new[]
+                {
+                    new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+                    new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
+                    new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
+                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
+                    new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                });
+
+            return new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+                new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
+                new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
+                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
+                new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+            });
+        }
+
         if (isFavorite)
             return new ReplyKeyboardMarkup(new[]
             {
@@ -13,13 +35,53 @@ public static class TelegramMarkups
                 new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
                 new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
             });
-        else
+
+        return new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+            new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
+            new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
+        });
+    }
+
+    public static ReplyKeyboardMarkup SELECTED_QUESTION_KEYBOARD(bool isFavorite, bool isAdmin)
+    {
+        if (isAdmin)
+        {
+            if (isFavorite)
+                return new ReplyKeyboardMarkup(new[]
+                {
+                    new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.RETURN },
+                    new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
+                    new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
+                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
+                    new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                });
+
             return new ReplyKeyboardMarkup(new[]
             {
-                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.NEXT_QUESTION },
+                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.RETURN },
                 new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
+                new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
+                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
+                new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+            });
+        }
+
+        if (isFavorite)
+            return new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.RETURN },
+                new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
                 new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
             });
+
+        return new ReplyKeyboardMarkup(new[]
+        {
+            new KeyboardButton[] { TelegramCommands.ANSWER_CURRENT_QUESTION, TelegramCommands.RETURN },
+            new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
+            new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
+        });
     }
 
     public static ReplyKeyboardMarkup FAVORITE_QUESTIONS_KEYBOARD()
@@ -74,15 +136,26 @@ public static class TelegramMarkups
         });
     }
 
-    public static ReplyKeyboardMarkup CATEGORIES_KEYBOARD(IEnumerable<string> Categories)
+    public static ReplyKeyboardMarkup CATEGORIES_WITH_MENU_AND_ALL_SELECTED(IEnumerable<string> Categories)
     {
-        // todo переписать
+        //todo переписать
         var keyboardButtonsEnumerable = Categories
             .Select((category, index) => new { Category = category, Index = index })
             .GroupBy(x => x.Index / 3)
             .Select(group => group.Select(x => new KeyboardButton(x.Category)).ToArray())
             .ToList();
         keyboardButtonsEnumerable.Add(new KeyboardButton[] { TelegramCommands.ALL_CATEGORIES });
+        keyboardButtonsEnumerable.Add(new KeyboardButton[] { TelegramCommands.MENU });
+        return new ReplyKeyboardMarkup(keyboardButtonsEnumerable);
+    }
+
+    public static ReplyKeyboardMarkup CATEGORIES_WITH_MENU(IEnumerable<string> Categories)
+    {
+        var keyboardButtonsEnumerable = Categories
+            .Select((category, index) => new { Category = category, Index = index })
+            .GroupBy(x => x.Index / 3)
+            .Select(group => group.Select(x => new KeyboardButton(x.Category)).ToArray())
+            .ToList();
         keyboardButtonsEnumerable.Add(new KeyboardButton[] { TelegramCommands.MENU });
         return new ReplyKeyboardMarkup(keyboardButtonsEnumerable);
     }

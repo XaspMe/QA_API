@@ -24,12 +24,11 @@ public class CategoriesHandler : MessageHandler
         if (message.Text == TelegramCommands.CATEGORIES)
         {
             var categories = _repo.GetAllCategories();
-
             // todo добавить мультивыбор категорий
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.CATEGORIES,
-                replyMarkup: TelegramMarkups.CATEGORIES_KEYBOARD(categories.Select(x => x.Name)),
+                replyMarkup: TelegramMarkups.CATEGORIES_WITH_MENU_AND_ALL_SELECTED(categories.Select(x => x.Name)),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

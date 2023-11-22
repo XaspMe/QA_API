@@ -6,5 +6,6 @@ public enum UserInputMode
     Favorites,
     AppFeedBack,
     CreateCategory,
-    CreateQuestion
+    CreateQuestion,
+    ChangeQuestionCategory
 }

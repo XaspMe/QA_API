@@ -36,8 +36,9 @@ public class SelectedQuestionHandler : MessageHandler
                 // replace br's for telegram only
                 text: WebUtility.HtmlEncode(
                     $"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
-                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
-                    await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
+                replyMarkup: TelegramMarkups.SELECTED_QUESTION_KEYBOARD(
+                    await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question),
+                    await _repo.IsTelegramUserAdmin(message.Chat.Id)),
                 cancellationToken: _ct,
                 parseMode: ParseMode.Html);
         }

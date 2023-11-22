@@ -28,44 +28,14 @@ public class NextQuestionHandler : MessageHandler
         {
             if (message.Text is TelegramCommands.REMOVE_FROM_FAVORITES)
             {
-                var curent = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
-                if (curent != null)
-                {
-                    await _repo.RemoveFromTelegramUserFavoriteElements(message.Chat.Id, curent);
-                    await _telegramBotClient.SendTextMessageAsync(
-                        chatId: message.Chat.Id,
-                        // replace br's for telegram only
-                        text: TelegramMessages.REMOVED_FROM_FAVORITES,
-                        replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
-                            await _repo.IsElementTelegramUserFavorite(message.Chat.Id, curent)),
-                        cancellationToken: _ct,
-                        parseMode: ParseMode.Html);
-                    return;
-                }
+                await RemoveFromFavorites(message);
                 return;
             }
 
-            var userChosenCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
-
             try
             {
-                QAElement question;
-
-                var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
-                if (chosenCategories.Count() == _repo.GetAllCategories().Count())
-                    question = _repo.GetElementRandom();
-                // todo множественный выбор категорий
-                else question = _repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
-                await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
-                Console.WriteLine($"текущий вопрос {question.Id}");
-
-                await _telegramBotClient.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    // replace br's for telegram only
-                    text: WebUtility.HtmlEncode($"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
-                    replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question)),
-                    cancellationToken: _ct,
-                    parseMode: ParseMode.Html);
+                await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.Questions);
+                await SendNextQuestion(message);
             }
             catch (Exception e)
             {
@@ -89,6 +59,49 @@ public class NextQuestionHandler : MessageHandler
                 chatId: message.Chat.Id,
                 text: TelegramMessages.HANDLE_ERROR,
                 cancellationToken: _ct);
+        }
+    }
+
+    private async Task SendNextQuestion(Message message)
+    {
+        var userChosenCategories = await _repo.GetTelegramUserCategories(message.Chat.Id);
+        QAElement question;
+
+        var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
+        if (chosenCategories.Count() == _repo.GetAllCategories().Count())
+            question = _repo.GetElementRandom();
+        // todo множественный выбор категорий
+        else question = _repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
+        await _repo.SetElementOnCurrentTelegramUser(message.Chat.Id, question);
+        Console.WriteLine($"текущий вопрос {question.Id}");
+
+        await _telegramBotClient.SendTextMessageAsync(
+            chatId: message.Chat.Id,
+            // replace br's for telegram only
+            text: WebUtility.HtmlEncode(
+                $"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
+            replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
+                await _repo.IsElementTelegramUserFavorite(message.Chat.Id, question),
+                await _repo.IsTelegramUserAdmin(message.Chat.Id)),
+            cancellationToken: _ct,
+            parseMode: ParseMode.Html);
+    }
+
+    private async Task RemoveFromFavorites(Message message)
+    {
+        var curent = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
+        if (curent != null)
+        {
+            await _repo.RemoveFromTelegramUserFavoriteElements(message.Chat.Id, curent);
+            await _telegramBotClient.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                // replace br's for telegram only
+                text: TelegramMessages.REMOVED_FROM_FAVORITES,
+                replyMarkup: TelegramMarkups.QUESTIONS_KEYBOARD(
+                    await _repo.IsElementTelegramUserFavorite(message.Chat.Id, curent),
+                    await _repo.IsTelegramUserAdmin(message.Chat.Id)),
+                cancellationToken: _ct,
+                parseMode: ParseMode.Html);
         }
     }
 }

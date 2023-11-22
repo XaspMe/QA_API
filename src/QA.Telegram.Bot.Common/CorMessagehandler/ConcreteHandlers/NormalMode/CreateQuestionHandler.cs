@@ -30,7 +30,7 @@ public class CreateQuestionHandler : MessageHandler
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: TelegramMessages.REQUEST_CATEGORY_FOR_NEW_QA,
-                replyMarkup:  TelegramMarkups.CATEGORIES_KEYBOARD(categories.Select(x => x.Name)),
+                replyMarkup:  TelegramMarkups.CATEGORIES_WITH_MENU_AND_ALL_SELECTED(categories.Select(x => x.Name)),
                 cancellationToken: _ct);
         }
         else if (_nextHandler != null)

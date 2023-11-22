@@ -1,4 +1,5 @@
 ﻿using QA.Data;
+using QA.Models.Models;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Common.CorMessagehandler.@abstract;
 using Telegram.Bot;
@@ -23,15 +24,8 @@ public class MenuHandler : MessageHandler
     {
         if (message.Text is TelegramCommands.START or TelegramCommands.MENU)
         {
-            var categories = _repo.GetAllCategories();
-            var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id));
-            await _telegramBotClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: message.Text is TelegramCommands.START?
-                    TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" + String.Join("\n", categories.Select(x => x.Name)):
-                    TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount()),
-                replyMarkup: replyKeyboardMarkup,
-                cancellationToken: _ct);
+            await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.Menu);
+            await SendMenu(message);
         }
         else if (_nextHandler != null)
         {
@@ -44,5 +38,18 @@ public class MenuHandler : MessageHandler
                 text: TelegramMessages.HANDLE_ERROR,
                 cancellationToken: _ct);
         }
+    }
+
+    private async Task SendMenu(Message message)
+    {
+        var categories = _repo.GetAllCategories();
+        var replyKeyboardMarkup = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id));
+        await _telegramBotClient.SendTextMessageAsync(
+            chatId: message.Chat.Id,
+            text: message.Text is TelegramCommands.START
+                ? TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" + String.Join("\n", categories.Select(x => x.Name))
+                : TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount()),
+            replyMarkup: replyKeyboardMarkup,
+            cancellationToken: _ct);
     }
 }
