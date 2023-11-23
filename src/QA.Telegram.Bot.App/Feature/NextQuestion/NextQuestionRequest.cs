@@ -22,6 +22,7 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
 
     public async Task<QaBotResponse> Handle(NextQuestionRequest request, CancellationToken cancellationToken)
     {
+        await _repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.Normal);
         await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Questions);
         var userChosenCategories = await this._repo.GetTelegramUserCategories(request.UserMessage.Message.Chat.Id);
         QAElement question;
@@ -35,7 +36,20 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
         // todo множественный выбор категорий
         else
         {
-            question = this._repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
+            try
+            {
+                question = this._repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                var categories = this._repo.GetAllCategories();
+                await _repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.SelectCategory);
+                return new QaBotResponse()
+                {
+                    Text = TelegramMessages.CATEGORY_IS_EMPTY,
+                    Keyboard = TelegramMarkups.CATEGORIES_WITH_MENU_AND_ALL_SELECTED(categories.Select(x => x.Name)),
+                };
+            }
         }
 
         await this._repo.SetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id, question);
