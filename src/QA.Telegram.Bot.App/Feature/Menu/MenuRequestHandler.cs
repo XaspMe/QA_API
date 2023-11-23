@@ -7,7 +7,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Menu;
 
-public record MenuRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record MenuRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class MenuRequestHandler : IRequestHandler<MenuRequest, QaBotResponse>
 {
@@ -15,14 +15,14 @@ public class MenuRequestHandler : IRequestHandler<MenuRequest, QaBotResponse>
 
     public MenuRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(MenuRequest request, CancellationToken cancellationToken)
     {
-        await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
-        await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
-        var qaCount = this._repo.ElementsCount();
+        await _repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
+        await _repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
+        var qaCount = _repo.ElementsCount();
         return new QaBotResponse
         {
             Text = TelegramMessages.MAIN_MENU_WITH_COUNT(qaCount),

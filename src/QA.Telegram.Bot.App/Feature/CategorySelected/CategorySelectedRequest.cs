@@ -20,14 +20,14 @@ public class CategorySelectedRequestHandler : IRequestHandler<CategorySelectedRe
 
     public CategorySelectedRequestHandler(IQaRepo qaRepo, IMediator mediator)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
         _mediator = mediator;
     }
 
     public async Task<QaBotResponse> Handle(CategorySelectedRequest request, CancellationToken cancellationToken)
     {
 
-        var categories = this._repo.GetAllCategories().ToList();
+        var categories = _repo.GetAllCategories().ToList();
         var categoriesNames = categories.Select(x => x.Name).ToList();
 
         if (categoriesNames.Any(x => request.UserMessage.Message.Text!.Contains(x)) ||
@@ -36,7 +36,7 @@ public class CategorySelectedRequestHandler : IRequestHandler<CategorySelectedRe
             if (request.UserMessage.Message.Text!.Contains(TelegramCommands.ALL_CATEGORIES))
             {
                 // todo multiselect
-                await this._repo.UpdateTelegramUserFavoriteCategories(
+                await _repo.UpdateTelegramUserFavoriteCategories(
                     request.UserMessage.Message.Chat.Id,
                     new List<QACategory>());
             }
@@ -45,7 +45,7 @@ public class CategorySelectedRequestHandler : IRequestHandler<CategorySelectedRe
                 var userDbCats =
                     categories.FirstOrDefault(x => x.Name == request.UserMessage.Message.Text);
 
-                await this._repo.UpdateTelegramUserFavoriteCategories(
+                await _repo.UpdateTelegramUserFavoriteCategories(
                     request.UserMessage.Message.Chat.Id,
                     new List<QACategory>()
                     {
@@ -53,11 +53,11 @@ public class CategorySelectedRequestHandler : IRequestHandler<CategorySelectedRe
                     });
             }
 
-            await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
-            return await this._mediator.Send(new NextQuestionRequest(request.UserMessage), cancellationToken);
+            await _repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
+            return await _mediator.Send(new NextQuestionRequest(request.UserMessage), cancellationToken);
         }
 
-        await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
-        return await this._mediator.Send(new MenuRequest(request.UserMessage), cancellationToken);
+        await _repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
+        return await _mediator.Send(new MenuRequest(request.UserMessage), cancellationToken);
     }
 }

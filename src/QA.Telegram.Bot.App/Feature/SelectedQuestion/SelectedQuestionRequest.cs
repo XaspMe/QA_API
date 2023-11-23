@@ -8,7 +8,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.SelectedQuestion;
 
-public record SelectedQuestionRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record SelectedQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class SelectedQuestionRequestHandler : IRequestHandler<SelectedQuestionRequest, QaBotResponse>
 {
@@ -16,7 +16,7 @@ public class SelectedQuestionRequestHandler : IRequestHandler<SelectedQuestionRe
 
     public SelectedQuestionRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(SelectedQuestionRequest request, CancellationToken cancellationToken)

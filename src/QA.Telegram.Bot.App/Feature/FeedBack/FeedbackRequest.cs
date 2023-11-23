@@ -8,7 +8,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.FeedBack;
 
-public record FeedbackRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record FeedbackRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class FeedbackRequestHandler : IRequestHandler<FeedbackRequest, QaBotResponse>
 {
@@ -16,12 +16,12 @@ public class FeedbackRequestHandler : IRequestHandler<FeedbackRequest, QaBotResp
 
     public FeedbackRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(FeedbackRequest request, CancellationToken cancellationToken)
     {
-        await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.AppFeedBack);
+        await _repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.AppFeedBack);
         return new QaBotResponse()
         {
             Text = TelegramMessages.FEEDBACK_MESSAGE,

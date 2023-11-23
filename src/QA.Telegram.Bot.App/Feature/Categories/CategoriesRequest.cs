@@ -15,13 +15,13 @@ public class CategoriesRequestHandler : IRequestHandler<CategoriesRequest, QaBot
 
     public CategoriesRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(CategoriesRequest request, CancellationToken cancellationToken)
     {
-        await this._repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.SelectCategory);
-        var categories = this._repo.GetAllCategories();
+        await _repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.SelectCategory);
+        var categories = _repo.GetAllCategories();
         return new QaBotResponse
         {
             Text = TelegramMessages.CATEGORIES,

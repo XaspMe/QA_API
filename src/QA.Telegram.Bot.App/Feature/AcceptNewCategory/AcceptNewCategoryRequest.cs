@@ -8,7 +8,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 
-public record AcceptNewCategoryRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record AcceptNewCategoryRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class AcceptNewCategoryRequestHandler : IRequestHandler<AcceptNewCategoryRequest, QaBotResponse>
 {
@@ -16,7 +16,7 @@ public class AcceptNewCategoryRequestHandler : IRequestHandler<AcceptNewCategory
 
     public AcceptNewCategoryRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(AcceptNewCategoryRequest request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class AcceptNewCategoryRequestHandler : IRequestHandler<AcceptNewCategory
         if (request.UserMessage.Message.Text != string.Empty &&
             request.UserMessage.Message.Text != TelegramCommands.MENU)
         {
-            await this._repo.CreateTelegramUserQaCategory(
+            await _repo.CreateTelegramUserQaCategory(
                 request.UserMessage.Message.Chat.Id,
                 new QACategory()
                 {
@@ -42,7 +42,7 @@ public class AcceptNewCategoryRequestHandler : IRequestHandler<AcceptNewCategory
 
         return new QaBotResponse
         {
-            Text = TelegramMessages.MAIN_MENU_WITH_COUNT(this._repo.ElementsCount()),
+            Text = TelegramMessages.MAIN_MENU_WITH_COUNT(_repo.ElementsCount()),
             Keyboard = TelegramMarkups.MAIN_MENU(request.UserMessage.User.isAdmin),
         };
     }

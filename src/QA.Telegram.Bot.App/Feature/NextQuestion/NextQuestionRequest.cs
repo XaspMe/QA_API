@@ -9,7 +9,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.NextQuestion;
 
-public record NextQuestionRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record NextQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, QaBotResponse>
 {
@@ -17,20 +17,20 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
 
     public NextQuestionRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(NextQuestionRequest request, CancellationToken cancellationToken)
     {
         await _repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.Normal);
-        await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Questions);
-        var userChosenCategories = await this._repo.GetTelegramUserCategories(request.UserMessage.Message.Chat.Id);
+        await _repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Questions);
+        var userChosenCategories = await _repo.GetTelegramUserCategories(request.UserMessage.Message.Chat.Id);
         QAElement question;
 
         var chosenCategories = userChosenCategories as QACategory[] ?? userChosenCategories.ToArray();
-        if (chosenCategories.Count() == this._repo.GetAllCategories().Count())
+        if (chosenCategories.Count() == _repo.GetAllCategories().Count())
         {
-            question = this._repo.GetElementRandom();
+            question = _repo.GetElementRandom();
         }
 
         // todo множественный выбор категорий
@@ -38,11 +38,11 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
         {
             try
             {
-                question = this._repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
+                question = _repo.GetElementRandomInCategory(chosenCategories.FirstOrDefault()!.Id);
             }
             catch (ArgumentOutOfRangeException e)
             {
-                var categories = this._repo.GetAllCategories();
+                var categories = _repo.GetAllCategories();
                 await _repo.SetTelegramUserMode(request.UserMessage.User.TelegramChatId, UserInputMode.SelectCategory);
                 return new QaBotResponse()
                 {
@@ -52,7 +52,7 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
             }
         }
 
-        await this._repo.SetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id, question);
+        await _repo.SetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id, question);
         Console.WriteLine($"текущий вопрос {question.Id}");
 
         return new QaBotResponse()
@@ -60,8 +60,8 @@ public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, Q
             Text = WebUtility.HtmlEncode(
                 $"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
             Keyboard = TelegramMarkups.QUESTIONS_KEYBOARD(
-                await this._repo.IsElementTelegramUserFavorite(request.UserMessage.Message.Chat.Id, question),
-                await this._repo.IsTelegramUserAdmin(request.UserMessage.Message.Chat.Id)),
+                await _repo.IsElementTelegramUserFavorite(request.UserMessage.Message.Chat.Id, question),
+                await _repo.IsTelegramUserAdmin(request.UserMessage.Message.Chat.Id)),
         };
     }
 }

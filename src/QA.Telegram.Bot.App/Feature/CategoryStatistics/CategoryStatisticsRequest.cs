@@ -15,7 +15,7 @@ public class CategoryStatisticsRequestHandler : IRequestHandler<CategoryStatisti
 
     public CategoryStatisticsRequestHandler(IQaRepo repo)
     {
-        this._repo = repo;
+        _repo = repo;
     }
 
     public async Task<QaBotResponse> Handle(CategoryStatisticsRequest request, CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ public class CategoryStatisticsRequestHandler : IRequestHandler<CategoryStatisti
 
         var responseMessage = new StringBuilder();
         responseMessage.AppendLine("Статистика по вашим категориям");
-        foreach (var stat in this._repo.CategoriesStats())
+        foreach (var stat in _repo.CategoriesStats())
         {
             responseMessage.AppendLine(WebUtility.HtmlEncode(stat));
         }

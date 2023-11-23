@@ -5,7 +5,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.ShowAnswer;
 
-public record ShowAnswerRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record ShowAnswerRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class ShowAnswerRequestHandler : IRequestHandler<ShowAnswerRequest, QaBotResponse>
 {
@@ -13,12 +13,12 @@ public class ShowAnswerRequestHandler : IRequestHandler<ShowAnswerRequest, QaBot
 
     public ShowAnswerRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(ShowAnswerRequest request, CancellationToken cancellationToken)
     {
-        var question = await this._repo.GetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id);
+        var question = await _repo.GetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id);
         return new QaBotResponse
         {
             Text = WebUtility.HtmlEncode(question.Answer?.Replace("<br>", "\n")) ?? string.Empty,

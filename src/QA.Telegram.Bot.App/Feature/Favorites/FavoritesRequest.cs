@@ -9,7 +9,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.Favorites;
 
-public record FavoritesRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record FavoritesRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class FavoritesRequestHandler : IRequestHandler<FavoritesRequest, QaBotResponse>
 {
@@ -17,16 +17,16 @@ public class FavoritesRequestHandler : IRequestHandler<FavoritesRequest, QaBotRe
 
     public FavoritesRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(FavoritesRequest request, CancellationToken cancellationToken)
     {
-        var question = await this._repo.GetRandomElementFromTelegramUserFavorites(request.UserMessage.Message.Chat.Id);
+        var question = await _repo.GetRandomElementFromTelegramUserFavorites(request.UserMessage.Message.Chat.Id);
         if (question != null)
         {
-            await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.FavoriteQuestion);
-            await this._repo.SetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id, question);
+            await _repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.FavoriteQuestion);
+            await _repo.SetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id, question);
             return new QaBotResponse
             {
                 Text = WebUtility.HtmlEncode(
@@ -35,7 +35,7 @@ public class FavoritesRequestHandler : IRequestHandler<FavoritesRequest, QaBotRe
             };
         }
 
-        await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
+        await _repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
         return new QaBotResponse
         {
             Text = TelegramMessages.NO_FAVORITES,

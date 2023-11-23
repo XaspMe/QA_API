@@ -12,5 +12,5 @@ public class TelegramUserMessage
     }
 
     public Message Message { get; set; }
-    public QA.Models.Models.User User { get; set; }
+    public User User { get; set; }
 }

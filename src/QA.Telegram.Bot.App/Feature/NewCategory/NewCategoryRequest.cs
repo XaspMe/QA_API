@@ -8,7 +8,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.NewCategory;
 
-public record NewCategoryRequest(TelegramUserMessage UserMessage) : MediatR.IRequest<QaBotResponse>;
+public record NewCategoryRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
 
 public class NewCategoryRequestHandler : IRequestHandler<NewCategoryRequest, QaBotResponse>
 {
@@ -16,12 +16,12 @@ public class NewCategoryRequestHandler : IRequestHandler<NewCategoryRequest, QaB
 
     public NewCategoryRequestHandler(IQaRepo qaRepo)
     {
-        this._repo = qaRepo;
+        _repo = qaRepo;
     }
 
     public async Task<QaBotResponse> Handle(NewCategoryRequest request, CancellationToken cancellationToken)
     {
-        await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.CreateCategory);
+        await _repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.CreateCategory);
         return new QaBotResponse()
         {
             Text = TelegramMessages.REQUEST_CATEGORY_NAME,
