@@ -20,6 +20,7 @@ using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NewCategory;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
+using QA.Telegram.Bot.App.Feature.Return;
 using QA.Telegram.Bot.App.Feature.SelectedQuestion;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.App.Feature.Start;
@@ -159,12 +160,12 @@ public class BotService : BackgroundService
                             new CreateNewQuestionRequest(userMessage), cancellationToken),
                         TelegramCommands.ADD_TEST_DATA => await _mediator.Send(
                             new AddTestDataRequest(userMessage), cancellationToken),
+                        TelegramCommands.RETURN => await _mediator.Send(
+                            new ReturnRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
 
-                break;
-            case UserInputMode.Favorites:
                 break;
             case UserInputMode.AppFeedBack:
                 botResponse = await _mediator.Send(new AcceptFeedBackRequest(userMessage), cancellationToken);
@@ -182,8 +183,6 @@ public class BotService : BackgroundService
             case UserInputMode.SelectCategory:
                 botResponse = await _mediator.Send(new CategorySelectedRequest(userMessage), cancellationToken);
                 break;
-            default:
-                throw new ArgumentOutOfRangeException();
         }
 
         if (botResponse is null)
@@ -242,7 +241,7 @@ public class BotService : BackgroundService
         // AddTestData addTestData = new AddTestData(botClient, cancellationToken, _qaRepo);
         // CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
         // SelectedQuestionHandler selectedQuestionHandler = +
-        //     new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken);
+        //     new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken); +
         // ChangeQuestionCategoryHandler questionCategoryHandler =
         //     new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken); +
         // ReturnToPreviousStep previousStep = new ReturnToPreviousStep(botClient, cancellationToken, _qaRepo);
