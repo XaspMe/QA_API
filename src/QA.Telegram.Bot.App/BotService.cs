@@ -91,14 +91,6 @@ public class BotService : BackgroundService
             return;
         }
 
-        // if (lastMessage.TryGetValue(message.Chat.Id, out var lastUserMessage) &&
-        //     (DateTime.Now - lastUserMessage).TotalSeconds < 1)
-        // {
-        //     Console.WriteLine("DDOS handling");
-        //     return;
-        // }
-        // todo pass ct properly
-
         Console.WriteLine($"Received a '{messageText}' message in chat {message.Chat.Id}.");
         using var scope = _scopeFactory.CreateScope();
 
@@ -108,21 +100,42 @@ public class BotService : BackgroundService
         await _qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
         var user = await _qaRepo.GetTelegramUser(message.Chat.Id);
         TelegramUserMessage userMessage = new TelegramUserMessage(message, user);
+        var botResponse = await RequestData(cancellationToken, userMessage);
 
+        if (botResponse is null)
+        {
+            await botClient.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: TelegramMessages.UNKNOWN_COMMAND,
+                replyMarkup: TelegramMarkups.GO_TO_MENU,
+                cancellationToken: cancellationToken);
+        }
+        else
+        {
+            await botClient.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: botResponse.Text,
+                replyMarkup: botResponse.Keyboard,
+                parseMode: ParseMode.Html,
+                cancellationToken: cancellationToken);
+        }
+    }
+
+    private async Task<QaBotResponse?> RequestData(CancellationToken cancellationToken, TelegramUserMessage userMessage)
+    {
         QaBotResponse? botResponse = null;
-
-        switch (user.UserInputMode)
+        switch (userMessage.User.UserInputMode)
         {
             case UserInputMode.Normal:
-                if (message.Text.Contains('/') &&
-                    int.TryParse(message.Text.Replace("/", string.Empty), out var _))
+                if (userMessage.Message.Text!.Contains('/') &&
+                    int.TryParse(userMessage.Message.Text.Replace("/", string.Empty), out var _))
                 {
                     botResponse =
                         await _mediator.Send(new SelectedQuestionRequest(userMessage), cancellationToken);
                 }
                 else
                 {
-                    botResponse = messageText switch
+                    botResponse = userMessage.Message.Text switch
                     {
                         TelegramCommands.START => await _mediator.Send(
                             new StartRequest(userMessage),
@@ -185,122 +198,7 @@ public class BotService : BackgroundService
                 break;
         }
 
-        if (botResponse is null)
-        {
-            await botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: TelegramMessages.UNKNOWN_COMMAND,
-                replyMarkup: TelegramMarkups.GO_TO_MENU,
-                cancellationToken: cancellationToken);
-        }
-        else
-        {
-            await botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: botResponse.Text,
-                replyMarkup: botResponse.Keyboard,
-                parseMode: ParseMode.Html,
-                cancellationToken: cancellationToken);
-        }
-
-
-
-        // #region normal_mode
-        // MessageHandler menuHandler = new MenuHandler(botClient, +
-        //     cancellationToken,
-        //     _qaRepo);
-        // MessageHandler nextQuestionHandler = new NextQuestionHandler( +
-        //     _qaRepo,
-        //     botClient,
-        //     cancellationToken);
-        // MessageHandler answerCurrentQuestionHandler = new AnswerCurrentQuestionHandler( +
-        //     _qaRepo,
-        //     botClient,
-        //     cancellationToken);
-        // MessageHandler categoriesHandler = new CategoriesHandler( +
-        //     botClient,
-        //     cancellationToken,
-        //     _qaRepo);
-        // SelectCategoriesHandler selectCategories = new SelectCategoriesHandler( +
-        //     _qaRepo,
-        //     botClient,
-        //     cancellationToken);
-        // CategoryStatisticsHandler categoryStatisticsHandler = new CategoryStatisticsHandler( +
-        //     botClient,
-        //     cancellationToken,
-        //     _qaRepo);
-        // AddToFavoritesHandler addToFavoritesHandler = +
-        //     new AddToFavoritesHandler(botClient, cancellationToken, _qaRepo);
-        // DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler( +
-        //     botClient,
-        //     cancellationToken);
-        // MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler = +
-        //     new MyFavoritesQuestionMessageHandler(_qaRepo, botClient, cancellationToken);
-        // FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, _qaRepo); +
-        // CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, _qaRepo); +
-        // AddTestData addTestData = new AddTestData(botClient, cancellationToken, _qaRepo);
-        // CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
-        // SelectedQuestionHandler selectedQuestionHandler = +
-        //     new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken); +
-        // ChangeQuestionCategoryHandler questionCategoryHandler =
-        //     new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken); +
-        // ReturnToPreviousStep previousStep = new ReturnToPreviousStep(botClient, cancellationToken, _qaRepo);
-        //
-        // menuHandler.SetNextHandler(nextQuestionHandler);
-        // nextQuestionHandler.SetNextHandler(answerCurrentQuestionHandler);
-        // answerCurrentQuestionHandler.SetNextHandler(categoriesHandler);
-        // categoriesHandler.SetNextHandler(selectCategories);
-        // selectCategories.SetNextHandler(categoryStatisticsHandler);
-        // categoryStatisticsHandler.SetNextHandler(addToFavoritesHandler);
-        // addToFavoritesHandler.SetNextHandler(developerContactsHandler);
-        // developerContactsHandler.SetNextHandler(myFavoritesQuestionMessageHandler);
-        // myFavoritesQuestionMessageHandler.SetNextHandler(feedBackHandler);
-        // feedBackHandler.SetNextHandler(createCategoryHandler);
-        // createCategoryHandler.SetNextHandler(addTestData);
-        // addTestData.SetNextHandler(createQuestionHandler);
-        // createQuestionHandler.SetNextHandler(selectedQuestionHandler);
-        // selectedQuestionHandler.SetNextHandler(questionCategoryHandler);
-        // questionCategoryHandler.SetNextHandler(previousStep);
-        // #endregion
-        //
-        // #region app_feedback_mode
-        // AcceptFeedbackText acceptFeedback = new AcceptFeedbackText(botClient, +
-        //     cancellationToken,
-        //     _qaRepo);
-        // #endregion
-        //
-        // #region create_category
-        // AcceptNewCategory acceptNewCategory = new AcceptNewCategory(botClient, cancellationToken, _qaRepo); +
-        // #endregion
-        //
-        // #region create_element
-        // AcceptNewElement acceptNewElement = new AcceptNewElement(botClient, cancellationToken, _qaRepo, _cache); +
-        // #endregion
-        //
-        // #region change_element_category
-        //
-        // AcceptNewCategoryOrGoToMenu acceptNewCategoryOrGoToMenu = +
-        //     new AcceptNewCategoryOrGoToMenu(botClient, cancellationToken, _qaRepo);
-        //
-        // #endregion
-        //
-        // try
-        // {
-        //     switch (await _qaRepo.GetTelegramUserMode(message.Chat.Id))
-        //     {
-        //         case UserInputMode.Normal: await menuHandler.HandleMessage(message); break;
-        //         case UserInputMode.AppFeedBack: await acceptFeedback.HandleMessage(message); break;
-        //         case UserInputMode.CreateCategory: await acceptNewCategory.HandleMessage(message); break;
-        //         case UserInputMode.CreateQuestion: await acceptNewElement.HandleMessage(message); break;
-        //         case UserInputMode.ChangeQuestionCategory: await acceptNewCategoryOrGoToMenu.HandleMessage(message); break;
-        //     }
-        // }
-        // catch (Exception e)
-        // {
-        //     Console.WriteLine(e);
-        // }
-        //
-        // // todo добавить раздел о приложении
+        return botResponse;
     }
 
     private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -317,24 +215,3 @@ public class BotService : BackgroundService
         return Task.CompletedTask;
     }
 }
-
-// public class StartRequestHandler : IRequestHandler<StartRequest, QaBotResponce>
-// {
-//     private IQaRepo _repo;
-//
-//     public StartRequestHandler(IQaRepo qaRepo)
-//     {
-//         _repo = qaRepo;
-//     }
-//
-//     public async Task<QaBotResponce> Handle(StartRequest request, CancellationToken cancellationToken)
-//     {
-//         await _repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
-//         var categories = _repo.GetAllCategories();
-//         return new QaBotResponce(
-//             TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" +
-//             String.Join("\n", categories.Select(x => x.Name)),
-//             TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(request.UserMessage.Message.Chat.Id))
-//         );
-//     }
-// }
