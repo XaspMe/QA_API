@@ -15,6 +15,7 @@ using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NewCategory;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
+using QA.Telegram.Bot.App.Feature.SelectedQuestion;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.App.Feature.Start;
 using QA.Telegram.Bot.Common.Constants;
@@ -109,57 +110,53 @@ public class BotService : BackgroundService
         var user = await _qaRepo.GetTelegramUser(message.Chat.Id);
         TelegramUserMessage userMessage = new TelegramUserMessage(message, user);
 
-        QaBotResponse botResponse = null;
+        QaBotResponse? botResponse = null;
 
         switch (user.UserInputMode)
         {
             case UserInputMode.Normal:
-                switch (messageText)
+                if (message.Text.Contains('/') &&
+                    int.TryParse(message.Text.Replace("/", string.Empty), out var _))
                 {
-                    case TelegramCommands.START:
-                        botResponse = await this._mediator.Send(new StartRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.MENU:
-                        botResponse = await this._mediator.Send(new MenuRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.NEXT_QUESTION:
-                        botResponse =
-                            await this._mediator.Send(new NextQuestionRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.REMOVE_FROM_FAVORITES:
-                        botResponse = await this._mediator.Send(
-                            new RemoveFromFavoritesRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.SHOW_ANSWER:
-                        botResponse = await this._mediator.Send(
-                            new ShowAnswerRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.CATEGORIES:
-                        botResponse = await this._mediator.Send(new CategoriesRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.SHOW_CATEGORIES_STATISTICS:
-                        botResponse = await this._mediator.Send(
-                            new CategoryStatisticsRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.ADD_TO_FAVORITES:
-                        botResponse = await this._mediator.Send(
-                            new AddToFavoritesRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.DEVELOPER_CONTACTS:
-                        botResponse = await this._mediator.Send(
-                            new DeveloperContactsRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.MY_FAVORITES_QUESTIONS:
-                        botResponse = await this._mediator.Send(
-                            new FavoritesRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.FEEDBACK:
-                        botResponse = await this._mediator.Send(new FeedbackRequest(userMessage), cancellationToken);
-                        break;
-                    case TelegramCommands.CREATE_CATEGORY:
-                        botResponse = await this._mediator.Send(new NewCategoryRequest(userMessage), cancellationToken);
-                        break;
-                };
+                    botResponse =
+                        await this._mediator.Send(new SelectedQuestionRequest(userMessage), cancellationToken);
+                }
+                else
+                {
+                    botResponse = messageText switch
+                    {
+                        TelegramCommands.START => await this._mediator.Send(
+                            new StartRequest(userMessage),
+                            cancellationToken),
+                        TelegramCommands.MENU => await this._mediator.Send(
+                            new MenuRequest(userMessage),
+                            cancellationToken),
+                        TelegramCommands.NEXT_QUESTION => await this._mediator.Send(
+                            new NextQuestionRequest(userMessage), cancellationToken),
+                        TelegramCommands.REMOVE_FROM_FAVORITES => await this._mediator.Send(
+                            new RemoveFromFavoritesRequest(userMessage), cancellationToken),
+                        TelegramCommands.SHOW_ANSWER => await this._mediator.Send(
+                            new ShowAnswerRequest(userMessage),
+                            cancellationToken),
+                        TelegramCommands.CATEGORIES => await this._mediator.Send(
+                            new CategoriesRequest(userMessage),
+                            cancellationToken),
+                        TelegramCommands.SHOW_CATEGORIES_STATISTICS => await this._mediator.Send(
+                            new CategoryStatisticsRequest(userMessage), cancellationToken),
+                        TelegramCommands.ADD_TO_FAVORITES => await this._mediator.Send(
+                            new AddToFavoritesRequest(userMessage), cancellationToken),
+                        TelegramCommands.DEVELOPER_CONTACTS => await this._mediator.Send(
+                            new DeveloperContactsRequest(userMessage), cancellationToken),
+                        TelegramCommands.MY_FAVORITES_QUESTIONS => await this._mediator.Send(
+                            new FavoritesRequest(userMessage), cancellationToken),
+                        TelegramCommands.FEEDBACK => await this._mediator.Send(
+                            new FeedbackRequest(userMessage),
+                            cancellationToken),
+                        TelegramCommands.CREATE_CATEGORY => await this._mediator.Send(
+                            new NewCategoryRequest(userMessage), cancellationToken),
+                        _ => botResponse
+                    };
+                }
 
                 break;
             case UserInputMode.Favorites:
@@ -236,7 +233,7 @@ public class BotService : BackgroundService
         // CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, _qaRepo); +
         // AddTestData addTestData = new AddTestData(botClient, cancellationToken, _qaRepo);
         // CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
-        // SelectedQuestionHandler selectedQuestionHandler =
+        // SelectedQuestionHandler selectedQuestionHandler = +
         //     new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken);
         // ChangeQuestionCategoryHandler questionCategoryHandler =
         //     new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken);

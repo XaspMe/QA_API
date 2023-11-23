@@ -260,7 +260,9 @@ namespace QA.Data
 
         public QAElement GetElementById(int id)
         {
-            return _context.Elements.FirstOrDefault(x => x.Id == id);
+            return _context.Elements.
+                Include(x => x.Category).
+                FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<User> GetTelegramUser(long chatId)
