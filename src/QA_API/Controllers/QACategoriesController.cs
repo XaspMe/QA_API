@@ -54,6 +54,8 @@ namespace QA_API.Controllers
 
                 if (_repo.GetCategoryByName(category.Name) != null)
                 {
+                    {
+                    }
                     return ValidationProblem($"Category already exist {category.Name}");
                 }
 
