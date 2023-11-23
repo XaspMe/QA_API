@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="Scrutor" Version="4.2.2" />
+      <PackageReference Include="Telegram.Bot" Version="19.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\QA.Common\QA.Common.csproj" />
+      <ProjectReference Include="..\QA.Data\QA.Data.csproj" />
+      <ProjectReference Include="..\QA.Models\QA.Models.csproj" />
+      <ProjectReference Include="..\QA.Telegram.Bot.Models\QA.Telegram.Bot.Models.csproj" />
+
+
+    </ItemGroup>
+
+
+
+
+</Project>
