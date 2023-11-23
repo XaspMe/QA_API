@@ -6,6 +6,7 @@ using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestionCategory;
+using QA.Telegram.Bot.App.Feature.AddTestDataToDb;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
@@ -156,6 +157,8 @@ public class BotService : BackgroundService
                             cancellationToken),
                         TelegramCommands.ADD_QUESTION => await _mediator.Send(
                             new CreateNewQuestionRequest(userMessage), cancellationToken),
+                        TelegramCommands.ADD_TEST_DATA => await _mediator.Send(
+                            new AddTestDataRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -272,7 +275,7 @@ public class BotService : BackgroundService
         // #endregion
         //
         // #region create_element
-        // AcceptNewElement acceptNewElement = new AcceptNewElement(botClient, cancellationToken, _qaRepo, _cache);
+        // AcceptNewElement acceptNewElement = new AcceptNewElement(botClient, cancellationToken, _qaRepo, _cache); +
         // #endregion
         //
         // #region change_element_category
