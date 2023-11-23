@@ -15,8 +15,6 @@ namespace QA_API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
-                    //     webBuilder.UseUrls("http://62.113.97.22:5000", "https://62.113.97.22:5001");
                 });
     }
 }
