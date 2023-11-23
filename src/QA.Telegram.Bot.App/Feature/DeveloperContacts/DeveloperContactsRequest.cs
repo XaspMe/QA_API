@@ -12,7 +12,7 @@ public class DeveloperContactsRequestHandler : IRequestHandler<DeveloperContacts
     {
         return new QaBotResponse
         {
-            Text = TelegramMessages.DEVELOPER_CONTACT
+            Text = TelegramMessages.DEVELOPER_CONTACT,
         };
     }
 }
