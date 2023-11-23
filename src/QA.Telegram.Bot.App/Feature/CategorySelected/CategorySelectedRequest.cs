@@ -1,13 +1,10 @@
-using System.Net;
 using MediatR;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.Common.Constants;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.NormalMode;
 using QA.Telegram.Bot.Models;
-using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.CategorySelected;
 

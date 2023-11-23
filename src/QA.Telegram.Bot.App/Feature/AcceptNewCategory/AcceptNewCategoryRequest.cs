@@ -1,8 +1,6 @@
-using System.Net;
 using MediatR;
 using QA.Data;
 using QA.Models.Models;
-using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
 

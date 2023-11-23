@@ -1,4 +1,3 @@
-using System.Net;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.Common.Constants;

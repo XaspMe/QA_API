@@ -4,10 +4,12 @@ using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
+using QA.Telegram.Bot.App.Feature.AcceptNewQuestionCategory;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
+using QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.FeedBack;
@@ -19,13 +21,6 @@ using QA.Telegram.Bot.App.Feature.SelectedQuestion;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.App.Feature.Start;
 using QA.Telegram.Bot.Common.Constants;
-using QA.Telegram.Bot.Common.CorMessagehandler.@abstract;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AddCategoryMode;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AddElementMode;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.AppFeedBackMode;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.ChangeQuestionCategoryMode;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.NormalMode;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.ServiceHandlers;
 using QA.Telegram.Bot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -154,6 +149,9 @@ public class BotService : BackgroundService
                             cancellationToken),
                         TelegramCommands.CREATE_CATEGORY => await _mediator.Send(
                             new NewCategoryRequest(userMessage), cancellationToken),
+                        TelegramCommands.CHANGE_QUESTION_CATEGORY => await _mediator.Send(
+                            new ChangeQuestionCategoryRequest(userMessage),
+                            cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -170,6 +168,8 @@ public class BotService : BackgroundService
             case UserInputMode.CreateQuestion:
                 break;
             case UserInputMode.ChangeQuestionCategory:
+                botResponse =
+                    await _mediator.Send(new AcceptNewQuestionCategoryRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.SelectCategory:
                 botResponse = await _mediator.Send(new CategorySelectedRequest(userMessage), cancellationToken);

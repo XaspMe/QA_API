@@ -126,7 +126,7 @@ public class AcceptNewElement : MessageHandler
         await _repo.SetTelegramUserMode(message.Chat.Id, UserInputMode.Normal);
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
-            text: TelegramMessages.CATEGORY_SELECT_FAIL,
+            text: TelegramMessages.CATEGORY_INVALID,
             replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
             cancellationToken: _ct);
         await _repo.SetTelegramUserMode(message.Chat.Id, UserInputMode.Normal);

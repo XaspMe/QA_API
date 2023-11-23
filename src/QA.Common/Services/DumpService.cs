@@ -1,6 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using QA.Data;
 

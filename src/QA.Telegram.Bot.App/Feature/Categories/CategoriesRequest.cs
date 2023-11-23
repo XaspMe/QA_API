@@ -3,7 +3,6 @@ using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
-using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.Categories;
 

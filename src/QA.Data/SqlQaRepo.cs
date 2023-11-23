@@ -1,6 +1,4 @@
-﻿using System.Data;
-using Microsoft.EntityFrameworkCore;
-using QA.Data.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
 using QA.Models.Models;
 
 namespace QA.Data

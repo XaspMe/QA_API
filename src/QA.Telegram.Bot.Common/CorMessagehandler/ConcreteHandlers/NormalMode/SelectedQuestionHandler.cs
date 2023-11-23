@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using QA.Data;
-using QA.Models.Models;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Common.CorMessagehandler.@abstract;
 using Telegram.Bot;

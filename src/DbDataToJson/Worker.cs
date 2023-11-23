@@ -1,5 +1,4 @@
 using QA.Common.Services;
-using QA.Data;
 
 namespace DbDataToJson;
 

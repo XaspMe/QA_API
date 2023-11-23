@@ -1,7 +1,6 @@
 using MediatR;
 using QA.Data;
 using QA.Models.Models;
-using QA.Telegram.Bot.App.Feature.Start;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
 

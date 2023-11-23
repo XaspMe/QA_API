@@ -10,7 +10,6 @@ public static class TelegramMessages
     public const string REQUEST_QUESTION_FOR_NEW_QA = "Введите ваш вопрос и отправьте мне текстом.";
     public const string REQUEST_ANSWER_FOR_NEW_QA = "Введите ответ на вопрос и отправьте мне текстом.";
     public const string HANDLE_ERROR = "Извините, я не могу обработать ваше сообщение.";
-    public const string CATEGORY_SELECT_FAIL = "Данной категории не существует.";
     public const string FEEDBACK_MESSAGE = "Введите текст и отправьте мне обычным сообщением, ваше обращение будет рассмотрено администратором.";
     public const string FEEDBACK_ACCEPTED_MESSAGE = "Спасибо за обратную связь, это помогает проекту стать лучше.";
     public const string CATEGORIES = "Выбери категорию";

@@ -1,10 +1,8 @@
 using System.Net;
 using MediatR;
 using QA.Data;
-using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
-using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.SelectedQuestion;
 

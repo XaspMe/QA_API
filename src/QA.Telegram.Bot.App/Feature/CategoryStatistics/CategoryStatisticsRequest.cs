@@ -2,7 +2,6 @@ using System.Net;
 using System.Text;
 using MediatR;
 using QA.Data;
-using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.CategoryStatistics;
