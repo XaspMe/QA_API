@@ -7,6 +7,7 @@ using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
+using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
@@ -123,8 +124,7 @@ public class BotService : BackgroundService
                         break;
                     case TelegramCommands.REMOVE_FROM_FAVORITES:
                         botResponse = await this._mediator.Send(
-                            new RemoveFromFavoritesRequest(userMessage),
-                            cancellationToken);
+                            new RemoveFromFavoritesRequest(userMessage), cancellationToken);
                         break;
                     case TelegramCommands.SHOW_ANSWER:
                         botResponse = await this._mediator.Send(
@@ -135,8 +135,7 @@ public class BotService : BackgroundService
                         break;
                     case TelegramCommands.SHOW_CATEGORIES_STATISTICS:
                         botResponse = await this._mediator.Send(
-                            new CategoryStatisticsRequest(userMessage),
-                            cancellationToken);
+                            new CategoryStatisticsRequest(userMessage), cancellationToken);
                         break;
                     case TelegramCommands.ADD_TO_FAVORITES:
                         botResponse = await this._mediator.Send(
@@ -144,8 +143,11 @@ public class BotService : BackgroundService
                         break;
                     case TelegramCommands.DEVELOPER_CONTACTS:
                         botResponse = await this._mediator.Send(
-                            new DeveloperContactsRequest(userMessage),
-                            cancellationToken);
+                            new DeveloperContactsRequest(userMessage), cancellationToken);
+                        break;
+                    case TelegramCommands.MY_FAVORITES_QUESTIONS:
+                        botResponse = await this._mediator.Send(
+                            new FavoritesRequest(userMessage), cancellationToken);
                         break;
                 };
 
@@ -215,7 +217,7 @@ public class BotService : BackgroundService
         //     _qaRepo);
         // AddToFavoritesHandler addToFavoritesHandler = +
         //     new AddToFavoritesHandler(botClient, cancellationToken, _qaRepo);
-        // DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler(
+        // DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler( +
         //     botClient,
         //     cancellationToken);
         // MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler =
