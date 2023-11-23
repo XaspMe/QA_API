@@ -21,6 +21,7 @@ public class MenuRequestHandler : IRequestHandler<MenuRequest, QaBotResponse>
     public async Task<QaBotResponse> Handle(MenuRequest request, CancellationToken cancellationToken)
     {
         await this._repo.SetUserCurrentStep(request.UserMessage.Message.Chat.Id, UserCurrentStep.Menu);
+        await this._repo.SetTelegramUserMode(request.UserMessage.Message.Chat.Id, UserInputMode.Normal);
         var qaCount = this._repo.ElementsCount();
         return new QaBotResponse
         {

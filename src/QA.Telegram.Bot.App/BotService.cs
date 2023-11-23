@@ -2,12 +2,14 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using QA.Data;
 using QA.Models.Models;
+using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.Favorites;
+using QA.Telegram.Bot.App.Feature.FeedBack;
 using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
@@ -149,12 +151,16 @@ public class BotService : BackgroundService
                         botResponse = await this._mediator.Send(
                             new FavoritesRequest(userMessage), cancellationToken);
                         break;
+                    case TelegramCommands.FEEDBACK:
+                        botResponse = await this._mediator.Send(new FeedbackRequest(userMessage), cancellationToken);
+                        break;
                 };
 
                 break;
             case UserInputMode.Favorites:
                 break;
             case UserInputMode.AppFeedBack:
+                botResponse = await this._mediator.Send(new AcceptFeedBackRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.CreateCategory:
                 break;
@@ -189,8 +195,6 @@ public class BotService : BackgroundService
 
 
 
-
-        //
         // #region normal_mode
         // MessageHandler menuHandler = new MenuHandler(botClient, +
         //     cancellationToken,
@@ -220,9 +224,9 @@ public class BotService : BackgroundService
         // DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler( +
         //     botClient,
         //     cancellationToken);
-        // MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler =
+        // MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler = +
         //     new MyFavoritesQuestionMessageHandler(_qaRepo, botClient, cancellationToken);
-        // FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, _qaRepo);
+        // FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, _qaRepo); +
         // CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, _qaRepo);
         // AddTestData addTestData = new AddTestData(botClient, cancellationToken, _qaRepo);
         // CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
@@ -250,7 +254,7 @@ public class BotService : BackgroundService
         // #endregion
         //
         // #region app_feedback_mode
-        // AcceptFeedbackText acceptFeedback = new AcceptFeedbackText(botClient,
+        // AcceptFeedbackText acceptFeedback = new AcceptFeedbackText(botClient, +
         //     cancellationToken,
         //     _qaRepo);
         // #endregion
