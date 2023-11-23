@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.AcceptFeedback;
+using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
@@ -11,6 +12,7 @@ using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.FeedBack;
 using QA.Telegram.Bot.App.Feature.Menu;
+using QA.Telegram.Bot.App.Feature.NewCategory;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
@@ -154,6 +156,9 @@ public class BotService : BackgroundService
                     case TelegramCommands.FEEDBACK:
                         botResponse = await this._mediator.Send(new FeedbackRequest(userMessage), cancellationToken);
                         break;
+                    case TelegramCommands.CREATE_CATEGORY:
+                        botResponse = await this._mediator.Send(new NewCategoryRequest(userMessage), cancellationToken);
+                        break;
                 };
 
                 break;
@@ -163,6 +168,7 @@ public class BotService : BackgroundService
                 botResponse = await this._mediator.Send(new AcceptFeedBackRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.CreateCategory:
+                botResponse = await _mediator.Send(new AcceptNewCategoryRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.CreateQuestion:
                 break;
@@ -227,7 +233,7 @@ public class BotService : BackgroundService
         // MyFavoritesQuestionMessageHandler myFavoritesQuestionMessageHandler = +
         //     new MyFavoritesQuestionMessageHandler(_qaRepo, botClient, cancellationToken);
         // FeedBackHandler feedBackHandler = new FeedBackHandler(botClient, cancellationToken, _qaRepo); +
-        // CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, _qaRepo);
+        // CreateCategoryHandler createCategoryHandler = new CreateCategoryHandler(botClient, cancellationToken, _qaRepo); +
         // AddTestData addTestData = new AddTestData(botClient, cancellationToken, _qaRepo);
         // CreateQuestionHandler createQuestionHandler = new CreateQuestionHandler(botClient, cancellationToken, _qaRepo);
         // SelectedQuestionHandler selectedQuestionHandler =
@@ -260,7 +266,7 @@ public class BotService : BackgroundService
         // #endregion
         //
         // #region create_category
-        // AcceptNewCategory acceptNewCategory = new AcceptNewCategory(botClient, cancellationToken, _qaRepo);
+        // AcceptNewCategory acceptNewCategory = new AcceptNewCategory(botClient, cancellationToken, _qaRepo); +
         // #endregion
         //
         // #region create_element

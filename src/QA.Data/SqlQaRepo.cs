@@ -219,6 +219,9 @@ namespace QA.Data
 
         public async Task CreateTelegramUserQaCategory(long chatId, QACategory category)
         {
+            var existingCategories = await _context.Categories.Select(x => x.Id).ToListAsync();
+            // костыль, это важно для быстрого инита базы данных на новых тачках
+            category.Id = existingCategories.Max() + 1;
             var user = await _context.Users.Include(x => x.CategoriesCreated)
                 .FirstOrDefaultAsync(x => x.TelegramChatId == chatId);
             user.CategoriesCreated.Add(category);
