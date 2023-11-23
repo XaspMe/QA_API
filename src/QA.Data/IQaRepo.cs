@@ -4,6 +4,7 @@ namespace QA.Data
 {
     public interface IQaRepo
     {
+        public Task<User> GetTelegramUser(long chatId);
         public Task<bool> IsTelegramUserAdmin(long chatId);
         // todo убрать все телеграмм методы
         bool SaveChanges();

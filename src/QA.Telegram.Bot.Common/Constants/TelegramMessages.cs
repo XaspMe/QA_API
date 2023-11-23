@@ -18,9 +18,11 @@ public static class TelegramMessages
     public const string DEVELOPER_CONTACT = "По всем существующим вопросам:\n@comppomosh";
     public const string ADDED_TO_FAVORITES = "Вопрос успешно добавлен в избранное, ваши избранные вопросы могут быть найдены в главном меню.";
     public const string REMOVED_FROM_FAVORITES = "Вопрос был убран из вашего списка избранных.";
+    public const string QUESTION_ISNT_FAVORITE = "Вопрос не находится в списке избранных.";
     public const string NO_FAVORITES = "В избранном пока ничего нет, добавьте понравившиеся вопросы в избранные, чтобы они появились в этом разделе.";
     public const string CATEGORY_INVALID = "Данной категории не существует.";
+    public const string UNKNOWN_COMMAND = "Пока я не могу обработать данную команду:(";
     public static string HELLO(int qaCount) => $"Привет! Я знаю {qaCount} вопросов, которые могут быть использованы на собеседованиях по следующим темам:";
-    public static string MAIN_MENU_SELECTOR(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
+    public static string MAIN_MENU_WITH_COUNT(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
 
 }

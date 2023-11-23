@@ -30,7 +30,7 @@ public class AcceptFeedbackText : MessageHandler
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
             text: message.Text is TelegramCommands.MENU
-                ? TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount())
+                ? TelegramMessages.MAIN_MENU_WITH_COUNT(_repo.ElementsCount())
                 : TelegramMessages.FEEDBACK_ACCEPTED_MESSAGE,
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: _ct);

@@ -27,16 +27,16 @@ public class CategoryStatisticsHandler : MessageHandler
         {
             var categories = _repo.GetAllCategories();
 
-            var responceMessage = new StringBuilder();
-            responceMessage.AppendLine("Статистика по вашим категориям");
+            var responseMessage = new StringBuilder();
+            responseMessage.AppendLine("Статистика по вашим категориям");
             foreach (var stat in _repo.CategoriesStats())
             {
-                responceMessage.AppendLine(WebUtility.HtmlEncode(stat));
+                responseMessage.AppendLine(WebUtility.HtmlEncode(stat));
             }
 
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: responceMessage.ToString(),
+                text: responseMessage.ToString(),
                 replyMarkup: TelegramMarkups.MAIN_MENU(false),
                 cancellationToken: _ct);
         }

@@ -257,6 +257,11 @@ namespace QA.Data
             return _context.Elements.FirstOrDefault(x => x.Id == id);
         }
 
+        public async Task<User> GetTelegramUser(long chatId)
+        {
+            return await _context.Users.FirstAsync(x => x.TelegramChatId == chatId);
+        }
+
         public async Task<bool> IsTelegramUserAdmin(long chatId)
         {
             var user = await _context.Users.FirstAsync(x => x.TelegramChatId == chatId);

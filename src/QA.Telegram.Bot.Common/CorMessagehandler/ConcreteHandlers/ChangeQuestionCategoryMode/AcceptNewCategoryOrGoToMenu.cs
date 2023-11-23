@@ -58,7 +58,7 @@ public class AcceptNewCategoryOrGoToMenu : MessageHandler
         await _telegramBotClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
             text: message.Text is TelegramCommands.MENU
-                ? TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount())
+                ? TelegramMessages.MAIN_MENU_WITH_COUNT(_repo.ElementsCount())
                 : TelegramMessages.FEEDBACK_ACCEPTED_MESSAGE,
             replyMarkup: TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
             cancellationToken: _ct);

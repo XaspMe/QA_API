@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QaCronDumpService", "QaCron
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbDataToJson", "src\DbDataToJson\DbDataToJson.csproj", "{CA20F609-872B-4DED-9558-6182ADD002FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QA.Telegram.Bot.Models", "src\QA.Telegram.Bot.Models\QA.Telegram.Bot.Models.csproj", "{D3BFF956-451B-4844-9044-E0B24EE85A61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{CA20F609-872B-4DED-9558-6182ADD002FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA20F609-872B-4DED-9558-6182ADD002FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA20F609-872B-4DED-9558-6182ADD002FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3BFF956-451B-4844-9044-E0B24EE85A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3BFF956-451B-4844-9044-E0B24EE85A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3BFF956-451B-4844-9044-E0B24EE85A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3BFF956-451B-4844-9044-E0B24EE85A61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{DCC121DF-6A24-4A86-B78F-D8663D55454D} = {6AAF9DDE-213D-450F-AF94-9F050E4E648D}
 		{821769BF-3B3C-46B7-A74A-BA12569738D6} = {41DF5363-B1E0-42C6-BB73-42BEAA65A7E4}
 		{CA20F609-872B-4DED-9558-6182ADD002FD} = {821769BF-3B3C-46B7-A74A-BA12569738D6}
+		{D3BFF956-451B-4844-9044-E0B24EE85A61} = {6AAF9DDE-213D-450F-AF94-9F050E4E648D}
 	EndGlobalSection
 EndGlobal

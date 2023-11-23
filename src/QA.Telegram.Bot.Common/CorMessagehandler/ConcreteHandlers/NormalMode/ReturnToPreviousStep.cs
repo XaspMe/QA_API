@@ -108,7 +108,7 @@ public class ReturnToPreviousStep : MessageHandler
             chatId: message.Chat.Id,
             text: message.Text is TelegramCommands.START
                 ? TelegramMessages.HELLO(_repo.ElementsCount()) + "\n" + String.Join("\n", categories.Select(x => x.Name))
-                : TelegramMessages.MAIN_MENU_SELECTOR(_repo.ElementsCount()),
+                : TelegramMessages.MAIN_MENU_WITH_COUNT(_repo.ElementsCount()),
             replyMarkup: replyKeyboardMarkup,
             cancellationToken: _ct);
     }

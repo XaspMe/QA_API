@@ -7,5 +7,6 @@ public enum UserInputMode
     AppFeedBack,
     CreateCategory,
     CreateQuestion,
-    ChangeQuestionCategory
+    ChangeQuestionCategory,
+    SelectCategory,
 }

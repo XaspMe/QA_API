@@ -1,6 +1,8 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using QA.Data;
 using QA.Telegram.Bot.App;
+using QA.Telegram.Bot.App.Feature;
 
 var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
 if (dBConnectionString is "" or null)
@@ -16,6 +18,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<BotService>();
         services.AddScoped<IQaRepo, SqlQaRepo>();
         services.AddMemoryCache();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
     })
     .Build();
 

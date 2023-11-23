@@ -23,7 +23,7 @@ public class AnswerCurrentQuestionHandler : MessageHandler
 
     public override async Task HandleMessage(Message message)
     {
-        if (message.Text == TelegramCommands.ANSWER_CURRENT_QUESTION)
+        if (message.Text == TelegramCommands.SHOW_ANSWER)
         {
             var question = await _repo.GetElementOnCurrentTelegramUser(message.Chat.Id);
             await _telegramBotClient.SendTextMessageAsync(

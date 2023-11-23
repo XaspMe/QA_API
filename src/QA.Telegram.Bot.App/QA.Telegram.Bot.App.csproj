@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1"/>
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
           <PrivateAssets>all</PrivateAssets>
@@ -19,5 +20,9 @@
     <ItemGroup>
       <ProjectReference Include="..\QA.Data\QA.Data.csproj" />
       <ProjectReference Include="..\QA.Telegram.Bot.Common\QA.Telegram.Bot.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Feature\AddToFavorites\" />
     </ItemGroup>
 </Project>

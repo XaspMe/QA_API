@@ -4,7 +4,7 @@ namespace QA.Telegram.Bot.Common.Constants;
 
 public static class TelegramCommands
 {
-    public const string ANSWER_CURRENT_QUESTION = "\u003f Показать ответ";
+    public const string SHOW_ANSWER = "\u003f Показать ответ";
     public const string NEXT_QUESTION = "\u21d2 Следующий вопрос";
     public const string NEXT_FAVORITE_QUESTION = "\u21d2 Следующий избранный вопрос";
     public const string ADD_TO_FAVORITES = "\u2661 В избранное";
