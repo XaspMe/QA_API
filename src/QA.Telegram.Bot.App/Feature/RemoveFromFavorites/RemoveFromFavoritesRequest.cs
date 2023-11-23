@@ -22,18 +22,13 @@ public class RemoveFromFavoritesRequestHandler : IRequestHandler<RemoveFromFavor
     public async Task<QaBotResponse> Handle(RemoveFromFavoritesRequest request, CancellationToken cancellationToken)
     {
         var curent = await this._repo.GetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id);
-        if (curent != null)
+        await this._repo.RemoveFromTelegramUserFavoriteElements(request.UserMessage.Message.Chat.Id, curent);
+        return new QaBotResponse()
         {
-            await this._repo.RemoveFromTelegramUserFavoriteElements(request.UserMessage.Message.Chat.Id, curent);
-            return new QaBotResponse()
-            {
-                Text = TelegramMessages.REMOVED_FROM_FAVORITES,
-                Keyboard = TelegramMarkups.QUESTIONS_KEYBOARD(
-                    await this._repo.IsElementTelegramUserFavorite(request.UserMessage.Message.Chat.Id, curent),
-                    request.UserMessage.User.isAdmin),
-            };
-        }
-
-        throw new NotImplementedException(); // todo something else
+            Text = TelegramMessages.REMOVED_FROM_FAVORITES,
+            Keyboard = TelegramMarkups.QUESTIONS_KEYBOARD(
+                await this._repo.IsElementTelegramUserFavorite(request.UserMessage.Message.Chat.Id, curent),
+                request.UserMessage.User.isAdmin),
+        };
     }
 }

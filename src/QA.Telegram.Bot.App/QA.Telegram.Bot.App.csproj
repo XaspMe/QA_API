@@ -21,8 +21,4 @@
       <ProjectReference Include="..\QA.Data\QA.Data.csproj" />
       <ProjectReference Include="..\QA.Telegram.Bot.Common\QA.Telegram.Bot.Common.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Feature\AddToFavorites\" />
-    </ItemGroup>
 </Project>

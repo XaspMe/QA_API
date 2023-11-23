@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using QA.Data;
 using QA.Models.Models;
+using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
@@ -136,6 +137,10 @@ public class BotService : BackgroundService
                             new CategoryStatisticsRequest(userMessage),
                             cancellationToken);
                         break;
+                    case TelegramCommands.ADD_TO_FAVORITES:
+                        botResponse = await this._mediator.Send(
+                            new AddToFavoritesRequest(userMessage), cancellationToken);
+                        break;
                 };
 
                 break;
@@ -202,7 +207,7 @@ public class BotService : BackgroundService
         //     botClient,
         //     cancellationToken,
         //     _qaRepo);
-        // AddToFavoritesHandler addToFavoritesHandler =
+        // AddToFavoritesHandler addToFavoritesHandler = +
         //     new AddToFavoritesHandler(botClient, cancellationToken, _qaRepo);
         // DeveloperContactsHandler developerContactsHandler = new DeveloperContactsHandler(
         //     botClient,
