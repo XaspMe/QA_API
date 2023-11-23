@@ -15,7 +15,7 @@ public static class TelegramMessages
     public const string FEEDBACK_ACCEPTED_MESSAGE = "Спасибо за обратную связь, это помогает проекту стать лучше.";
     public const string CATEGORIES = "Выбери категорию";
     public const string ERROR = "Произошла ошибка :(";
-    public const string DEVELOPER_CONTACT = "По всем существующим вопросам:\n@comppomosh";
+    public const string DEVELOPER_CONTACT = "По всем вопросам или предложениям вы можете:\nНаписать мне - @comppomosh\n<a href='https://github.com/XaspMe'>Посетить мой гитхаб</a>\n<a href='https://github.com/XaspMe/QA_API'>Посмотреть исходный код этого бота</a>";
     public const string ADDED_TO_FAVORITES = "Вопрос успешно добавлен в избранное, ваши избранные вопросы могут быть найдены в главном меню.";
     public const string REMOVED_FROM_FAVORITES = "Вопрос был убран из вашего списка избранных.";
     public const string QUESTION_ISNT_FAVORITE = "Вопрос не находится в списке избранных.";

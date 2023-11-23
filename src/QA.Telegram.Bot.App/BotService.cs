@@ -6,6 +6,7 @@ using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
+using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
@@ -140,6 +141,11 @@ public class BotService : BackgroundService
                     case TelegramCommands.ADD_TO_FAVORITES:
                         botResponse = await this._mediator.Send(
                             new AddToFavoritesRequest(userMessage), cancellationToken);
+                        break;
+                    case TelegramCommands.DEVELOPER_CONTACTS:
+                        botResponse = await this._mediator.Send(
+                            new DeveloperContactsRequest(userMessage),
+                            cancellationToken);
                         break;
                 };
 
