@@ -4,12 +4,14 @@ using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
+using QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestionCategory;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
+using QA.Telegram.Bot.App.Feature.CreateNewQuestion;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.FeedBack;
@@ -152,6 +154,8 @@ public class BotService : BackgroundService
                         TelegramCommands.CHANGE_QUESTION_CATEGORY => await _mediator.Send(
                             new ChangeQuestionCategoryRequest(userMessage),
                             cancellationToken),
+                        TelegramCommands.ADD_QUESTION => await _mediator.Send(
+                            new CreateNewQuestionRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -166,6 +170,7 @@ public class BotService : BackgroundService
                 botResponse = await _mediator.Send(new AcceptNewCategoryRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.CreateQuestion:
+                botResponse = await _mediator.Send(new AcceptNewQuestionRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.ChangeQuestionCategory:
                 botResponse =
@@ -236,7 +241,7 @@ public class BotService : BackgroundService
         // SelectedQuestionHandler selectedQuestionHandler = +
         //     new SelectedQuestionHandler(_qaRepo, botClient, cancellationToken);
         // ChangeQuestionCategoryHandler questionCategoryHandler =
-        //     new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken);
+        //     new ChangeQuestionCategoryHandler(_qaRepo, botClient, cancellationToken); +
         // ReturnToPreviousStep previousStep = new ReturnToPreviousStep(botClient, cancellationToken, _qaRepo);
         //
         // menuHandler.SetNextHandler(nextQuestionHandler);
@@ -272,7 +277,7 @@ public class BotService : BackgroundService
         //
         // #region change_element_category
         //
-        // AcceptNewCategoryOrGoToMenu acceptNewCategoryOrGoToMenu =
+        // AcceptNewCategoryOrGoToMenu acceptNewCategoryOrGoToMenu = +
         //     new AcceptNewCategoryOrGoToMenu(botClient, cancellationToken, _qaRepo);
         //
         // #endregion
