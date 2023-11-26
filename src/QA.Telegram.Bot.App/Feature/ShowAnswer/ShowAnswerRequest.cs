@@ -5,7 +5,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.ShowAnswer;
 
-public record ShowAnswerRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record ShowAnswerRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class ShowAnswerRequestHandler : IRequestHandler<ShowAnswerRequest, QaBotResponse>
 {

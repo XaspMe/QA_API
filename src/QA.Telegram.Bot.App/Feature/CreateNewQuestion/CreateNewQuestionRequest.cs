@@ -9,7 +9,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.CreateNewQuestion;
 
-public record CreateNewQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record CreateNewQuestionRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage, true);
 
 public class CreateNewQuestionRequestHandler : IRequestHandler<CreateNewQuestionRequest, QaBotResponse>
 {

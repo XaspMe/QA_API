@@ -6,7 +6,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.SelectedQuestion;
 
-public record SelectedQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record SelectedQuestionRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class SelectedQuestionRequestHandler : IRequestHandler<SelectedQuestionRequest, QaBotResponse>
 {

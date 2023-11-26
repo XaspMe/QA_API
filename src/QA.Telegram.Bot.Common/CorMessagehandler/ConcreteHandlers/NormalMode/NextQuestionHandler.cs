@@ -37,7 +37,7 @@ public class NextQuestionHandler : MessageHandler
                 await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.Questions);
                 await SendNextQuestion(message);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

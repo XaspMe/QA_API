@@ -6,7 +6,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.FeedBack;
 
-public record FeedbackRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record FeedbackRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class FeedbackRequestHandler : IRequestHandler<FeedbackRequest, QaBotResponse>
 {

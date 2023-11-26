@@ -6,7 +6,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
 
-public record ChangeQuestionCategoryRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record ChangeQuestionCategoryRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage, true);
 
 public class ChangeQuestionCategoryRequestHandler : IRequestHandler<ChangeQuestionCategoryRequest, QaBotResponse>
 {

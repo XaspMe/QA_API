@@ -7,7 +7,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Favorites;
 
-public record FavoritesRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record FavoritesRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class FavoritesRequestHandler : IRequestHandler<FavoritesRequest, QaBotResponse>
 {

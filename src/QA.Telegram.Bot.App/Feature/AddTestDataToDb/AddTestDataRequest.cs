@@ -8,7 +8,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.AddTestDataToDb;
 
-public record AddTestDataRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record AddTestDataRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage, true);
 
 public class AAddTestDataRequestHandler : IRequestHandler<AddTestDataRequest, QaBotResponse>
 {

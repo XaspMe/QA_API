@@ -48,7 +48,7 @@ public class MyFavoritesQuestionMessageHandler : MessageHandler
                 await _repo.SetUserCurrentStep(message.Chat.Id, UserCurrentStep.FavoriteQuestion);
                 await SendNextFavoritesQuestionOrGoToMenu(message);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

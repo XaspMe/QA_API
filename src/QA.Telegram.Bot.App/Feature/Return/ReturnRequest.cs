@@ -11,7 +11,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Return;
 
-public record ReturnRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record ReturnRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class ReturnRequestHandler : IRequestHandler<ReturnRequest, QaBotResponse>
 {

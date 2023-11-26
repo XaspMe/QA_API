@@ -5,7 +5,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.AddToFavorites;
 
-public record AddToFavoritesRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record AddToFavoritesRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class AddToFavoritesRequestHandler : IRequestHandler<AddToFavoritesRequest, QaBotResponse>
 {

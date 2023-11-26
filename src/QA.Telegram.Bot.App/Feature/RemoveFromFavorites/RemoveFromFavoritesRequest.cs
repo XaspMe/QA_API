@@ -5,7 +5,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
 
-public record RemoveFromFavoritesRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record RemoveFromFavoritesRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class RemoveFromFavoritesRequestHandler : IRequestHandler<RemoveFromFavoritesRequest, QaBotResponse>
 {

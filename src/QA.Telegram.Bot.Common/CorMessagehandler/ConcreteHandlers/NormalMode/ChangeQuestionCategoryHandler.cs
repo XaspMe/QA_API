@@ -35,7 +35,7 @@ public class ChangeQuestionCategoryHandler : MessageHandler
                     replyMarkup: TelegramMarkups.CATEGORIES_WITH_MENU(categories.Select(x => x.Name)),
                     cancellationToken: _ct);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 await _telegramBotClient.SendTextMessageAsync(
                     chatId: message.Chat.Id,

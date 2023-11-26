@@ -7,7 +7,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.NextQuestion;
 
-public record NextQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record NextQuestionRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class NextQuestionRequestHandler : IRequestHandler<NextQuestionRequest, QaBotResponse>
 {

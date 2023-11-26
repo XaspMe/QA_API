@@ -6,7 +6,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.NewCategory;
 
-public record NewCategoryRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record NewCategoryRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage, true);
 
 public class NewCategoryRequestHandler : IRequestHandler<NewCategoryRequest, QaBotResponse>
 {

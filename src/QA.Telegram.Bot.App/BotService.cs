@@ -25,6 +25,7 @@ using QA.Telegram.Bot.App.Feature.SelectedQuestion;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.App.Feature.Start;
 using QA.Telegram.Bot.Common.Constants;
+using QA.Telegram.Bot.Common.Exception;
 using QA.Telegram.Bot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -100,23 +101,43 @@ public class BotService : BackgroundService
         await _qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
         var user = await _qaRepo.GetTelegramUser(message.Chat.Id);
         TelegramUserMessage userMessage = new TelegramUserMessage(message, user);
-        var botResponse = await RequestData(cancellationToken, userMessage);
-
-        if (botResponse is null)
+        try
+        {
+            var botResponse = await RequestData(cancellationToken, userMessage);
+            if (botResponse is null)
+            {
+                // todo make as unknown command
+                await botClient.SendTextMessageAsync(
+                    chatId: message.Chat.Id,
+                    text: TelegramMessages.UNKNOWN_COMMAND,
+                    replyMarkup: TelegramMarkups.GO_TO_MENU,
+                    cancellationToken: cancellationToken);
+            }
+            else
+            {
+                await botClient.SendTextMessageAsync(
+                    chatId: message.Chat.Id,
+                    text: botResponse.Text,
+                    replyMarkup: botResponse.Keyboard,
+                    parseMode: ParseMode.Html,
+                    cancellationToken: cancellationToken);
+            }
+        }
+        catch (AccessDeniedException e)
         {
             await botClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: TelegramMessages.UNKNOWN_COMMAND,
+                text: TelegramMessages.ACCESS_DENIED,
                 replyMarkup: TelegramMarkups.GO_TO_MENU,
                 cancellationToken: cancellationToken);
         }
-        else
+        catch (Exception e)
         {
+            // todo only for debug mode
             await botClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: botResponse.Text,
-                replyMarkup: botResponse.Keyboard,
-                parseMode: ParseMode.Html,
+                text: e.Message,
+                replyMarkup: TelegramMarkups.GO_TO_MENU,
                 cancellationToken: cancellationToken);
         }
     }
@@ -175,6 +196,8 @@ public class BotService : BackgroundService
                             new AddTestDataRequest(userMessage), cancellationToken),
                         TelegramCommands.RETURN => await _mediator.Send(
                             new ReturnRequest(userMessage), cancellationToken),
+                        // TelegramCommands.EDIT_QUESTION => await _mediator.Send(
+                        //     new )
                         _ => botResponse
                     };
                 }

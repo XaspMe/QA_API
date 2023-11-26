@@ -20,6 +20,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddMemoryCache();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(UserAdminAccessBehavior<,>));
     })
     .Build();
 

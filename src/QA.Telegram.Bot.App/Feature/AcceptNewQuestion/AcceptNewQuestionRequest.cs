@@ -12,7 +12,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 
-public record AcceptNewQuestionRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record AcceptNewQuestionRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage, true);
 
 public class AcceptNewQuestionRequestHandler : IRequestHandler<AcceptNewQuestionRequest, QaBotResponse>
 {

@@ -73,7 +73,7 @@ public class SelectCategoriesHandler : MessageHandler
                     cancellationToken: _ct);
             }
         }
-        catch (Exception e)
+        catch (System.Exception e)
         {
             await _telegramBotClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,

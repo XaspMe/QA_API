@@ -6,7 +6,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Start;
 
-public record StartRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record StartRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class StartRequestHandler : IRequestHandler<StartRequest, QaBotResponse>
 {

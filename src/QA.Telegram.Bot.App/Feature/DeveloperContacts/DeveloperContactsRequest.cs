@@ -4,7 +4,7 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.DeveloperContacts;
 
-public record DeveloperContactsRequest(TelegramUserMessage UserMessage) : IRequest<QaBotResponse>;
+public record DeveloperContactsRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
 public class DeveloperContactsRequestHandler : IRequestHandler<DeveloperContactsRequest, QaBotResponse>
 {
