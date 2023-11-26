@@ -24,6 +24,8 @@ public static class TelegramCommands
     public const string ABOUT = "О приложении";
     // adm
     public const string EDIT_QUESTION = "Исправить вопрос";
+    public const string EDIT_QUESTION_CONTENT = "Изменить вопрос";
+    public const string EDIT_ANSWER_CONTENT = "Изменить ответ";
     public const string ADD_QUESTION = "Добавить вопрос";
     public const string DELETE_QUESTION = "Удалить вопрос";
     public const string CHANGE_QUESTION_CATEGORY = "Изменить категорию для вопроса";

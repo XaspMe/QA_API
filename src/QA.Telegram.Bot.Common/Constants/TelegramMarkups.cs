@@ -14,8 +14,7 @@ public static class TelegramMarkups
                     new KeyboardButton[] { TelegramCommands.SHOW_ANSWER, TelegramCommands.NEXT_QUESTION },
                     new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
                     new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
-                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
-                    new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION  }
                 });
 
             return new ReplyKeyboardMarkup(new[]
@@ -23,8 +22,7 @@ public static class TelegramMarkups
                 new KeyboardButton[] { TelegramCommands.SHOW_ANSWER, TelegramCommands.NEXT_QUESTION },
                 new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
                 new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
-                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
-                new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION  }
             });
         }
 
@@ -43,6 +41,13 @@ public static class TelegramMarkups
             new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
         });
     }
+
+    public static ReplyKeyboardMarkup EDIT_QUESTION_KEYBOARD => new ReplyKeyboardMarkup(new[]
+    {
+        new KeyboardButton[] { TelegramCommands.EDIT_QUESTION_CONTENT, TelegramCommands.EDIT_ANSWER_CONTENT },
+        new KeyboardButton[] { TelegramCommands.CHANGE_QUESTION_CATEGORY, TelegramCommands.DELETE_QUESTION },
+        new KeyboardButton[] { TelegramCommands.RETURN}
+    });
 
     public static ReplyKeyboardMarkup SELECTED_QUESTION_KEYBOARD(bool isFavorite, bool isAdmin)
     {

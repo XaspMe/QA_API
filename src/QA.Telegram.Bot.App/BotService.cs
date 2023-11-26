@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.AcceptFeedback;
@@ -14,6 +15,7 @@ using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
 using QA.Telegram.Bot.App.Feature.CreateNewQuestion;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
+using QA.Telegram.Bot.App.Feature.EditQuestion;
 using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.FeedBack;
 using QA.Telegram.Bot.App.Feature.Menu;
@@ -149,7 +151,7 @@ public class BotService : BackgroundService
         {
             case UserInputMode.Normal:
                 if (userMessage.Message.Text!.Contains('/') &&
-                    int.TryParse(userMessage.Message.Text.Replace("/", string.Empty), out var _))
+                    int.TryParse(userMessage.Message.Text.Replace("/", string.Empty), out _))
                 {
                     botResponse =
                         await _mediator.Send(new SelectedQuestionRequest(userMessage), cancellationToken);
@@ -196,8 +198,8 @@ public class BotService : BackgroundService
                             new AddTestDataRequest(userMessage), cancellationToken),
                         TelegramCommands.RETURN => await _mediator.Send(
                             new ReturnRequest(userMessage), cancellationToken),
-                        // TelegramCommands.EDIT_QUESTION => await _mediator.Send(
-                        //     new )
+                        TelegramCommands.EDIT_QUESTION => await _mediator.Send(
+                             new EditQuestionRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }

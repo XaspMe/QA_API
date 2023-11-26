@@ -21,8 +21,10 @@ public static class TelegramMessages
     public const string NO_FAVORITES = "В избранном пока ничего нет, добавьте понравившиеся вопросы в избранные, чтобы они появились в этом разделе.";
     public const string CATEGORY_INVALID = "Данной категории не существует.";
     public const string UNKNOWN_COMMAND = "Пока я не могу обработать данную команду:(";
+    public const string ACCESS_DENIED = "Пока я не могу обработать данную команду или ваш уровень доступа ограничен, свяжитесь с администратором для повышения привелегий:(";
     public const string CATEGORY_IS_EMPTY = "В данной категории пока пусто:(";
     public const string TEST_DATA_APPEND_SUCCESS = "Тестовые данные добавлены";
+    public const string SELECTOR = "Выберите пункт меню.";
     public static string HELLO(int qaCount) => $"Привет! Я знаю {qaCount} вопросов, которые могут быть использованы на собеседованиях по следующим темам:";
     public static string MAIN_MENU_WITH_COUNT(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
 

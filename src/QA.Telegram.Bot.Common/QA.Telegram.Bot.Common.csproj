@@ -17,17 +17,5 @@
       <ProjectReference Include="..\QA.Data\QA.Data.csproj" />
       <ProjectReference Include="..\QA.Models\QA.Models.csproj" />
       <ProjectReference Include="..\QA.Telegram.Bot.Models\QA.Telegram.Bot.Models.csproj" />
-
-
-
-
-    <ItemGroup>
-      <Folder Include="Abstract\" />
     </ItemGroup>
-
-    </ItemGroup>
-
-
-
-
 </Project>
