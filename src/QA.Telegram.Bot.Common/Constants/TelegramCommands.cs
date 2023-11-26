@@ -9,7 +9,6 @@ public static class TelegramCommands
     public const string NEXT_FAVORITE_QUESTION = "\u21d2 Следующий избранный вопрос";
     public const string ADD_TO_FAVORITES = "\u2661 В избранное";
     public const string REMOVE_FROM_FAVORITES = "\u2573 Убрать из избранного";
-    public const string EXCLUDE_FROM_FAVORITES = "\u2573 Исключить из избранного";
     public const string CATEGORIES = "\ud83d\udcf0 Вопросы по категориям";
     public const string MENU = "\u2630 Меню";
     public const string DEVELOPER_CONTACTS = "\ud83d\udcf1 Контакты разработчика";

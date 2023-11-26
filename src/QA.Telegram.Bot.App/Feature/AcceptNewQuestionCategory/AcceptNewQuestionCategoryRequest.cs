@@ -41,7 +41,10 @@ public class AcceptNewQuestionCategoryRequesttHandler : IRequestHandler<AcceptNe
         {
             return new QaBotResponse()
             {
-                Text = TelegramMessages.CATEGORY_INVALID,
+                // todo return back if invalid;
+                Text = request.UserMessage.Message.Text is TelegramCommands.MENU ?
+                    TelegramMessages.MAIN_MENU_WITH_COUNT(_repo.ElementsCount()) :
+                    TelegramMessages.CATEGORY_INVALID,
                 Keyboard = TelegramMarkups.MAIN_MENU(request.UserMessage.User.isAdmin),
             };
         }

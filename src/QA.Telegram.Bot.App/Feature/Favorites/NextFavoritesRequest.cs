@@ -7,18 +7,18 @@ using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Favorites;
 
-public record FavoritesRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
+public record NextFavoritesRequest(TelegramUserMessage UserMessage) : TelegramUserRequest(UserMessage);
 
-public class FavoritesRequestHandler : IRequestHandler<FavoritesRequest, QaBotResponse>
+public class NextFavoritesRequestHandler : IRequestHandler<NextFavoritesRequest, QaBotResponse>
 {
     private readonly IQaRepo _repo;
 
-    public FavoritesRequestHandler(IQaRepo qaRepo)
+    public NextFavoritesRequestHandler(IQaRepo qaRepo)
     {
         _repo = qaRepo;
     }
 
-    public async Task<QaBotResponse> Handle(FavoritesRequest request, CancellationToken cancellationToken)
+    public async Task<QaBotResponse> Handle(NextFavoritesRequest request, CancellationToken cancellationToken)
     {
         var question = await _repo.GetRandomElementFromTelegramUserFavorites(request.UserMessage.Message.Chat.Id);
         if (question != null)

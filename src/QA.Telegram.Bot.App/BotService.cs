@@ -102,7 +102,7 @@ public class BotService : BackgroundService
 
         await _qaRepo.СreateTelegramUserIfDoesntExist(message.Chat.Id);
         var user = await _qaRepo.GetTelegramUser(message.Chat.Id);
-        TelegramUserMessage userMessage = new TelegramUserMessage(message, user);
+        TelegramUserMessage userMessage = new TelegramUserMessage(message, user, botClient);
         try
         {
             var botResponse = await RequestData(cancellationToken, userMessage);
@@ -168,6 +168,10 @@ public class BotService : BackgroundService
                             cancellationToken),
                         TelegramCommands.NEXT_QUESTION => await _mediator.Send(
                             new NextQuestionRequest(userMessage), cancellationToken),
+                        TelegramCommands.MY_FAVORITES_QUESTIONS => await _mediator.Send(
+                            new NextFavoritesRequest(userMessage), cancellationToken),
+                        TelegramCommands.NEXT_FAVORITE_QUESTION => await _mediator.Send(
+                            new NextFavoritesRequest(userMessage), cancellationToken),
                         TelegramCommands.REMOVE_FROM_FAVORITES => await _mediator.Send(
                             new RemoveFromFavoritesRequest(userMessage), cancellationToken),
                         TelegramCommands.SHOW_ANSWER => await _mediator.Send(
@@ -182,8 +186,6 @@ public class BotService : BackgroundService
                             new AddToFavoritesRequest(userMessage), cancellationToken),
                         TelegramCommands.DEVELOPER_CONTACTS => await _mediator.Send(
                             new DeveloperContactsRequest(userMessage), cancellationToken),
-                        TelegramCommands.MY_FAVORITES_QUESTIONS => await _mediator.Send(
-                            new FavoritesRequest(userMessage), cancellationToken),
                         TelegramCommands.FEEDBACK => await _mediator.Send(
                             new FeedbackRequest(userMessage),
                             cancellationToken),

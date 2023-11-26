@@ -6,7 +6,6 @@ using QA.Telegram.Bot.App.Feature.Favorites;
 using QA.Telegram.Bot.App.Feature.Menu;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.Common.Constants;
-using QA.Telegram.Bot.Common.CorMessagehandler.ConcreteHandlers.NormalMode;
 using QA.Telegram.Bot.Models;
 
 namespace QA.Telegram.Bot.App.Feature.Return;
@@ -18,9 +17,10 @@ public class ReturnRequestHandler : IRequestHandler<ReturnRequest, QaBotResponse
     private readonly IQaRepo _repo;
     private readonly IMediator _mediator;
 
-    public ReturnRequestHandler(IQaRepo repo)
+    public ReturnRequestHandler(IQaRepo repo, IMediator mediator)
     {
         _repo = repo;
+        _mediator = mediator;
     }
 
     public async Task<QaBotResponse> Handle(ReturnRequest request, CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ public class ReturnRequestHandler : IRequestHandler<ReturnRequest, QaBotResponse
             case UserCurrentStep.Questions:
                 return await _mediator.Send(new NextQuestionRequest(request.UserMessage), cancellationToken);
             case UserCurrentStep.FavoriteQuestion:
-                return await _mediator.Send(new FavoritesRequest(request.UserMessage), cancellationToken);
+                return await _mediator.Send(new NextFavoritesRequest(request.UserMessage), cancellationToken);
             default:
                 throw new ArgumentOutOfRangeException();
         }

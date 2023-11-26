@@ -59,8 +59,7 @@ public static class TelegramMarkups
                     new KeyboardButton[] { TelegramCommands.SHOW_ANSWER, TelegramCommands.RETURN },
                     new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
                     new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
-                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
-                    new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                    new KeyboardButton[] { TelegramCommands.EDIT_QUESTION  }
                 });
 
             return new ReplyKeyboardMarkup(new[]
@@ -68,8 +67,7 @@ public static class TelegramMarkups
                 new KeyboardButton[] { TelegramCommands.SHOW_ANSWER, TelegramCommands.RETURN },
                 new KeyboardButton[] { TelegramCommands.ADD_TO_FAVORITES, TelegramCommands.RATE },
                 new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU },
-                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION, TelegramCommands.CHANGE_QUESTION_CATEGORY },
-                new KeyboardButton[] { TelegramCommands.DELETE_QUESTION}
+                new KeyboardButton[] { TelegramCommands.EDIT_QUESTION  }
             });
         }
 
@@ -94,7 +92,7 @@ public static class TelegramMarkups
         return new ReplyKeyboardMarkup(new[]
         {
             new KeyboardButton[] { TelegramCommands.SHOW_ANSWER, TelegramCommands.NEXT_FAVORITE_QUESTION },
-            new KeyboardButton[] { TelegramCommands.EXCLUDE_FROM_FAVORITES, TelegramCommands.RATE },
+            new KeyboardButton[] { TelegramCommands.REMOVE_FROM_FAVORITES, TelegramCommands.RATE },
             new KeyboardButton[] { TelegramCommands.REPORT, TelegramCommands.MENU }
         });
     }
