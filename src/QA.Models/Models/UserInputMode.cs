@@ -9,4 +9,6 @@ public enum UserInputMode
     CreateQuestion,
     ChangeQuestionCategory,
     SelectCategory,
+    ChangeContentQuestion,
+    ChangeContentAnswer
 }

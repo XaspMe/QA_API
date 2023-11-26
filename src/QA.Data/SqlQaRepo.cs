@@ -284,9 +284,15 @@ namespace QA.Data
             throw new NotImplementedException();
         }
 
-        public void UpdateElement(QAElement element)
+        public async Task UpdateElement(QAElement element)
         {
-            throw new NotImplementedException();
+            var dbElement = await _context.Elements.
+                Include(x => x.Category).
+                FirstAsync(x => x.Id == element.Id);
+            dbElement.Question = element.Question;
+            dbElement.Answer = element.Answer;
+            dbElement.Category = element.Category;
+            await _context.SaveChangesAsync();
         }
 
         public int ElementsCount()

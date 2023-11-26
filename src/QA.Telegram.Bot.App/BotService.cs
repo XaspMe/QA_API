@@ -7,12 +7,14 @@ using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestionCategory;
+using QA.Telegram.Bot.App.Feature.AcceptQuestionUpdate;
 using QA.Telegram.Bot.App.Feature.AddTestDataToDb;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
 using QA.Telegram.Bot.App.Feature.CategorySelected;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
+using QA.Telegram.Bot.App.Feature.ChangeQuestionContent;
 using QA.Telegram.Bot.App.Feature.CreateNewQuestion;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.EditQuestion;
@@ -202,6 +204,10 @@ public class BotService : BackgroundService
                             new ReturnRequest(userMessage), cancellationToken),
                         TelegramCommands.EDIT_QUESTION => await _mediator.Send(
                              new EditQuestionRequest(userMessage), cancellationToken),
+                        TelegramCommands.EDIT_ANSWER_CONTENT => await _mediator.Send(
+                            new ChangeAnswerRequest(userMessage), cancellationToken),
+                        TelegramCommands.EDIT_QUESTION_CONTENT => await _mediator.Send(
+                            new ChangeQuestionRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -222,6 +228,12 @@ public class BotService : BackgroundService
                 break;
             case UserInputMode.SelectCategory:
                 botResponse = await _mediator.Send(new CategorySelectedRequest(userMessage), cancellationToken);
+                break;
+            case UserInputMode.ChangeContentAnswer:
+                botResponse = await _mediator.Send(new AcceptAnswerUpdateRequest(userMessage), cancellationToken);
+                break;
+            case UserInputMode.ChangeContentQuestion:
+                botResponse = await _mediator.Send(new AcceptQuestionUpdateRequest(userMessage), cancellationToken);
                 break;
         }
 

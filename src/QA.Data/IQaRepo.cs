@@ -25,7 +25,7 @@ namespace QA.Data
         Task<QAElement> GetRandomElementFromTelegramUserFavorites(long chatId);
         void CreateElement(QAElement element);
         Task CreateElementWithCategoryLoading(QAElement element);
-        void UpdateElement(QAElement element);
+        Task UpdateElement(QAElement element);
         void DeleteElement(QAElement element);
         QAElement GetElementInGroupByQuestion(string question, int group);
         Task СreateTelegramUserIfDoesntExist(long chatId);
