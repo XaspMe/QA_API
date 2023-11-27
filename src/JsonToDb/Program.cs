@@ -23,16 +23,16 @@ var _appDbContext = serviceProvider.GetService<IQaRepo>();
 var result = File.ReadAllText(""); // here your path to file
 var deserialised = JsonConvert.DeserializeObject<ICollection<DumpService.QaDump>>(result);
 // add categories
-// foreach (var category in deserialised.ToList().GroupBy(x => x.categoryId).Select(x => x.First()))
-// {
-//     var qaCategory = new QACategory()
-//     {
-//         Id = category.categoryId,
-//         Name = category.category
-//     };
-//     _appDbContext.CreateCategory(qaCategory);
-//     _appDbContext.SaveChanges();
-// }
+foreach (var category in deserialised.ToList().GroupBy(x => x.categoryId).Select(x => x.First()))
+{
+    var qaCategory = new QACategory()
+    {
+        Id = category.categoryId,
+        Name = category.category
+    };
+    _appDbContext.CreateCategory(qaCategory);
+    _appDbContext.SaveChanges();
+}
 
 var catsResult = _appDbContext.GetAllCategories();
 Console.WriteLine("text");
