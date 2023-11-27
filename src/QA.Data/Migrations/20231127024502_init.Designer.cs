@@ -12,8 +12,8 @@ using QA.Data;
 namespace QA.Data.Migrations
 {
     [DbContext(typeof(QaContext))]
-    [Migration("20231127002644_initial")]
-    partial class initial
+    [Migration("20231127024502_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

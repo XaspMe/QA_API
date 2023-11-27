@@ -52,7 +52,9 @@ namespace QA.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CurrentQuestionId = table.Column<int>(type: "int", nullable: true),
                     TelegramChatId = table.Column<long>(type: "bigint", nullable: false),
-                    UserInputMode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserCurrentStep = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserInputMode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -120,12 +122,14 @@ namespace QA.Data.Migrations
                         name: "FK_UserFavoriteElements_Elements_QAElementId",
                         column: x => x.QAElementId,
                         principalTable: "Elements",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserFavoriteElements_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

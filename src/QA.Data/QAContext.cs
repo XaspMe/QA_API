@@ -85,7 +85,15 @@ namespace QA.Data
             var builder = new DbContextOptionsBuilder<QaContext>();
             var environmentVariable = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
             if (environmentVariable is "" or null)
-                throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
+            {
+                environmentVariable =
+                    Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Process);
+                if (environmentVariable is "" or null)
+                {
+                    throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
+                }
+            }
+
             builder.UseSqlServer(environmentVariable);
             return new QaContext(builder.Options);
         }
