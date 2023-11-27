@@ -1,6 +1,8 @@
 ﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 using QA.Data;
+using QA.Models.Models;
 
 namespace QA.Common.Services
 {
@@ -14,19 +16,28 @@ namespace QA.Common.Services
         }
 
         [DataContract]
+        [Serializable]
         public class QaDump
         {
             [DataMember] public int id;
             [DataMember] public string question;
             [DataMember] public string answer;
             [DataMember] public string category;
+            [DataMember] public int categoryId;
 
-            public QaDump(int id, string question, string answer, string category)
+            public QaDump()
+            {
+
+            }
+
+
+            public QaDump(int id, string question, string answer, string category, int categoryId)
             {
                 this.id = id;
                 this.question = question;
                 this.answer = answer;
                 this.category = category;
+                this.categoryId = categoryId;
             }
         }
 
@@ -34,12 +45,19 @@ namespace QA.Common.Services
         {
             var elements = _qaRepo.GetAllElements();
             var categories = _qaRepo.GetAllCategories();
-            var dumpQas = elements.Select(x => new
-                    { x.Id, x.Question, x.Answer, CategoryName = categories.First(y => y.Id == x.Category.Id).Name })
-                .ToList();
+            var dumpQas =
+                elements.Select(x => new
+                        QaDump
+                        {
+                            id = x.Id,
+                            question = x.Question,
+                            answer = x.Answer,
+                            category = x.Category.Name,
+                            categoryId = x.Category.Id
+                        }).ToList();
             var serializeObject = JsonConvert.SerializeObject(dumpQas);
 
-            var qaDumpSavePath = Environment.GetEnvironmentVariable("QA_DUMP_SAVE_PATH", EnvironmentVariableTarget.Machine);
+            var qaDumpSavePath = Environment.GetEnvironmentVariable("QA_DUMP_SAVE_PATH", EnvironmentVariableTarget.User);
             if (qaDumpSavePath is "" or null)
                 throw new ArgumentException("QA_DUMP_SAVE_PATH environment variable dos not exists on this machine or empty");
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QA.Common.Services;
 using QA.Data;
 
-var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Machine);
+var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
 if (dBConnectionString is "" or null)
     throw new ArgumentException("QA_DB environment variable does not exists on this machine or empty");
 

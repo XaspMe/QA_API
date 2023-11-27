@@ -101,7 +101,7 @@ namespace QA.Data
 
         public IEnumerable<QAElement> GetAllElements()
         {
-            var modelElem = _context.Elements.ToList();
+            var modelElem = _context.Elements.Include(x => x.Category) .ToList();
             return modelElem;
         }
 
