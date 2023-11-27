@@ -2,7 +2,7 @@ using System.Net;
 using System.Text;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
-using QA.Common.Extesions;
+using QA.Common.Extensions;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;

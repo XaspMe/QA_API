@@ -1,5 +1,5 @@
 using MediatR;
-using QA.Common.Extesions;
+using QA.Common.Extensions;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.EditQuestion;

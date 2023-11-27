@@ -21,6 +21,7 @@ public static class TelegramCommands
     public const string ADMIN = "/adm";
     public const string ALL_CATEGORIES = "Все подряд";
     public const string ABOUT = "О приложении";
+    public const string MANAGE = "Управление";
     // adm
     public const string EDIT_QUESTION = "Исправить вопрос";
     public const string EDIT_QUESTION_CONTENT = "Изменить вопрос";

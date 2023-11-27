@@ -1,6 +1,6 @@
 using QA.Models.Models;
 
-namespace QA.Common.Extesions;
+namespace QA.Common.Extensions;
 
 public static class QaElementExtesion
 {

@@ -29,7 +29,7 @@ public class NextFavoritesRequestHandler : IRequestHandler<NextFavoritesRequest,
             {
                 Text = WebUtility.HtmlEncode(
                     $"Вопрос /{question.Id}\nКатегория: {question.Category.Name}\n{question.Question?.Replace("<br>", "\n") ?? string.Empty}"),
-                Keyboard = TelegramMarkups.FAVORITE_QUESTIONS_KEYBOARD(),
+                Keyboard = TelegramMarkups.FAVORITE_QUESTIONS_KEYBOARD(request.UserMessage.User.isAdmin),
             };
         }
 
