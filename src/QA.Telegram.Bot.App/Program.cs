@@ -7,8 +7,14 @@ using QA.Telegram.Bot.App.Feature;
 var dBConnectionString = Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.User);
 if (dBConnectionString is "" or null)
 {
-    throw new ArgumentException("QA_DB environment variable does not exists on this machine or empty");
+    dBConnectionString =
+        Environment.GetEnvironmentVariable("QA_DB", EnvironmentVariableTarget.Process);
+    if (dBConnectionString is "" or null)
+    {
+        throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
+    }
 }
+
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>

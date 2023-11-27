@@ -59,9 +59,13 @@ public class BotService : BackgroundService
             Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.User);
         if (qaBotToken is "" or null)
         {
-            throw new ArgumentException("QA_BOT_TOKEN environment variable dos not exists on this machine or empty");
+            qaBotToken =
+                Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.Process);
+            if (qaBotToken is "" or null)
+            {
+                throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
+            }
         }
-
         var botClient = new TelegramBotClient(qaBotToken);
 
         using CancellationTokenSource cts = new ();
