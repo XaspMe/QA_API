@@ -20,7 +20,7 @@ services.AddScoped<IQaRepo, SqlQaRepo>();
 var serviceProvider = services.BuildServiceProvider();
 var _appDbContext = serviceProvider.GetService<IQaRepo>();
 
-var result = File.ReadAllText("C:\\temp\\dumps\\qa-dump-2023-11-27T05-06-36.json"); // here your path to file
+var result = File.ReadAllText(""); // here your path to file
 var deserialised = JsonConvert.DeserializeObject<ICollection<DumpService.QaDump>>(result);
 // add categories
 // foreach (var category in deserialised.ToList().GroupBy(x => x.categoryId).Select(x => x.First()))
