@@ -6,6 +6,6 @@ public static class QaElementExtesion
 {
     public static string TelegramMarkupShowAsString(this QAElement qaElement)
     {
-        return $"\nКатегория:\n{qaElement.Category.Name}\nВопрос:\n{qaElement.Question}\nОтвет:\n{qaElement.Answer}";
+        return $"Вопрос /{qaElement.Id}\nКатегория:\n{qaElement.Category.Name}\nВопрос:\n{qaElement.Question}\nОтвет:\n{qaElement.Answer}";
     }
 }

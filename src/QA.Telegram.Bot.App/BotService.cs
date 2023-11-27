@@ -16,6 +16,7 @@ using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.App.Feature.ChangeQuestionCategory;
 using QA.Telegram.Bot.App.Feature.ChangeQuestionContent;
 using QA.Telegram.Bot.App.Feature.CreateNewQuestion;
+using QA.Telegram.Bot.App.Feature.DeleteQuestion;
 using QA.Telegram.Bot.App.Feature.DeveloperContacts;
 using QA.Telegram.Bot.App.Feature.EditQuestion;
 using QA.Telegram.Bot.App.Feature.Favorites;
@@ -208,6 +209,8 @@ public class BotService : BackgroundService
                             new ChangeAnswerRequest(userMessage), cancellationToken),
                         TelegramCommands.EDIT_QUESTION_CONTENT => await _mediator.Send(
                             new ChangeQuestionRequest(userMessage), cancellationToken),
+                        TelegramCommands.DELETE_QUESTION => await _mediator.Send(
+                            new DeleteQuestionRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }

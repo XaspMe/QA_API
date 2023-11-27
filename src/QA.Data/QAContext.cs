@@ -45,8 +45,8 @@ namespace QA.Data
                 .UsingEntity<Dictionary<string, object>>(
                     "UserFavoriteElements",
                     j => j.HasOne<QAElement>().WithMany().HasForeignKey("QAElementId")
-                        .OnDelete(DeleteBehavior.NoAction),
-                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction),
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade), // изменение настройки удаления на Cascade
                     j => { j.HasKey("UserId", "QAElementId"); });
 
             modelBuilder.Entity<User>()

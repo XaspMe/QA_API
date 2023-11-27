@@ -78,14 +78,11 @@ namespace QA.Data
             _context.Categories.Remove(category);
         }
 
-        public void DeleteElement(QAElement element)
+        public async Task DeleteElement(QAElement element)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException(nameof(element));
-            }
-
+            var dbElement = await _context.Elements.FirstAsync(x => x.Id == element.Id);
             _context.Elements.Remove(element);
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<string> CategoriesStats()

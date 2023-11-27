@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using QA.Common.Extesions;
 using QA.Data;
 using QA.Models.Models;
 using QA.Telegram.Bot.App.Feature.CategoryStatistics;
@@ -64,7 +65,7 @@ public class AcceptNewQuestionRequestHandler : IRequestHandler<AcceptNewQuestion
         return new QaBotResponse()
         {
             Text = TelegramMessages.QA_ELEMENT_CREATED +
-                   $"\nКатегория:\n{qaElement.Category.Name}\nВопрос:\n{qaElement.Question}\nОтвет:\n{qaElement.Answer}",
+                   qaElement.TelegramMarkupShowAsString(),
             Keyboard = TelegramMarkups.MAIN_MENU(await _repo.IsTelegramUserAdmin(message.Chat.Id)),
         };
     }

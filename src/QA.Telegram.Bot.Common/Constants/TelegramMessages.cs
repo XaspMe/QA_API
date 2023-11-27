@@ -29,6 +29,7 @@ public static class TelegramMessages
     public const string SELECTOR = "Выберите пункт меню.";
     public const string REQUEST_NEW_QUESTION = "Введите исправленный вопрос.";
     public const string REQUEST_NEW_ANSWER = "Введите исправленный ответ.";
+    public const string DELETE_SUCCESS = "Удаление завершено.";
     public static string HELLO(int qaCount) => $"Привет! Я знаю {qaCount} вопросов, которые могут быть использованы на собеседованиях по следующим темам:";
     public static string MAIN_MENU_WITH_COUNT(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
 
