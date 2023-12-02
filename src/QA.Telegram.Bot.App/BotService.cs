@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using QA.Data;
 using QA.Models.Models;
+using QA.Telegram.Bot.App.Feature.About;
 using QA.Telegram.Bot.App.Feature.AcceptFeedback;
 using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
@@ -63,9 +64,10 @@ public class BotService : BackgroundService
                 Environment.GetEnvironmentVariable("QA_BOT_TOKEN", EnvironmentVariableTarget.Process);
             if (qaBotToken is "" or null)
             {
-                throw new ArgumentException("QA_DB environment variable dos not exists on this machine or empty");
+                throw new ArgumentException("QA_BOT_TOKEN environment variable dos not exists on this machine or empty");
             }
         }
+
         var botClient = new TelegramBotClient(qaBotToken);
 
         using CancellationTokenSource cts = new ();
@@ -129,7 +131,7 @@ public class BotService : BackgroundService
                     chatId: message.Chat.Id,
                     text: botResponse.Text,
                     replyMarkup: botResponse.Keyboard,
-                    parseMode: ParseMode.Html,
+                    parseMode: botResponse.ParseMode,
                     cancellationToken: cancellationToken);
             }
         }
@@ -169,11 +171,9 @@ public class BotService : BackgroundService
                     botResponse = userMessage.Message.Text switch
                     {
                         TelegramCommands.START => await _mediator.Send(
-                            new StartRequest(userMessage),
-                            cancellationToken),
+                            new StartRequest(userMessage), cancellationToken),
                         TelegramCommands.MENU => await _mediator.Send(
-                            new MenuRequest(userMessage),
-                            cancellationToken),
+                            new MenuRequest(userMessage), cancellationToken),
                         TelegramCommands.NEXT_QUESTION => await _mediator.Send(
                             new NextQuestionRequest(userMessage), cancellationToken),
                         TelegramCommands.MY_FAVORITES_QUESTIONS => await _mediator.Send(
@@ -183,11 +183,9 @@ public class BotService : BackgroundService
                         TelegramCommands.REMOVE_FROM_FAVORITES => await _mediator.Send(
                             new RemoveFromFavoritesRequest(userMessage), cancellationToken),
                         TelegramCommands.SHOW_ANSWER => await _mediator.Send(
-                            new ShowAnswerRequest(userMessage),
-                            cancellationToken),
+                            new ShowAnswerRequest(userMessage), cancellationToken),
                         TelegramCommands.CATEGORIES => await _mediator.Send(
-                            new CategoriesRequest(userMessage),
-                            cancellationToken),
+                            new CategoriesRequest(userMessage), cancellationToken),
                         TelegramCommands.SHOW_CATEGORIES_STATISTICS => await _mediator.Send(
                             new CategoryStatisticsRequest(userMessage), cancellationToken),
                         TelegramCommands.ADD_TO_FAVORITES => await _mediator.Send(
@@ -195,13 +193,11 @@ public class BotService : BackgroundService
                         TelegramCommands.DEVELOPER_CONTACTS => await _mediator.Send(
                             new DeveloperContactsRequest(userMessage), cancellationToken),
                         TelegramCommands.FEEDBACK => await _mediator.Send(
-                            new FeedbackRequest(userMessage),
-                            cancellationToken),
+                            new FeedbackRequest(userMessage), cancellationToken),
                         TelegramCommands.CREATE_CATEGORY => await _mediator.Send(
                             new NewCategoryRequest(userMessage), cancellationToken),
                         TelegramCommands.CHANGE_QUESTION_CATEGORY => await _mediator.Send(
-                            new ChangeQuestionCategoryRequest(userMessage),
-                            cancellationToken),
+                            new ChangeQuestionCategoryRequest(userMessage), cancellationToken),
                         TelegramCommands.ADD_QUESTION => await _mediator.Send(
                             new CreateNewQuestionRequest(userMessage), cancellationToken),
                         TelegramCommands.ADD_TEST_DATA => await _mediator.Send(
@@ -218,6 +214,8 @@ public class BotService : BackgroundService
                             new DeleteQuestionRequest(userMessage), cancellationToken),
                         TelegramCommands.MANAGE => await _mediator.Send(
                             new ManageAppRequest(userMessage), cancellationToken),
+                        TelegramCommands.ABOUT => await _mediator.Send(
+                            new AboutRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -233,8 +231,7 @@ public class BotService : BackgroundService
                 botResponse = await _mediator.Send(new AcceptNewQuestionRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.ChangeQuestionCategory:
-                botResponse =
-                    await _mediator.Send(new AcceptNewQuestionCategoryRequest(userMessage), cancellationToken);
+                botResponse = await _mediator.Send(new AcceptNewQuestionCategoryRequest(userMessage), cancellationToken);
                 break;
             case UserInputMode.SelectCategory:
                 botResponse = await _mediator.Send(new CategorySelectedRequest(userMessage), cancellationToken);
@@ -260,6 +257,7 @@ public class BotService : BackgroundService
         //     _ => exception.ToString()
         // };
 
+        // todo log
         Console.WriteLine(exception.Message);
         return Task.CompletedTask;
     }
