@@ -1,15 +1,11 @@
-using System.Net;
-using System.Text;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using QA.Common.Extensions;
 using QA.Data;
 using QA.Models.Models;
-using QA.Telegram.Bot.App.Feature.CategoryStatistics;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 

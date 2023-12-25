@@ -10,5 +10,6 @@ public enum UserInputMode
     ChangeQuestionCategory,
     SelectCategory,
     ChangeContentQuestion,
-    ChangeContentAnswer
+    ChangeContentAnswer,
+    Search
 }

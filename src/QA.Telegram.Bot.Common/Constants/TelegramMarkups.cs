@@ -151,7 +151,7 @@ public static class TelegramMarkups
         new KeyboardButton[]
             { TelegramCommands.ADD_TEST_DATA, TelegramCommands.ADD_QUESTION },
         new KeyboardButton[]
-            { TelegramCommands.MENU },
+            {  TelegramCommands.SEARCH, TelegramCommands.MENU },
     });
 
     public static ReplyKeyboardMarkup CATEGORIES_WITH_MENU_AND_ALL_SELECTED(IEnumerable<string> Categories)

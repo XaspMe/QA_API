@@ -1,9 +1,12 @@
 ﻿// ReSharper disable InconsistentNaming
 
+using Telegram.Bot.Types.ReplyMarkups;
+
 namespace QA.Telegram.Bot.Common.Constants;
 
 public static class TelegramCommands
 {
+    public const string SEARCH = "Поиск по контенту";
     public const string SHOW_ANSWER = "\u003f Показать ответ";
     public const string NEXT_QUESTION = "\u21d2 Следующий вопрос";
     public const string NEXT_FAVORITE_QUESTION = "\u21d2 Следующий избранный вопрос";

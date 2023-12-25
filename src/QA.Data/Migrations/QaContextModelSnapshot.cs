@@ -103,6 +103,9 @@ namespace QA.Data.Migrations
                     b.Property<int?>("CurrentQuestionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("TelegramChatId")
                         .HasColumnType("bigint");
 
@@ -112,6 +115,9 @@ namespace QA.Data.Migrations
 
                     b.Property<string>("UserInputMode")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAdmin")

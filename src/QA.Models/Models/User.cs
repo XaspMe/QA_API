@@ -13,4 +13,6 @@ public class User
     public UserInputMode UserInputMode { get; set; }
     // am using it before adding proper auth approach
     public bool isAdmin { get; set; } = false;
+    public string? UserName { get; set; }
+    public string? DisplayName { get; set; }
 }

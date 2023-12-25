@@ -3,6 +3,7 @@ using MediatR;
 using QA.Data;
 using QA.Telegram.Bot.Common.Constants;
 using QA.Telegram.Bot.Models;
+using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.SelectedQuestion;
 
@@ -41,6 +42,7 @@ public class SelectedQuestionRequestHandler : IRequestHandler<SelectedQuestionRe
                     request.UserMessage.Message.Chat.Id,
                     targetQuestion),
                 request.UserMessage.User.isAdmin),
+            ParseMode = ParseMode.Markdown
         };
     }
 }

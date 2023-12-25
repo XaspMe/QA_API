@@ -2,6 +2,7 @@ using System.Net;
 using MediatR;
 using QA.Data;
 using QA.Telegram.Bot.Models;
+using Telegram.Bot.Types.Enums;
 
 namespace QA.Telegram.Bot.App.Feature.ShowAnswer;
 
@@ -22,6 +23,7 @@ public class ShowAnswerRequestHandler : IRequestHandler<ShowAnswerRequest, QaBot
         return new QaBotResponse
         {
             Text = WebUtility.HtmlEncode(question.Answer?.Replace("<br>", "\n")) ?? string.Empty,
+            ParseMode = ParseMode.Markdown
         };
     }
 }

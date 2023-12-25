@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QA.Models.Models;
+using Telegram.Bot.Types;
+using User = QA.Models.Models.User;
 
 namespace QA.Data
 {
@@ -120,12 +122,29 @@ namespace QA.Data
             return _context.Elements.FirstOrDefault(x => x.Question == question && x.Category.Id == group);
         }
 
-        public async Task СreateTelegramUserIfDoesntExist(long chatId)
+        public async Task СreateOrUpdateTelegramUser(Chat chat)
         {
-            if (!await _context.Users.AnyAsync(x => x.TelegramChatId == chatId))
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.TelegramChatId == chat.Id);
+            if (user == null)
             {
-                await _context.Users.AddAsync(new User() { TelegramChatId = chatId });
+                await _context.Users.AddAsync(
+                    new User()
+                    {
+                        TelegramChatId = chat.Id,
+                        DisplayName = $"{chat.FirstName} {chat.LastName}",
+                        UserName = chat.Username
+                    });
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (user.UserName != chat.Username
+                    || user.DisplayName != $"{chat.FirstName} {chat.LastName}")
+                {
+                    user.UserName = chat.Username;
+                    user.DisplayName = $"{chat.FirstName} {chat.LastName}";
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 

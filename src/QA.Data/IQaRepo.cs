@@ -1,4 +1,6 @@
 ﻿using QA.Models.Models;
+using Telegram.Bot.Types;
+using User = QA.Models.Models.User;
 
 namespace QA.Data
 {
@@ -28,7 +30,7 @@ namespace QA.Data
         Task UpdateElement(QAElement element);
         Task DeleteElement(QAElement element);
         QAElement GetElementInGroupByQuestion(string question, int group);
-        Task СreateTelegramUserIfDoesntExist(long chatId);
+        Task СreateOrUpdateTelegramUser(Chat chat);
         Task SetElementOnCurrentTelegramUser(long chatId, QAElement element);
         Task<QAElement> GetElementOnCurrentTelegramUser(long chatId);
         Task<IEnumerable<QACategory>> GetTelegramUserCategories(long chatId);
