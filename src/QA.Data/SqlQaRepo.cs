@@ -122,7 +122,7 @@ namespace QA.Data
             return _context.Elements.FirstOrDefault(x => x.Question == question && x.Category.Id == group);
         }
 
-        public async Task СreateOrUpdateTelegramUser(Chat chat)
+        public async Task СreateOrUpdateTelegramUserSetAccessTime(Chat chat)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.TelegramChatId == chat.Id);
             if (user == null)
@@ -134,7 +134,6 @@ namespace QA.Data
                         DisplayName = $"{chat.FirstName} {chat.LastName}",
                         UserName = chat.Username
                     });
-                await _context.SaveChangesAsync();
             }
             else
             {
@@ -143,9 +142,10 @@ namespace QA.Data
                 {
                     user.UserName = chat.Username;
                     user.DisplayName = $"{chat.FirstName} {chat.LastName}";
-                    await _context.SaveChangesAsync();
                 }
             }
+            user.LastAccess = DateTime.Now;
+            await _context.SaveChangesAsync();
         }
 
         public async Task SetElementOnCurrentTelegramUser(long chatId, QAElement element)

@@ -110,7 +110,7 @@ public class BotService : BackgroundService
         _qaRepo = scope.ServiceProvider.GetRequiredService<IQaRepo>();
         _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        await _qaRepo.СreateOrUpdateTelegramUser(message.Chat);
+        await _qaRepo.СreateOrUpdateTelegramUserSetAccessTime(message.Chat);
         var user = await _qaRepo.GetTelegramUser(message.Chat.Id);
         TelegramUserMessage userMessage = new TelegramUserMessage(message, user, botClient);
         try

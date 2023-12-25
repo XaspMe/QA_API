@@ -106,6 +106,9 @@ namespace QA.Data.Migrations
                     b.Property<string>("DisplayName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastAccess")
+                        .HasColumnType("datetime2");
+
                     b.Property<long>("TelegramChatId")
                         .HasColumnType("bigint");
 

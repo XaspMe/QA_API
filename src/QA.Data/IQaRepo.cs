@@ -30,7 +30,7 @@ namespace QA.Data
         Task UpdateElement(QAElement element);
         Task DeleteElement(QAElement element);
         QAElement GetElementInGroupByQuestion(string question, int group);
-        Task СreateOrUpdateTelegramUser(Chat chat);
+        Task СreateOrUpdateTelegramUserSetAccessTime(Chat chat);
         Task SetElementOnCurrentTelegramUser(long chatId, QAElement element);
         Task<QAElement> GetElementOnCurrentTelegramUser(long chatId);
         Task<IEnumerable<QACategory>> GetTelegramUserCategories(long chatId);
