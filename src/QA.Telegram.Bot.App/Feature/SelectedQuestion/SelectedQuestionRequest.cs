@@ -41,8 +41,7 @@ public class SelectedQuestionRequestHandler : IRequestHandler<SelectedQuestionRe
                 await _repo.IsElementTelegramUserFavorite(
                     request.UserMessage.Message.Chat.Id,
                     targetQuestion),
-                request.UserMessage.User.isAdmin),
-            ParseMode = ParseMode.Markdown
+                request.UserMessage.User.isAdmin)
         };
     }
 }

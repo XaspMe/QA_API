@@ -22,8 +22,7 @@ public class ShowAnswerRequestHandler : IRequestHandler<ShowAnswerRequest, QaBot
         var question = await _repo.GetElementOnCurrentTelegramUser(request.UserMessage.Message.Chat.Id);
         return new QaBotResponse
         {
-            Text = WebUtility.HtmlEncode(question.Answer?.Replace("<br>", "\n")) ?? string.Empty,
-            ParseMode = ParseMode.Markdown
+            Text = WebUtility.HtmlEncode(question.Answer?.Replace("<br>", "\n")) ?? string.Empty
         };
     }
 }

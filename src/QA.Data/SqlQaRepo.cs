@@ -127,13 +127,13 @@ namespace QA.Data
             var user = await _context.Users.FirstOrDefaultAsync(x => x.TelegramChatId == chat.Id);
             if (user == null)
             {
-                await _context.Users.AddAsync(
-                    new User()
-                    {
-                        TelegramChatId = chat.Id,
-                        DisplayName = $"{chat.FirstName} {chat.LastName}",
-                        UserName = chat.Username
-                    });
+                user = new User()
+                {
+                    TelegramChatId = chat.Id,
+                    DisplayName = $"{chat.FirstName} {chat.LastName}",
+                    UserName = chat.Username
+                };
+                await _context.Users.AddAsync(user);
             }
             else
             {
