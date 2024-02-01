@@ -1,5 +1,7 @@
 # OBSOLETE!! HAS BEEN WORKING AS A TELEGRAM BOT FOR ABOUT HALF A YEAR, IF YOU WANT TO SEE AN EXAMPLE OF MY CODE, GO TO THE CODE SECTION WITH THE BOT
 
+# Description was written in ~2018
+
 # C# Core 3.1 Full REST API training project.
 
 The project allows:
