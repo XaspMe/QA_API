@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Fissoft.EntityFramework.Fts;
+using Microsoft.EntityFrameworkCore;
 using QA.Models.Models;
 using Telegram.Bot.Types;
 using User = QA.Models.Models.User;
@@ -260,6 +261,16 @@ namespace QA.Data
             var firstAsync = await _context.Users.Where(x => x.TelegramChatId == TelegramChatId).FirstAsync();
             firstAsync.UserCurrentStep = step;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<QAElement>> SearchInQuestions(string text)
+        {
+            var questions = await _context.
+                Elements.Include(x => x.Category)
+                .AsNoTrackingWithIdentityResolution()
+                .ToListAsync();
+
+            return questions.Where(x => x.Question.Contains(text, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         public async Task SetTelegramUserMode(long chatId, UserInputMode mode)

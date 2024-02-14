@@ -18,8 +18,4 @@
       <ProjectReference Include="..\QA.Models\QA.Models.csproj" />
       <ProjectReference Include="..\QA.Telegram.Bot.Models\QA.Telegram.Bot.Models.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Abstract\" />
-    </ItemGroup>
 </Project>

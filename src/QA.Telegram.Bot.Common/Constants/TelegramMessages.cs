@@ -22,7 +22,7 @@ public static class TelegramMessages
     public const string QUESTION_ISNT_FAVORITE = "Вопрос не находится в списке избранных.";
     public const string NO_FAVORITES = "В избранном пока ничего нет, добавьте понравившиеся вопросы в избранные, чтобы они появились в этом разделе.";
     public const string CATEGORY_INVALID = "Данной категории не существует.";
-    public const string CONTENT_INVALID = "Неправильное содержание.";
+    public const string CONTENT_INVALID = "Неправильное содержимое.";
     public const string UNKNOWN_COMMAND = "Пока я не могу обработать данную команду:(";
     public const string ACCESS_DENIED = "Пока я не могу обработать данную команду или ваш уровень доступа ограничен, свяжитесь с администратором для повышения привелегий:(";
     public const string CATEGORY_IS_EMPTY = "В данной категории пока пусто:(";
@@ -31,6 +31,7 @@ public static class TelegramMessages
     public const string REQUEST_NEW_QUESTION = "Введите исправленный вопрос.";
     public const string REQUEST_NEW_ANSWER = "Введите исправленный ответ.";
     public const string DELETE_SUCCESS = "Удаление завершено.";
+    public const string ENTER_SEARCH_KEYWORD = "Введите искомую фразу или слово.";
     public static string HELLO(int qaCount) => $"Привет! Я знаю {qaCount} вопросов, которые могут быть использованы на собеседованиях по следующим темам:";
     public static string MAIN_MENU_WITH_COUNT(int qaCount) => $"Текущее количество вопросов в базе: {qaCount} \nCейчас вы в главном меню";
 

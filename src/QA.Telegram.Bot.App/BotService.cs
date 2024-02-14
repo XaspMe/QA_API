@@ -9,6 +9,7 @@ using QA.Telegram.Bot.App.Feature.AcceptNewCategory;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestion;
 using QA.Telegram.Bot.App.Feature.AcceptNewQuestionCategory;
 using QA.Telegram.Bot.App.Feature.AcceptQuestionUpdate;
+using QA.Telegram.Bot.App.Feature.AcceptSearchKeyword;
 using QA.Telegram.Bot.App.Feature.AddTestDataToDb;
 using QA.Telegram.Bot.App.Feature.AddToFavorites;
 using QA.Telegram.Bot.App.Feature.Categories;
@@ -28,6 +29,7 @@ using QA.Telegram.Bot.App.Feature.NewCategory;
 using QA.Telegram.Bot.App.Feature.NextQuestion;
 using QA.Telegram.Bot.App.Feature.RemoveFromFavorites;
 using QA.Telegram.Bot.App.Feature.Return;
+using QA.Telegram.Bot.App.Feature.SearchQuestion;
 using QA.Telegram.Bot.App.Feature.SelectedQuestion;
 using QA.Telegram.Bot.App.Feature.ShowAnswer;
 using QA.Telegram.Bot.App.Feature.Start;
@@ -216,6 +218,8 @@ public class BotService : BackgroundService
                             new ManageAppRequest(userMessage), cancellationToken),
                         TelegramCommands.ABOUT => await _mediator.Send(
                             new AboutRequest(userMessage), cancellationToken),
+                        TelegramCommands.SEARCH => await _mediator.Send(
+                            new SearchQuestionRequest(userMessage), cancellationToken),
                         _ => botResponse
                     };
                 }
@@ -241,6 +245,10 @@ public class BotService : BackgroundService
                 break;
             case UserInputMode.ChangeContentQuestion:
                 botResponse = await _mediator.Send(new AcceptQuestionUpdateRequest(userMessage), cancellationToken);
+                break;
+            case UserInputMode.Search:
+                botResponse =
+                    await _mediator.Send(new AcceptSearchKeywordRequest(userMessage), cancellationToken);
                 break;
         }
 

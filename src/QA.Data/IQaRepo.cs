@@ -45,5 +45,6 @@ namespace QA.Data
         public Task ChangeQuestionCategory(QAElement qaElement, QACategory category);
         public Task<UserCurrentStep> GetUserCurrentStep(long telegramChatId);
         public Task SetUserCurrentStep(long telegramChatId, UserCurrentStep step);
+        public Task<IEnumerable<QAElement>> SearchInQuestions(string text);
     }
 }
